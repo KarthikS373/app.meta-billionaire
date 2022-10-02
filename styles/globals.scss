@@ -1,0 +1,82 @@
+html,
+body {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  background-color: #191920;
+  font-family: "Montserrat", sans-serif;
+  overflow-x: hidden;
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  scrollbar-width: none; /* Firefox */
+}
+
+.grecaptcha-badge {
+  visibility: hidden;
+}
+
+.select-container {
+  option {
+    background-color: #191920 !important;
+  }
+  box-shadow: none !important;
+}
+
+.checkbox-container {
+  span {
+    font-size: 17px !important;
+  }
+}
+
+canvas {
+  width: 100%;
+  height: 100% !important;
+}
+
+.canvas-container {
+  div {
+    flex: 1 !important;
+    width: 100% !important;
+    height: unset !important;
+    align-items: stretch !important;
+  }
+}
+
+html::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
+}
+
+body::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
+}
+
+button:focus {
+  box-shadow: none !important;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.rounded-img {
+  border-radius: 5px;
+}
+
+.floating-object {
+  animation-name: floating;
+  animation-duration: 3.5s;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+}
+
+@keyframes floating {
+  from {
+    transform: translate(0, 0px);
+  }
+  50% {
+    transform: translate(0, 15px);
+  }
+  to {
+    transform: translate(0, -0px);
+  }
+}
