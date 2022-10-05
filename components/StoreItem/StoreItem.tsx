@@ -100,11 +100,11 @@ const StoreItem = ({ data, getActiveProduct }: any) => {
   const renderer = ({ days, hours, minutes, seconds, completed }: any) => {
     const result: string = `${days}d ${hours}h ${minutes}m ${seconds}s`;
     if (completed) {
-      return <chakra.span>Time over</chakra.span>;
+      return <chakra.span fontSize={[10,10,13,13]}>Time over</chakra.span>;
     } else {
       return (
         <chakra.span
-          fontSize={[15, 15, 18, 18]}
+          fontSize={[10, 10, 13, 13]}
           color="customBlue.500"
           fontFamily="METAB"
         >
@@ -308,10 +308,12 @@ const StoreItem = ({ data, getActiveProduct }: any) => {
     <Flex
       align="center"
       justify="center"
+      maxW="350px"
+      h="500px"
       w="100%"
-      px={["sm", "sm", "lg", "lg"]}
-      mb="md"
-      py="md"
+      mx="auto"
+      my="20px"
+      p="20px"
       borderColor="customBlue.500"
       borderWidth={3}
       borderStyle="solid"
@@ -320,32 +322,29 @@ const StoreItem = ({ data, getActiveProduct }: any) => {
       shadow="xl"
       borderRadius={15}
     >
-      <Image
-        src={data.image}
-        alt={data.name}
-        objectFit="cover"
-        w={200}
-        h={250}
-        borderRadius={10}
-        shadow="lg"
-      />
       <Flex
         align="center"
         justify="center"
         flexDir="column"
-        ml={[0, 0, "lg", "lg"]}
-        mt={["md", "md", 0, 0]}
         w="100%"
       >
-        <Flex align="center" justify="center" w="100%">
+        <Flex align="center" justify="center" w="100%" flexDir="column">
+          <Image
+            src={data.image}
+            alt={data.name}
+            h={100}
+            mx="auto"
+            mb="7px"
+            borderRadius={10}
+            shadow="lg"
+          />
           <Text
-            fontSize={[17, 17, 20, 20]}
+            fontSize={[10, 10, 13, 13]}
             textAlign="center"
             fontFamily="METAB"
           >
             {data.name}
           </Text>
-          <Spacer />
           <IconButton
             as={Link}
             isExternal
@@ -365,13 +364,13 @@ const StoreItem = ({ data, getActiveProduct }: any) => {
           justifyItems="flex-start"
           alignItems="center"
           columns={2}
-          spacingX={8}
+          spacingX={2}
           spacingY={4}
           mt="md"
           w="100%"
         >
           <Box>
-            <Text fontSize={[17, 17, 20, 20]} fontFamily="Montserrat">
+            <Text fontSize={[10, 10, 13, 13]} fontFamily="Montserrat">
               Amount Available
             </Text>
             <Text
@@ -385,7 +384,7 @@ const StoreItem = ({ data, getActiveProduct }: any) => {
 
           {Number(finalEndResult) > 0 && (
             <Box>
-              <Text fontSize={[17, 17, 20, 20]} fontFamily="Montserrat">
+              <Text fontSize={[10, 10, 13, 13]} fontFamily="Montserrat">
                 Opportunity close in
               </Text>
               {!isSSR && (
@@ -399,11 +398,11 @@ const StoreItem = ({ data, getActiveProduct }: any) => {
           )}
 
           <Box>
-            <Text fontSize={[17, 17, 20, 20]} fontFamily="Montserrat">
+            <Text fontSize={[10, 10, 13, 13]} fontFamily="Montserrat">
               Price
             </Text>
             <Text
-              fontSize={[17, 17, 20, 20]}
+              fontSize={[10, 10, 13, 13]}
               color="customBlue.500"
               fontFamily="METAB"
             >
@@ -412,7 +411,7 @@ const StoreItem = ({ data, getActiveProduct }: any) => {
           </Box>
 
           <Box>
-            <Text fontSize={[17, 17, 20, 20]} fontFamily="Montserrat">
+            <Text fontSize={[10, 10, 13, 13]} fontFamily="Montserrat">
               Max per user
             </Text>
             <Text

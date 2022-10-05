@@ -6,7 +6,7 @@ import { IoLogoTwitter } from "react-icons/io5";
 const TeamsPage = () => {
     const teamMembers = [{
         image: "/teams/chiefExecutive.png",
-        position: "CHIEF EXECUTIVE OFFICER & PRESIDENT",
+        position: "CEO & PRESIDENT",
         twitter: "https://twitter.com/alectavarez",
         name: "Alec Tavarez",
         description: "Alec Tavarez has over 10 years of experience in Business Development, Strategy, and Data Analytics. In terms of Web2, Alec has built 6- and 7-figure rental car agencies, led B2B business partnerships with Fortune 500 companies, as well as helped build the initial sales operations and strategies for North American mid-market agencies for TikTok. In terms of Web3, Alec has been an avid NFT investor and trader since mid-2021, getting his first Web3 experience working with Metabillionaire in December of 2021. "
@@ -70,56 +70,57 @@ const TeamsPage = () => {
                 {teamMembers.map((teamMember: any) => {
                     return (
                         <Flex key={teamMember.twitter} wrap="wrap">
-                            <Flex direction="column">
-                                <Image src={teamMember.image} alt="Team Member image" w="200px" m="auto"/>
-                                <Flex>
-                                    <Flex
-                                        align="center"
-                                        as={Box}
-                                        w="10%"
-                                        justify="center"
-                                        bgColor="#ffffff"
-                                        flexDir="column"
-                                        p="sm"
-                                        borderRadius={10}
-                                        cursor="pointer"
-                                        transition="all ease 0.5s"
-                                        _hover={{
-                                            transform: "scale(1.05)",
-                                        }}
-                                        shadow="lg"
-                                    >
-                                        <Link href={teamMember.twitter} >
-                                            <Icon as={IoLogoTwitter} color="customBlue.500" w={42} h={42} />
-                                        </Link>
+                            <Flex>
+                                <Flex flexDir="column">
+                                    <Flex flexWrap="wrap" justify="center" align="center">
+                                        <Image src={teamMember.image} alt="Team Member image" w="200px" my="4px" mx={[0,0,"sm","sm"]} borderRadius="10px"/>
+                                        <Flex direction="column" m="auto" flexWrap="wrap" justify="center">
+                                            <Text
+                                                textAlign="left"
+                                                mx="auto"
+                                                mt="sm"
+                                                casing="uppercase"
+                                                fontFamily="Montserrat"
+                                                fontSize={19}
+                                                fontWeight={900}
+                                            >{teamMember.name}</Text>
+                                            <Text
+                                                textAlign="left"
+                                                mx="auto"
+                                                mt="sm"
+                                                fontFamily="Montserrat"
+                                                fontSize={19}
+                                                fontWeight={400}
+                                            >{teamMember.position}</Text>
+                                        </Flex>
+                                        <Flex
+                                            align="center"
+                                            as={Box}
+                                            w="100px"
+                                            h="80px"
+                                            justify="center"
+                                            bgColor="#ffffff"
+                                            borderRadius={10}
+                                            cursor="pointer"
+                                            transition="all ease 0.5s"
+                                            _hover={{
+                                                transform: "scale(1.05)",
+                                            }}
+                                            shadow="lg"
+                                        >
+                                            <Link href={teamMember.twitter} >
+                                                <Icon as={IoLogoTwitter} color="customBlue.500" w={42} h={42} />
+                                            </Link>
+                                        </Flex>
                                     </Flex>
-                                    <Flex direction="column" m="auto" pr="lg">
-                                        <Text
-                                            textAlign="left"
-                                            mx="auto"
-                                            mt="sm"
-                                            fontFamily="Montserrat"
-                                            fontSize={19}
-                                            fontWeight={400}
-                                        >{teamMember.position}</Text>
-                                        <Text
-                                            textAlign="left"
-                                            mx="auto"
-                                            mt="sm"
-                                            casing="uppercase"
-                                            fontFamily="Montserrat"
-                                            fontSize={19}
-                                            fontWeight={900}
-                                        >{teamMember.name}</Text>
-                                    </Flex>
+                                    <Text
+                                        textAlign="left"
+                                        mx="auto"
+                                        mt="sm"
+                                        fontFamily="Montserrat"
+                                        fontSize={19}
+                                    >{teamMember.description}</Text>
                                 </Flex>
-                                <Text
-                                    textAlign="left"
-                                    mx="auto"
-                                    mt="sm"
-                                    fontFamily="Montserrat"
-                                    fontSize={19}
-                                >{teamMember.description}</Text>
                             </Flex>
                             <Box h="40px"/>
                         </Flex>

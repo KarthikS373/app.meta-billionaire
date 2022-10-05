@@ -108,7 +108,7 @@ const RaffleItem = ({ data, getActiveProduct, raffleWinner }: any) => {
     } else {
       return (
         <chakra.span
-          fontSize={[15, 15, 18, 18]}
+          fontSize={[10, 10, 13, 13]}
           color="customBlue.500"
           fontFamily="METAB"
         >
@@ -320,10 +320,12 @@ const RaffleItem = ({ data, getActiveProduct, raffleWinner }: any) => {
     <Flex
       align="center"
       justify="center"
+      maxW="350px"
+      h="500px"
       w="100%"
-      px={["sm", "sm", "lg", "lg"]}
-      mb="md"
-      py="md"
+      mx="auto"
+      my="20px"
+      p="20px"
       borderColor="customBlue.500"
       borderWidth={3}
       borderStyle="solid"
@@ -332,26 +334,24 @@ const RaffleItem = ({ data, getActiveProduct, raffleWinner }: any) => {
       shadow="xl"
       borderRadius={15}
     >
-      <Image
-        src={data.image}
-        alt={data.name}
-        objectFit="cover"
-        w={200}
-        h={250}
-        borderRadius={10}
-        shadow="lg"
-      />
       <Flex
         align="center"
         justify="center"
         flexDir="column"
-        ml={[0, 0, "lg", "lg"]}
-        mt={["md", "md", 0, 0]}
         w="100%"
       >
-        <Flex align="center" justify="center" w="100%">
+        <Flex align="center" justify="center" w="100%" flexDir="column">
+          <Image
+            src={data.image}
+            alt={data.name}
+            h={100}
+            mx="auto"
+            mb="7px"
+            borderRadius={10}
+            shadow="lg"
+          />
           <Text
-            fontSize={[17, 17, 20, 20]}
+            fontSize={[10, 10, 13, 13]}
             textAlign="center"
             fontFamily="METAB"
           >
@@ -373,23 +373,21 @@ const RaffleItem = ({ data, getActiveProduct, raffleWinner }: any) => {
             mr="sm"
           />
         </Flex>
-
-        <>
           <SimpleGrid
             justifyItems="flex-start"
             alignItems="center"
             columns={2}
-            spacingX={8}
+            spacingX={2}
             spacingY={4}
             mt="md"
             w="100%"
           >
             <Box>
-              <Text fontSize={[17, 17, 20, 20]} fontFamily="Montserrat">
+              <Text fontSize={[10, 10, 13, 13]} fontFamily="Montserrat">
                 Raffle Spots Available
               </Text>
               <Text
-                fontSize={[17, 17, 20, 20]}
+                fontSize={[10, 10, 13, 13]}
                 color="customBlue.500"
                 fontFamily="METAB"
               >
@@ -400,11 +398,11 @@ const RaffleItem = ({ data, getActiveProduct, raffleWinner }: any) => {
               new Date().getTime() <
             0 ? (
               <Box>
-                <Text fontSize={[17, 17, 20, 20]} fontFamily="Montserrat">
+                <Text fontSize={[10, 10, 13, 13]} fontFamily="Montserrat">
                   Winner is
                 </Text>
                 <Text
-                  fontSize={[17, 17, 20, 20]}
+                  fontSize={[10, 10, 13, 13]}
                   color="customBlue.500"
                   fontFamily="METAB"
                 >
@@ -414,7 +412,7 @@ const RaffleItem = ({ data, getActiveProduct, raffleWinner }: any) => {
             ) : (
               Number(finalEndResult) > 0 && (
                 <Box>
-                  <Text fontSize={[17, 17, 20, 20]} fontFamily="Montserrat">
+                  <Text fontSize={[10, 10, 13, 13]} fontFamily="Montserrat">
                     Raffle close in
                   </Text>
                   {!isSSR && (
@@ -429,11 +427,11 @@ const RaffleItem = ({ data, getActiveProduct, raffleWinner }: any) => {
             )}
 
             <Box>
-              <Text fontSize={[17, 17, 20, 20]} fontFamily="Montserrat">
+              <Text fontSize={[10, 10, 13, 13]} fontFamily="Montserrat">
                 Price
               </Text>
               <Text
-                fontSize={[17, 17, 20, 20]}
+                fontSize={[10, 10, 13, 13]}
                 color="customBlue.500"
                 fontFamily="METAB"
               >
@@ -524,7 +522,6 @@ const RaffleItem = ({ data, getActiveProduct, raffleWinner }: any) => {
               </Button>
             )}
           </Flex>
-        </>
       </Flex>
     </Flex>
   );

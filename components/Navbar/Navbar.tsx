@@ -47,11 +47,7 @@ const Navbar = () => {
     },
     {
       name : "Content",
-      link : "/content"
-    },
-    {
-      name : "User",
-      link : "/user"
+      link : "https://content.metabillionaire.com/"
     },
     {
       name : "MarketPlace",
