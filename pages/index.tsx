@@ -107,7 +107,6 @@ const Home: NextPage = ({ investments, news }: any) => {
           </Text>
         </Flex>
         <Flex
-          maxW="container.lg"
           w="100%"
           flexDir="column"
           align="center"
@@ -144,6 +143,7 @@ const Home: NextPage = ({ investments, news }: any) => {
           />
 
           <SimpleGrid
+            maxW="container.lg"
             columns={[1, 1, 2, 2]}
             spacing={12}
             alignItems="center"
@@ -201,6 +201,7 @@ const Home: NextPage = ({ investments, news }: any) => {
             </Flex>
           )}
           <Text
+            maxW="container.lg"
             fontSize={30}
             w="100%"
             textAlign="left"
@@ -212,6 +213,7 @@ const Home: NextPage = ({ investments, news }: any) => {
           </Text>
 
           <SimpleGrid
+            maxW="container.lg"
             columns={[1, 1, 2, 2]}
             alignItems="center"
             justifyItems="center"
@@ -359,7 +361,7 @@ const Home: NextPage = ({ investments, news }: any) => {
           <Text
             fontSize={30}
             w="100%"
-            textAlign="left"
+            textAlign="center"
             textTransform="uppercase"
             mt="lg"
             mb="md"
@@ -367,19 +369,20 @@ const Home: NextPage = ({ investments, news }: any) => {
             SHOP
           </Text>
 
+          <Flex flexWrap="wrap">
           {activeProducts ? (
             activeProducts.length > 0 ? (
               activeProducts.map((product: any, key: number) => {
                 return (
-                  <StoreItem
-                    key={key}
-                    data={product}
-                    getActiveProduct={getActiveProduct}
-                  />
+                    <StoreItem
+                      key={key}
+                      data={product}
+                      getActiveProduct={getActiveProduct}
+                    />
                 );
               })
             ) : (
-              <Flex align="center" justify="center" flex={1}>
+              <Flex align="center" justify="center" flexWrap="wrap">
                 <Text
                   fontSize={25}
                   fontFamily="MontserratBold"
@@ -394,7 +397,7 @@ const Home: NextPage = ({ investments, news }: any) => {
           ) : (
             <Spinner m="0 auto" size="xl" mt="lg" color="customBlue.500" />
           )}
-
+          </Flex>
           <Text
             fontSize={30}
             w="100%"

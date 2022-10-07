@@ -180,7 +180,7 @@ const Navbar = () => {
               color: "customBlue.500",
             }}
           >
-            <Link passHref href="https://opensea.io/metabillionaire">
+            <Link passHref href="https://opensea.io/collection/metabillionaire">
               <Image src="/opensea.svg" alt="open Sea Logo" w="30px" display="inline" pb="2px"/>
             </Link>
           </Box>
