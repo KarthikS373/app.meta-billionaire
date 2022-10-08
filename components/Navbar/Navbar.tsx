@@ -133,11 +133,22 @@ const Navbar = () => {
           <Image
             src="/logo3.png"
             alt="metabillionaire logo"
+            paddingLeft="md"
+            marginX="auto"
             width={170}
             height={75}
             cursor="pointer"
           />
         </Link>
+        <Box
+          fontSize={17}
+          cursor="pointer"
+          display={['block','block','block','none']}
+        >
+          <Link passHref href="https://opensea.io/collection/metabillionaire">
+            <Image src="/opensea.svg" alt="open Sea Logo" w="30px" display="inline" pb="2px"/>
+          </Link>
+        </Box>
         <Flex
           justify="center"
           align="center"
@@ -176,9 +187,6 @@ const Navbar = () => {
             fontSize={17}
             px="xs"
             cursor="pointer"
-            _hover={{
-              color: "customBlue.500",
-            }}
           >
             <Link passHref href="https://opensea.io/collection/metabillionaire">
               <Image src="/opensea.svg" alt="open Sea Logo" w="30px" display="inline" pb="2px"/>
@@ -191,9 +199,6 @@ const Navbar = () => {
             mx="xs"
             bgColor="#2081e2"
             borderRadius="50%"
-            _hover={{
-              color: "customBlue.500",
-            }}
           >
             <Link passHref href="https://shop.metabillionaire.com/">
               <Icon as={FaShoppingCart} size="20" m="5px"/>
