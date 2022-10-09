@@ -200,163 +200,163 @@ const Home: NextPage = ({ investments, news }: any) => {
               </Button>
             </Flex>
           )}
-          <Text
-            maxW="container.lg"
-            fontSize={30}
-            w="100%"
-            textAlign="left"
-            textTransform="uppercase"
-            mt="lg"
-            mb="md"
-          >
-            Live Fractions
-          </Text>
+          {/*<Text*/}
+          {/*  maxW="container.lg"*/}
+          {/*  fontSize={30}*/}
+          {/*  w="100%"*/}
+          {/*  textAlign="left"*/}
+          {/*  textTransform="uppercase"*/}
+          {/*  mt="lg"*/}
+          {/*  mb="md"*/}
+          {/*>*/}
+          {/*  Live Fractions*/}
+          {/*</Text>*/}
 
-          <SimpleGrid
-            maxW="container.lg"
-            columns={[1, 1, 2, 2]}
-            alignItems="center"
-            justifyItems="center"
-            spacing={6}
-            w="100%"
-            m="0 auto"
-          >
-            {investments.map((investmentsData: any, key: number) => {
-              return (
-                <Flex
-                  bgColor="#171717"
-                  w="100%"
-                  minH={450}
-                  textAlign="center"
-                  key={key}
-                  pt="sm"
-                  pb="xs"
-                  bg={`url(${investmentsData.image}) no-repeat center center`}
-                  bgRepeat="no-repeat"
-                  bgSize="cover"
-                  align={investmentsData.comingSoon ? "center" : "flex-end"}
-                  justify="center"
-                  px="sm"
-                  shadow="md"
-                  borderRadius={15}
-                  cursor="pointer"
-                  transition="all ease 0.5s"
-                  _hover={{
-                    transform: "scale(1.01)",
-                  }}
-                  boxShadow={`inset 0px ${
-                    investmentsData.comingSoon ? "-550px" : "-145px"
-                  } 15px 2px rgba(0,0,0,${
-                    investmentsData.comingSoon ? "0.9" : "0.8"
-                  })`}
-                  onClick={() =>
-                    investmentsData.comingSoon
-                      ? {}
-                      : router.push("/vault/" + investmentsData.id)
-                  }
-                >
-                  {!investmentsData.comingSoon ? (
-                    <>
-                      <Flex
-                        flexDir="column"
-                        align="flex-start"
-                        justify="flex-start"
-                      >
-                        <Text textAlign="left" fontSize={20} color="white">
-                          <chakra.span color="customBlue.500">
-                            {investmentsData.supply * 10}%
-                          </chakra.span>{" "}
-                          Available
-                        </Text>
-                      </Flex>
-                      <Spacer />
-                      <Flex
-                        w="100%"
-                        flexDir="column"
-                        align="flex-end"
-                        justify="center"
-                      >
-                        <Text color="white" textAlign="right" fontSize={15}>
-                          {investmentsData.title}
-                        </Text>
-                        <Text
-                          color="customBlue.500"
-                          textAlign="right"
-                          fontSize={17}
-                        >
-                          {investmentsData.tokenId}
-                        </Text>
-                        <Text
-                          textTransform="uppercase"
-                          fontFamily="OpenSans"
-                          fontSize={12}
-                          color="white"
-                          mt={1}
-                        >
-                          Valued{" "}
-                          <chakra.span ml={1} fontSize={17} lineHeight={5}>
-                            {investmentsData.totalPrice} ETH
-                          </chakra.span>
-                        </Text>
-                        <Text
-                          textTransform="uppercase"
-                          fontFamily="OpenSans"
-                          fontSize={12}
-                          color="white"
-                        >
-                          Price{" "}
-                          <chakra.span ml={1} fontSize={17} lineHeight={5}>
-                            {investmentsData.stackingPrice} ETH
-                          </chakra.span>
-                        </Text>
-                        <Text
-                          textTransform="uppercase"
-                          fontFamily="OpenSans"
-                          fontSize={12}
-                          color="white"
-                        >
-                          Supply{" "}
-                          <chakra.span ml={1} fontSize={17} lineHeight={5}>
-                            {investmentsData.supply}/
-                            {investmentsData.totalSupply}
-                          </chakra.span>
-                        </Text>
-                      </Flex>
-                    </>
-                  ) : (
-                    <>
-                      <Flex flexDir="column" align="center" justify="center">
-                        <Flex
-                          bgColor="customBlue.500"
-                          borderRadius="full"
-                          w={75}
-                          h={75}
-                          flexDir="column"
-                          align="center"
-                          justify="center"
-                        >
-                          <Icon
-                            as={IoHourglassOutline}
-                            w={35}
-                            h={35}
-                            color="white"
-                          />
-                        </Flex>
-                        <Text
-                          textTransform="uppercase"
-                          fontSize={30}
-                          mt="xs"
-                          color="customBlue.500"
-                        >
-                          Coming soon
-                        </Text>
-                      </Flex>
-                    </>
-                  )}
-                </Flex>
-              );
-            })}
-          </SimpleGrid>
+          {/*<SimpleGrid*/}
+          {/*  maxW="container.lg"*/}
+          {/*  columns={[1, 1, 2, 2]}*/}
+          {/*  alignItems="center"*/}
+          {/*  justifyItems="center"*/}
+          {/*  spacing={6}*/}
+          {/*  w="100%"*/}
+          {/*  m="0 auto"*/}
+          {/*>*/}
+          {/*  {investments.map((investmentsData: any, key: number) => {*/}
+          {/*    return (*/}
+          {/*      <Flex*/}
+          {/*        bgColor="#171717"*/}
+          {/*        w="100%"*/}
+          {/*        minH={450}*/}
+          {/*        textAlign="center"*/}
+          {/*        key={key}*/}
+          {/*        pt="sm"*/}
+          {/*        pb="xs"*/}
+          {/*        bg={`url(${investmentsData.image}) no-repeat center center`}*/}
+          {/*        bgRepeat="no-repeat"*/}
+          {/*        bgSize="cover"*/}
+          {/*        align={investmentsData.comingSoon ? "center" : "flex-end"}*/}
+          {/*        justify="center"*/}
+          {/*        px="sm"*/}
+          {/*        shadow="md"*/}
+          {/*        borderRadius={15}*/}
+          {/*        cursor="pointer"*/}
+          {/*        transition="all ease 0.5s"*/}
+          {/*        _hover={{*/}
+          {/*          transform: "scale(1.01)",*/}
+          {/*        }}*/}
+          {/*        boxShadow={`inset 0px ${*/}
+          {/*          investmentsData.comingSoon ? "-550px" : "-145px"*/}
+          {/*        } 15px 2px rgba(0,0,0,${*/}
+          {/*          investmentsData.comingSoon ? "0.9" : "0.8"*/}
+          {/*        })`}*/}
+          {/*        onClick={() =>*/}
+          {/*          investmentsData.comingSoon*/}
+          {/*            ? {}*/}
+          {/*            : router.push("/vault/" + investmentsData.id)*/}
+          {/*        }*/}
+          {/*      >*/}
+          {/*        {!investmentsData.comingSoon ? (*/}
+          {/*          <>*/}
+          {/*            <Flex*/}
+          {/*              flexDir="column"*/}
+          {/*              align="flex-start"*/}
+          {/*              justify="flex-start"*/}
+          {/*            >*/}
+          {/*              <Text textAlign="left" fontSize={20} color="white">*/}
+          {/*                <chakra.span color="customBlue.500">*/}
+          {/*                  {investmentsData.supply * 10}%*/}
+          {/*                </chakra.span>{" "}*/}
+          {/*                Available*/}
+          {/*              </Text>*/}
+          {/*            </Flex>*/}
+          {/*            <Spacer />*/}
+          {/*            <Flex*/}
+          {/*              w="100%"*/}
+          {/*              flexDir="column"*/}
+          {/*              align="flex-end"*/}
+          {/*              justify="center"*/}
+          {/*            >*/}
+          {/*              <Text color="white" textAlign="right" fontSize={15}>*/}
+          {/*                {investmentsData.title}*/}
+          {/*              </Text>*/}
+          {/*              <Text*/}
+          {/*                color="customBlue.500"*/}
+          {/*                textAlign="right"*/}
+          {/*                fontSize={17}*/}
+          {/*              >*/}
+          {/*                {investmentsData.tokenId}*/}
+          {/*              </Text>*/}
+          {/*              <Text*/}
+          {/*                textTransform="uppercase"*/}
+          {/*                fontFamily="OpenSans"*/}
+          {/*                fontSize={12}*/}
+          {/*                color="white"*/}
+          {/*                mt={1}*/}
+          {/*              >*/}
+          {/*                Valued{" "}*/}
+          {/*                <chakra.span ml={1} fontSize={17} lineHeight={5}>*/}
+          {/*                  {investmentsData.totalPrice} ETH*/}
+          {/*                </chakra.span>*/}
+          {/*              </Text>*/}
+          {/*              <Text*/}
+          {/*                textTransform="uppercase"*/}
+          {/*                fontFamily="OpenSans"*/}
+          {/*                fontSize={12}*/}
+          {/*                color="white"*/}
+          {/*              >*/}
+          {/*                Price{" "}*/}
+          {/*                <chakra.span ml={1} fontSize={17} lineHeight={5}>*/}
+          {/*                  {investmentsData.stackingPrice} ETH*/}
+          {/*                </chakra.span>*/}
+          {/*              </Text>*/}
+          {/*              <Text*/}
+          {/*                textTransform="uppercase"*/}
+          {/*                fontFamily="OpenSans"*/}
+          {/*                fontSize={12}*/}
+          {/*                color="white"*/}
+          {/*              >*/}
+          {/*                Supply{" "}*/}
+          {/*                <chakra.span ml={1} fontSize={17} lineHeight={5}>*/}
+          {/*                  {investmentsData.supply}/*/}
+          {/*                  {investmentsData.totalSupply}*/}
+          {/*                </chakra.span>*/}
+          {/*              </Text>*/}
+          {/*            </Flex>*/}
+          {/*          </>*/}
+          {/*        ) : (*/}
+          {/*          <>*/}
+          {/*            <Flex flexDir="column" align="center" justify="center">*/}
+          {/*              <Flex*/}
+          {/*                bgColor="customBlue.500"*/}
+          {/*                borderRadius="full"*/}
+          {/*                w={75}*/}
+          {/*                h={75}*/}
+          {/*                flexDir="column"*/}
+          {/*                align="center"*/}
+          {/*                justify="center"*/}
+          {/*              >*/}
+          {/*                <Icon*/}
+          {/*                  as={IoHourglassOutline}*/}
+          {/*                  w={35}*/}
+          {/*                  h={35}*/}
+          {/*                  color="white"*/}
+          {/*                />*/}
+          {/*              </Flex>*/}
+          {/*              <Text*/}
+          {/*                textTransform="uppercase"*/}
+          {/*                fontSize={30}*/}
+          {/*                mt="xs"*/}
+          {/*                color="customBlue.500"*/}
+          {/*              >*/}
+          {/*                Coming soon*/}
+          {/*              </Text>*/}
+          {/*            </Flex>*/}
+          {/*          </>*/}
+          {/*        )}*/}
+          {/*      </Flex>*/}
+          {/*    );*/}
+          {/*  })}*/}
+          {/*</SimpleGrid>*/}
 
           <Text
             fontSize={30}

@@ -58,20 +58,12 @@ const Navbar = () => {
       link : "/roadmap"
     },
     {
-      name : "Story",
-      link : "/story"
-    },
-    {
       name : "Teams",
       link : "/teams"
     },
     {
       name : "Map",
       link : "/map"
-    },
-    {
-      name : "News",
-      link : "/news"
     },
     {
       name : "Faq",
