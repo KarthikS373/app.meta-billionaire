@@ -56,7 +56,7 @@ const TeamsPage = () => {
         image: "/teams/menno.jpg",
         position: "Operations Director",
         twitter: "https://twitter.com/menno43394385",
-        name: "Menno",
+        name: "Menno Jansen",
         description: "Menno Tijmen Jansen is a day one passionate holder. He is a marketing enthusiast, graduate and executer for more than 6 years. Working closely with the biggest brands and software companies. It is his passion to create and build big things that involve innovation. Besides working behind the scenes he will operate in Discord helping the community out and hopefully make everyone happy."
     }, {
         image: "/teams/javier.jpg",
