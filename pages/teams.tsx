@@ -52,7 +52,8 @@ const TeamsPage = () => {
         twitter: "https://twitter.com/Nansfrozentoast ",
         name: "Kyron Smith",
         description: "Kyron Smith is a ‘jack of all traits, master of none’. For the past few years he has been working at a tax technology startup, bringing in 11 figure businesses as clients and going on to delivering these projects too. His key expertise lie in workflow automation, data manipulation and project management. Kyron developed a strong love for crypto in 2019 and joined Web3 via Metabillionaire in November 2021, becoming a key member of the community shortly after joining."
-    }, {
+    },
+        {
         image: "/teams/menno.jpg",
         position: "Operations Director",
         twitter: "https://twitter.com/menno43394385",
