@@ -41,17 +41,11 @@ const TeamsPage = () => {
         name: "Mark Herndon",
         description: "Mark the “middle man” Herndon A.K.A. GatorAPE is a professional athlete and entrepreneur. Since November of 2021, he has been helping athletes, celebrities, influencers, and companies take advantage of Web3 technology. With the experience that he has gained since entering the space, Mark will be helping lead the Metabillionaire charge in partnerships in Web2 and Web3 to help grow the brand. If you didn't know before, you know now- Mark was behind the team that put Metabillionaire in the Super Bowl making NFT and NFL history. He may be a Gator but, he doesn’t bite…hard. Feel free to connect with him."
     }, {
-        image: "/teams/chiefExecutive.png",
+        image: "/teams/cole.jpg",
         position: "CREATIVE DIRECTOR",
         twitter: "https://twitter.com/whoiscole_eth",
         name: "Cole Ryan",
         description: "Cole Ryan has a history of success in crypto after beginning his journey at the age of 16 years old. Starting out as a degen, he blended his skill and knowledge to design, develop, and scale many ventures in the Web3 realm. Using his background in event production, having worked on events such as Rolling Loud, Governor’s Ball, and MTV Music Awards, Cole has designed and lead activations, experiences, and events for Web3 organizations such as Ledger, MyBFF, and more."
-    }, {
-        image: "/teams/chiefExecutive.png",
-        position: "CREATIVE DIRECTOR",
-        twitter: "https://twitter.com/ethchoncey",
-        name: "Choncey Coles",
-        description: "Choncey Coles is the ultimate Web2 connector. He has organized events throughout the entire US, bringing together artists, creatives, event planners, and investors. Choncey has been a full-time cryptocurrency trader and investor for the last 7 years, leveraging his event-planning experience to bring people together. Beyond trading, Choncey is a veteran in botanical sciences (if you know, you know)."
     }, {
         image: "/teams/kyron.jpg",
         position: "Chief Community & Partnership Officer",
@@ -84,59 +78,61 @@ const TeamsPage = () => {
             >
                 Teams
             </Text>
-            <Flex direction="column" px="20%">
+            <Flex direction="column" className={'md:px-[20%] px-7'} >
                 {teamMembers.map((teamMember: any) => {
                     return (
                         <Flex key={teamMember.twitter} wrap="wrap">
                             <Flex>
                                 <Flex flexDir="column">
-                                    <Flex flexWrap="wrap" justify="center" align="center">
+                                    <Flex className={'flex-col md:flex-row'} flexWrap="wrap" justify="center" align="center">
                                         <Image src={teamMember.image} alt="Team Member image" w="200px" my="4px" mx={[0,0,"sm","sm"]} borderRadius="10px"/>
                                         <Flex direction="column" m="auto" flexWrap="wrap" justify="center">
+
                                             <Text
                                                 textAlign="left"
                                                 mx="auto"
-                                                my="sm"
+                                                mt="sm"
                                                 casing="uppercase"
                                                 fontFamily="Montserrat"
-                                                fontSize={20}
+                                                fontSize={24}
                                                 fontWeight={900}
                                             >{teamMember.name}</Text>
                                             <Text
-                                                textAlign="left"
+                                                className={'text-center md:text-start max-w-[250px]'}
                                                 mx="auto"
-                                                my="sm"
+                                                my="5px"
                                                 fontFamily="Montserrat"
-                                                fontSize={16}
+                                                fontSize={14}
                                                 fontWeight={400}
                                             >{teamMember.position}</Text>
                                         </Flex>
-                                        <Flex
-                                            align="center"
-                                            as={Box}
-                                            w="80px"
-                                            h="64px"
-                                            justify="center"
-                                            bgColor="#ffffff"
-                                            borderRadius={10}
-                                            cursor="pointer"
-                                            transition="all ease 0.5s"
-                                            _hover={{
-                                                transform: "scale(1.05)",
-                                            }}
-                                            shadow="lg"
-                                        >
-                                            <Link href={teamMember.twitter} >
-                                                <Icon as={IoLogoTwitter} color="customBlue.500" w={42} h={42} />
-                                            </Link>
-                                        </Flex>
+                                        {/*<div className={'w-full'}>*/}
+                                            <Flex
+                                                className={'w-[40px] h-[40px] md:w-[64px] md:h-[64px] md:mx-0 mx-auto'}
+                                                align="center"
+                                                as={Box}
+                                                justify="center"
+                                                bgColor="#ffffff"
+                                                borderRadius={1000}
+                                                cursor="pointer"
+                                                transition="all ease 0.5s"
+                                                _hover={{
+                                                    transform: "scale(1.05)",
+                                                }}
+                                                shadow="lg"
+                                            >
+                                                <Link href={teamMember.twitter} >
+                                                    <Icon as={IoLogoTwitter} color="customBlue.500"  className={'md:w-[54px] md:h-[54px] w-[30px] h-[30px]'} />
+                                                </Link>
+                                            </Flex>
+                                        {/*</div>*/}
+
                                     </Flex>
                                     <Text
-                                        textAlign="left"
                                         mx="auto"
                                         mt="sm"
                                         fontFamily="Montserrat"
-                                        fontSize={19}
+                                        className={'md:text-start text-center md:text-lg text-sm'}
                                     >{teamMember.description}</Text>
                                 </Flex>
                             </Flex>
