@@ -96,26 +96,26 @@ const TeamsPage = () => {
                                             <Text
                                                 textAlign="left"
                                                 mx="auto"
-                                                mt="sm"
+                                                my="sm"
                                                 casing="uppercase"
                                                 fontFamily="Montserrat"
-                                                fontSize={19}
+                                                fontSize={20}
                                                 fontWeight={900}
                                             >{teamMember.name}</Text>
                                             <Text
                                                 textAlign="left"
                                                 mx="auto"
-                                                mt="sm"
+                                                my="sm"
                                                 fontFamily="Montserrat"
-                                                fontSize={19}
+                                                fontSize={16}
                                                 fontWeight={400}
                                             >{teamMember.position}</Text>
                                         </Flex>
                                         <Flex
                                             align="center"
                                             as={Box}
-                                            w="100px"
-                                            h="80px"
+                                            w="80px"
+                                            h="64px"
                                             justify="center"
                                             bgColor="#ffffff"
                                             borderRadius={10}
