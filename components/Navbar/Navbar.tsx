@@ -141,6 +141,19 @@ const Navbar = () => {
             <Image src="/opensea.svg" alt="open Sea Logo" w="30px" display="inline" pb="2px"/>
           </Link>
         </Box>
+        <Box
+            fontSize={17}
+            cursor="pointer"
+            p="2px"
+            mx="xs"
+            bgColor="#2081e2"
+            borderRadius="50%"
+            display={['block','block','block','none']}
+        >
+          <Link passHref href="https://shop.metabillionaire.com/">
+            <Icon as={FaShoppingCart} size="20" m="5px"/>
+          </Link>
+        </Box>
         <Flex
           justify="center"
           align="center"
@@ -177,7 +190,7 @@ const Navbar = () => {
           <Spacer />
           <Box
             fontSize={17}
-            px="xs"
+
             cursor="pointer"
           >
             <Link passHref href="https://opensea.io/collection/metabillionaire">
