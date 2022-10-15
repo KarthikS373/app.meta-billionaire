@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@chakra-ui/react": "^1.8.8",
+    "@coinbase/wallet-sdk": "^3.5.3",
     "@emotion/react": "^11",
     "@emotion/styled": "^11",
     "@prisma/client": "^3.12.0",
