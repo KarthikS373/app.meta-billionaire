@@ -115,7 +115,12 @@ const AdminContent = ({ products, raffleWinner }: any) => {
           <CreateNewProduct setCreateNewMode={setCreateNewMode} />
         ) : (
           <>
-            <Flex w="100%" align="center" justify="center">
+            <Flex
+              w="100%"
+              align="center"
+              justify="center"
+              flexDir={["column", null, "row"]}
+            >
               <Text
                 fontSize={30}
                 fontFamily="MontserratBold"

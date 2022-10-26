@@ -16,6 +16,7 @@ import { ethers } from "ethers";
 import useEthersProvider from "../../hooks/useEthersProvider";
 import contractABI from "../../artifacts/contracts/MarketplaceERC20.sol/Marketplace.json";
 import { useState } from "react";
+import moment from "moment";
 
 interface CreateNewProductProps {
   setCreateNewMode: (data: boolean) => void;
@@ -94,7 +95,12 @@ const CreateNewProduct = ({ setCreateNewMode }: CreateNewProductProps) => {
 
   return (
     <>
-      <Flex w="100%" align="center" justify="center">
+      <Flex
+        w="100%"
+        align="center"
+        justify="center"
+        flexDir={["column", null, "row"]}
+      >
         <Text
           fontSize={30}
           fontFamily="MontserratBold"
@@ -140,13 +146,14 @@ const CreateNewProduct = ({ setCreateNewMode }: CreateNewProductProps) => {
               Product Name :
             </Text>
             <Input
+              fontFamily={"sans-serif"}
               w="100%"
               value={productName}
               mt={2}
               required
               onChange={(e) => setProductName(e.target.value)}
               colorScheme="customBlue"
-              fontSize={20}
+              fontSize={["14px", null, "sm"]}
               placeholder="Product name"
             />
           </Flex>
@@ -162,13 +169,14 @@ const CreateNewProduct = ({ setCreateNewMode }: CreateNewProductProps) => {
               Product Image (URL) :
             </Text>
             <Input
+              fontFamily={"sans-serif"}
               w="100%"
               value={productImage}
               mt={2}
               required
               onChange={(e) => setProductImage(e.target.value)}
               colorScheme="customBlue"
-              fontSize={20}
+              fontSize={["14px", null, "sm"]}
               placeholder="Product image"
             />
           </Flex>
@@ -189,7 +197,7 @@ const CreateNewProduct = ({ setCreateNewMode }: CreateNewProductProps) => {
               mt={2}
               onChange={(event) => setProductState(event.target.checked)}
               colorScheme="customBlue"
-              fontSize={20}
+              fontSize={["14px", null, "sm"]}
             />
           </Flex>
 
@@ -204,14 +212,18 @@ const CreateNewProduct = ({ setCreateNewMode }: CreateNewProductProps) => {
               Product Sale Start Time (Timestamp) :
             </Text>
             <Input
+              fontFamily={"sans-serif"}
               w="100%"
-              value={productStart}
               mt={2}
-              type="number"
+              // type="number"
+              type="datetime-local"
               required
-              onChange={(e) => setProductStart(e.target.value)}
+              onChange={(e) => {
+                console.log(e.target.value);
+                setProductStart(Date.parse(e.target.value).toString());
+              }}
               colorScheme="customBlue"
-              fontSize={20}
+              fontSize={["14px", null, "sm"]}
               placeholder="Product start sale time"
             />
           </Flex>
@@ -227,14 +239,16 @@ const CreateNewProduct = ({ setCreateNewMode }: CreateNewProductProps) => {
               Product Sale End Time (Timestamp) :
             </Text>
             <Input
+              fontFamily={"sans-serif"}
               w="100%"
-              value={productEnd}
               mt={2}
-              type="number"
+              type="datetime-local"
               required
-              onChange={(e) => setProductEnd(e.target.value)}
+              onChange={(e) => {
+                setProductEnd(Date.parse(e.target.value).toString());
+              }}
               colorScheme="customBlue"
-              fontSize={20}
+              fontSize={["14px", null, "sm"]}
               placeholder="Product end sale time"
             />
           </Flex>
@@ -251,9 +265,10 @@ const CreateNewProduct = ({ setCreateNewMode }: CreateNewProductProps) => {
             </Text>
             <NumberInput
               w="100%"
+              fontFamily={"sans-serif"}
               isRequired
               colorScheme="customBlue"
-              fontSize={20}
+              fontSize={["14px", null, "sm"]}
               defaultValue={productSpot}
               min={0}
               mt={2}
@@ -279,12 +294,14 @@ const CreateNewProduct = ({ setCreateNewMode }: CreateNewProductProps) => {
             </Text>
             <NumberInput
               w="100%"
+              fontFamily={"sans-serif"}
               isRequired
               colorScheme="customBlue"
-              fontSize={20}
+              fontSize={["14px", null, "sm"]}
               defaultValue={productPrice}
               min={0}
               mt={2}
+              placeholder={"product Price in MBUC"}
               onChange={(e: any) => setProductPrice(e)}
             >
               <NumberInputField />
@@ -307,12 +324,14 @@ const CreateNewProduct = ({ setCreateNewMode }: CreateNewProductProps) => {
             </Text>
             <NumberInput
               w="100%"
+              fontFamily={"sans-serif"}
               isRequired
               colorScheme="customBlue"
-              fontSize={20}
+              fontSize={["14px", null, "sm"]}
               defaultValue={productMaxPerUser}
               min={1}
               mt={2}
+              placeholder={"Max product per user"}
               onChange={(e: any) => setProductMaxPerUser(e)}
             >
               <NumberInputField />
