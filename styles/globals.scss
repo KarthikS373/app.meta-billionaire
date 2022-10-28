@@ -494,6 +494,7 @@ td::after {
   font-size: xx-large;
 }
 #crane-content h1 {
+  white-space: none;
   font-size: 12rem;
 }
 #crane-content p {
@@ -506,12 +507,22 @@ td::after {
 }
 @media only screen and (max-width: 1600px) {
   #crane-content h1 {
-    font-size: 8rem;
+    font-size: 6rem;
   }
 }
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 768px){
   #crane-content h1 {
-    font-size: 4rem;
+    font-size: 2.2rem;
+  }
+}
+@media screen and (max-height: 768px){
+  #crane-content {
+    transform: translateY(-30%);
+  }
+}
+@media screen and (max-height: 568px){
+  #crane-content {
+    transform: translateY(-50%);
   }
 }
 

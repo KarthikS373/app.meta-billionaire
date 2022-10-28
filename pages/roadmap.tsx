@@ -86,7 +86,7 @@ const RoadmapPage = () => {
     <>
       <Navbar />
       <div id="crane-content">
-        <h1>Road Map</h1>
+        <h1>Roadmap</h1>
         <p> Under Construction </p>
       </div>
       <div id="outerCraneContainer">
