@@ -54,6 +54,9 @@ const News = ({ post }:any) => {
           <Text mb="sm" fontSize={17} fontFamily="OpenSans">
             {post.publishedAt}
           </Text>
+          <Text mb="sm" fontSize={17} fontFamily="OpenSans">
+            {post.author}
+          </Text>
           <PortableText value={post.body} components={portableTextComponents} />
         </Flex>
       </Layout>
