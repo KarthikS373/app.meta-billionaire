@@ -26,6 +26,7 @@ import StoreItem from "../components/StoreItem/StoreItem";
 import { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import contractABI from "../artifacts/contracts/MarketplaceERC20.sol/Marketplace.json";
+import {client, urlFor} from "../lib/client";
 
 const Home: NextPage = ({ investments, news }: any) => {
   const { connect, address } = useEthersProvider();
@@ -431,7 +432,7 @@ const Home: NextPage = ({ investments, news }: any) => {
                   cursor="pointer"
                   w="100%"
                   onClick={() =>
-                    router.push("/news/" + postData.slug, undefined, {
+                    router.push("/news/" + postData.slug.current, undefined, {
                       scroll: false,
                     })
                   }
@@ -439,8 +440,8 @@ const Home: NextPage = ({ investments, news }: any) => {
                   _hover={{ transform: "scale(1.01)" }}
                 >
                   <Image
-                    src={"/" + postData.frontmatter.image}
-                    alt={postData.frontmatter.image}
+                    src={urlFor(postData.featuredImage) as any}
+                    alt={postData.title}
                     objectFit="cover"
                     w="100%"
                     h={200}
@@ -453,15 +454,16 @@ const Home: NextPage = ({ investments, news }: any) => {
                       fontFamily="OpenSans"
                       fontSize={20}
                     >
-                      {postData.frontmatter.title}
+                      {postData.title}
                     </Text>
                     <Text
                       fontFamily="Montserrat"
                       mt="xs"
                       fontSize={15}
                       color="black"
+                      className={'truncate-desc'}
                     >
-                      {postData.frontmatter.description}
+                      {postData.description}
                     </Text>
                   </Flex>
                 </Flex>
@@ -477,20 +479,7 @@ const Home: NextPage = ({ investments, news }: any) => {
 
 export async function getServerSideProps() {
   const investments = await prisma.nFT.findMany();
-
-  const postsDirectory = join(process.cwd(), "posts");
-  const files = fs.readdirSync(postsDirectory);
-  const news = files.map((fileName: any) => {
-    const slug = fileName.replace(".md", "");
-    const postsDirectory2 = join(process.cwd(), `posts/${fileName}`);
-    const readFile = fs.readFileSync(postsDirectory2, "utf-8");
-    const { data: frontmatter } = matter(readFile);
-    return {
-      slug,
-      frontmatter,
-    };
-  });
-
+  const news = await client.fetch(`*[_type == "post"]`);
   return { props: { investments, news } };
 }
 

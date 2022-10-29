@@ -4,70 +4,80 @@ import fs from "fs";
 import md from "markdown-it";
 import Layout from "../../components/Layout/Layout";
 import { join } from "path";
+import { client, urlFor } from '../../lib/client';
+import {PortableText} from "@portabletext/react";
+const News = ({ post }:any) => {
+  const portableTextComponents = {
+    types: {
+      image: ({ value }:any) => <img className='mx-auto rounded-xl my-16' src={urlFor(value) as any} />,
+    },
 
-const NewsContent = ({ frontmatter, content }: any) => {
+    marks: {
+      link: ({ children, value }:any) => {
+        const rel = !value.href.startsWith('/') ? 'noreferrer noopener' : undefined
+        return (
+            <a className='text-blue-400 underline' href={value.href} rel={rel}>
+              {children}
+            </a>
+        )
+      },
+      strong: ({ text }:any) => {
+        return <span className='text-pink-400'>{text}</span>
+      },
+      h1: (prop:any) => {
+        console.log(prop)
+        return <p>Hello</p>
+      }
+    },
+  }
   return (
-    <Layout>
-      <Flex
-        my={["md", "md", "lg", "lg"]}
-        align="center"
-        justify="center"
-        w="100%"
-        flexDir="column"
-        px="md"
-        maxW="container.md"
-        m="0 auto"
-      >
-        <Text
-          mb="sm"
-          mt={["md", "md", 0, 0]}
-          fontSize={[22, 22, 25, 25]}
-          textAlign="center"
-          fontFamily="MontserratBold"
+      <Layout key={post.slug.current}>
+        <Flex
+            my={["md", "md", "lg", "lg"]}
+            align="center"
+            justify="center"
+            w="100%"
+            flexDir="column"
+            px="md"
+            maxW="container.md"
+            m="0 auto"
         >
-          {frontmatter.title}
-        </Text>
-        <Text mb="sm" fontSize={17} fontFamily="OpenSans">
-          {frontmatter.date}
-        </Text>
-        <Box
-          className="prose mx-auto article-content"
-          fontFamily="Montserrat"
-          dangerouslySetInnerHTML={{ __html: md().render(content) }}
-          mb="md"
-        />
-      </Flex>
-    </Layout>
+          <Text
+              mb="sm"
+              mt={["md", "md", 0, 0]}
+              fontSize={[22, 22, 25, 25]}
+              textAlign="center"
+              fontFamily="MontserratBold"
+          >
+            {post.title}
+          </Text>
+          <Text mb="sm" fontSize={17} fontFamily="OpenSans">
+            {post.publishedAt}
+          </Text>
+          <PortableText value={post.body} components={portableTextComponents} />
+        </Flex>
+      </Layout>
   );
 };
 
 export async function getStaticProps({ params: { slug } }: any) {
-  const postsDirectory = join(process.cwd(), `posts/${slug}.md`);
-  const fileName = fs.readFileSync(postsDirectory, "utf-8");
-  const { data: frontmatter, content } = matter(fileName);
+  const posts = await client.fetch(`*[_type == "post"]`);
 
   return {
     props: {
-      frontmatter,
-      content,
+      post:posts.find((post:any)=>post.slug.current===slug)
     },
   };
 }
 
 export async function getStaticPaths() {
-  const postsDirectory = join(process.cwd(), "posts");
-  const files = fs.readdirSync(postsDirectory);
-
-  const paths = files.map((fileName) => ({
-    params: {
-      slug: fileName.replace(".md", ""),
-    },
-  }));
-
+  const posts = await client.fetch(`*[_type == "post"]`);
+  console.log(posts[0]);
+  const paths = posts.map((post:any)=>({params:{slug:post.slug.current}}))
   return {
     paths,
-    fallback: false,
+    fallback:false
   };
 }
 
-export default NewsContent;
+export default News;

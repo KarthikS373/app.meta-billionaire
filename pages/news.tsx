@@ -4,6 +4,7 @@ import matter from "gray-matter";
 import fs from "fs";
 import { useRouter } from "next/router";
 import { join } from "path";
+import {client, urlFor} from "../lib/client";
 
 const News = ({ posts }: any) => {
   const router = useRouter();
@@ -48,13 +49,13 @@ const News = ({ posts }: any) => {
                 shadow="xl"
                 borderRadius={10}
                 cursor="pointer"
-                onClick={() => router.push("/news/" + postData.slug)}
+                onClick={() => router.push("/news/" + postData.slug.current)}
                 transition="all ease 0.5s"
                 _hover={{ transform: "scale(1.01)" }}
               >
                 <Image
-                  src={"/" + postData.frontmatter.image}
-                  alt={postData.frontmatter.image}
+                  src={urlFor(postData.featuredImage) as any}
+                  alt={postData.title}
                   objectFit="cover"
                   w="100%"
                   h={200}
@@ -67,15 +68,16 @@ const News = ({ posts }: any) => {
                     fontFamily="OpenSans"
                     fontSize={20}
                   >
-                    {postData.frontmatter.title}
+                    {postData.title}
                   </Text>
                   <Text
                     fontFamily="Montserrat"
                     mt="xs"
                     fontSize={15}
                     color="black"
+                    className={'truncate-desc'}
                   >
-                    {postData.frontmatter.description}
+                    {postData.description}
                   </Text>
                 </Flex>
               </Flex>
@@ -88,18 +90,7 @@ const News = ({ posts }: any) => {
 };
 
 export async function getServerSideProps(context: any) {
-  const postsDirectory = join(process.cwd(), "posts");
-  const files = fs.readdirSync(postsDirectory);
-  const posts = files.map((fileName: any) => {
-    const slug = fileName.replace(".md", "");
-    const postsDirectory2 = join(process.cwd(), `posts/${fileName}`);
-    const readFile = fs.readFileSync(postsDirectory2, "utf-8");
-    const { data: frontmatter } = matter(readFile);
-    return {
-      slug,
-      frontmatter,
-    };
-  });
+  const posts = await client.fetch(`*[_type == "post"]`);
 
   return {
     props: {
