@@ -500,7 +500,7 @@ td::after {
   font-size: xx-large;
 }
 #crane-content h1 {
-  white-space: none;
+  white-space: nowrap;
   font-size: 12rem;
 }
 #crane-content p {
@@ -771,4 +771,4 @@ td::after {
     transform: translate(9100%, -15%);
     height: 80%;
   }
-}
+}}
