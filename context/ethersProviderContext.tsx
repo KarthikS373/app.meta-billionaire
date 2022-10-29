@@ -6,7 +6,7 @@ import { providers } from "ethers";
 import { useDisclosure, useToast } from "@chakra-ui/react";
 import axios from "../lib/api";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
-
+import CoinbaseWalletSDK from "@coinbase/wallet-sdk";
 interface AppContext {
   address: string;
   provider: providers.Web3Provider;
@@ -40,6 +40,13 @@ export const EthersProvider = ({ children }: any) => {
   let web3Modal: Web3Modal;
   if (typeof window !== "undefined") {
     const providerOptions = {
+      coinbasewallet: {
+        package: CoinbaseWalletSDK,
+        options: {
+          appName: "Web 3 Modal Demo",
+          infuraId: process.env.INFURA_KEY
+        }
+      },
       walletconnect: {
         display: {
           name: "Mobile",

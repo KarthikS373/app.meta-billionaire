@@ -17,15 +17,13 @@ import prisma from "../lib/prisma";
 import { join } from "path";
 import fs from "fs";
 import matter from "gray-matter";
-import {
-  IoHourglassOutline,
-} from "react-icons/io5";
 import FooterLink from "../components/Footer/FooterLink";
 import { useRouter } from "next/router";
 import StoreItem from "../components/StoreItem/StoreItem";
 import { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import contractABI from "../artifacts/contracts/MarketplaceERC20.sol/Marketplace.json";
+import ShopContent from "../components/Marketplace/HomeShopContent";
 import {client, urlFor} from "../lib/client";
 
 const Home: NextPage = ({ investments, news }: any) => {
@@ -80,7 +78,13 @@ const Home: NextPage = ({ investments, news }: any) => {
 
   return (
     <Layout>
-      <Flex w="100%" flexDir="column" align="center" justify="center" pos="relative">
+      <Flex
+        w="100%"
+        flexDir="column"
+        align="center"
+        justify="center"
+        pos="relative"
+      >
         <Flex
           mb="md"
           w="100%"
@@ -98,12 +102,7 @@ const Home: NextPage = ({ investments, news }: any) => {
             h="100%"
             objectFit="cover"
           />
-          <Text
-            pos="absolute"
-            m="sm"
-            top="0px"
-            color="white"
-          >
+          <Text pos="absolute" m="sm" top="0px" color="white">
             WELCOME TO OUR PLATFORM
           </Text>
         </Flex>
@@ -359,18 +358,9 @@ const Home: NextPage = ({ investments, news }: any) => {
           {/*  })}*/}
           {/*</SimpleGrid>*/}
 
-          <Text
-            fontSize={30}
-            w="100%"
-            textAlign="center"
-            textTransform="uppercase"
-            mt="lg"
-            mb="md"
-          >
-            SHOP
-          </Text>
+          <ShopContent />
 
-          <Flex flexWrap="wrap">
+          {/* <Flex flexWrap="wrap">
           {activeProducts ? (
             activeProducts.length > 0 ? (
               activeProducts.map((product: any, key: number) => {
@@ -398,7 +388,7 @@ const Home: NextPage = ({ investments, news }: any) => {
           ) : (
             <Spinner m="0 auto" size="xl" mt="lg" color="customBlue.500" />
           )}
-          </Flex>
+          </Flex> */}
           <Text
             fontSize={30}
             w="100%"
