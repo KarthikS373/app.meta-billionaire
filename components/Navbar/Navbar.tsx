@@ -40,37 +40,36 @@ const Navbar = () => {
 
   const btnRef = React.useRef();
 
-  const navbar_menu=[
+  const navbar_menu = [
     {
-      name : "Home",
-      link : "/"
+      name: "Home",
+      link: "/",
     },
     {
-      name : "Content",
-      link : "https://content.metabillionaire.com/"
+      name: "Content",
+      link: "https://content.metabillionaire.com/",
     },
     {
-      name : "MarketPlace",
-      link : "/marketplace"
+      name: "MarketPlace",
+      link: "/marketplace",
     },
     {
-      name : "Roadmap",
-      link : "/roadmap"
+      name: "Roadmap",
+      link: "/roadmap",
     },
     {
-      name : "Teams",
-      link : "/teams"
+      name: "Teams",
+      link: "/teams",
     },
     {
-      name : "Map",
-      link : "/map"
+      name: "Map",
+      link: "/map",
     },
     {
-      name : "Faq",
-      link : "/faq"
+      name: "Faq",
+      link: "/faq",
     },
-  ]
-
+  ];
 
   useEffect(() => {
     getEthPriceNow().then((data: any) => {
@@ -81,8 +80,6 @@ const Navbar = () => {
       setGweiPrice(result);
     });
   }, []);
-
-
 
   return (
     <>
@@ -116,7 +113,7 @@ const Navbar = () => {
             bgColor: "customBlue.500",
             borderColor: "customBlue.500",
           }}
-          //@ts-ignore
+          // @ts-ignore
           ref={btnRef}
           variant="outline"
           onClick={onOpen}
@@ -135,23 +132,29 @@ const Navbar = () => {
         <Box
           fontSize={17}
           cursor="pointer"
-          display={['block','block','block','none']}
+          display={["block", "block", "block", "none"]}
         >
           <Link passHref href="https://opensea.io/collection/metabillionaire">
-            <Image src="/opensea.svg" alt="open Sea Logo" w="30px" display="inline" pb="2px"/>
+            <Image
+              src="/opensea.svg"
+              alt="open Sea Logo"
+              w="30px"
+              display="inline"
+              pb="2px"
+            />
           </Link>
         </Box>
         <Box
-            fontSize={17}
-            cursor="pointer"
-            p="2px"
-            mx="xs"
-            bgColor="#2081e2"
-            borderRadius="50%"
-            display={['block','block','block','none']}
+          fontSize={17}
+          cursor="pointer"
+          p="2px"
+          mx="xs"
+          bgColor="#2081e2"
+          borderRadius="50%"
+          display={["block", "block", "block", "none"]}
         >
           <Link passHref href="https://shop.metabillionaire.com/">
-            <Icon as={FaShoppingCart} size="20" m="5px"/>
+            <Icon as={FaShoppingCart} size="20" m="5px" />
           </Link>
         </Box>
         <Flex
@@ -162,13 +165,8 @@ const Navbar = () => {
           ml={[0, 0, 0, "md"]}
         >
           <Menu>
-            <MenuButton as={Box}>
-              Menu ▼
-            </MenuButton>
-            <MenuList
-              bgColor="black"
-              border="0px"
-            >
+            <MenuButton as={Box}>Menu ▼</MenuButton>
+            <MenuList bgColor="black" border="0px">
               {navbar_menu.map((option) => {
                 return (
                   <Box p="3px" key={option.name}>
@@ -181,20 +179,25 @@ const Navbar = () => {
                           color: "customBlue.500",
                         }}
                         mr="sm"
-                      >{option.name}</Text>
+                      >
+                        {option.name}
+                      </Text>
                     </Link>
                   </Box>
-                )})}
+                );
+              })}
             </MenuList>
           </Menu>
           <Spacer />
-          <Box
-            fontSize={17}
-
-            cursor="pointer"
-          >
+          <Box fontSize={17} cursor="pointer">
             <Link passHref href="https://opensea.io/collection/metabillionaire">
-              <Image src="/opensea.svg" alt="open Sea Logo" w="30px" display="inline" pb="2px"/>
+              <Image
+                src="/opensea.svg"
+                alt="open Sea Logo"
+                w="30px"
+                display="inline"
+                pb="2px"
+              />
             </Link>
           </Box>
           <Box
@@ -206,7 +209,7 @@ const Navbar = () => {
             borderRadius="50%"
           >
             <Link passHref href="https://shop.metabillionaire.com/">
-              <Icon as={FaShoppingCart} size="20" m="5px"/>
+              <Icon as={FaShoppingCart} size="20" m="5px" />
             </Link>
           </Box>
           {address ? (
@@ -409,7 +412,8 @@ const Navbar = () => {
                     _hover={{
                       color: "customBlue.500",
                     }}
-                    key={option.name}>
+                    key={option.name}
+                  >
                     <Link passHref href={option.link}>
                       <Text
                         fontSize={17}
@@ -419,10 +423,13 @@ const Navbar = () => {
                           color: "customBlue.500",
                         }}
                         mr="sm"
-                      >{option.name}</Text>
+                      >
+                        {option.name}
+                      </Text>
                     </Link>
                   </Box>
-                )})}
+                );
+              })}
               <Spacer />
               {address ? (
                 <>

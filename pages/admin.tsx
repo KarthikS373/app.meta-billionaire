@@ -60,11 +60,11 @@ const Admin = ({ data, raffleWinner }: any) => {
         flexDir="column"
         m="0 auto"
       >
-        {address ? (
+        {/* {address ? (
           ownerContract ? (
-            address === ownerContract ? (
+            address === ownerContract ? ( */}
               <AdminContent products={data} raffleWinner={raffleWinner} />
-            ) : (
+            {/* ) : (
               <Text
                 color="customBlue.500"
                 w="100%"
@@ -88,7 +88,7 @@ const Admin = ({ data, raffleWinner }: any) => {
           >
             Please connect your wallet
           </Text>
-        )}
+        )} */}
       </Flex>
     </Layout>
   );
@@ -122,3 +122,4 @@ export const getServerSideProps: GetServerSideProps = async () => {
 };
 
 export default Admin;
+  

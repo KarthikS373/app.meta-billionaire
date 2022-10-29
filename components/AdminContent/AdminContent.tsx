@@ -80,6 +80,8 @@ const AdminContent = ({ products, raffleWinner }: any) => {
     }
   }, [provider]);
 
+  console.log(activeProducts);
+
   const sortProduct = [...products].sort(
     (a, b) => Number(a.productId) - Number(b.productId)
   );
@@ -115,7 +117,12 @@ const AdminContent = ({ products, raffleWinner }: any) => {
           <CreateNewProduct setCreateNewMode={setCreateNewMode} />
         ) : (
           <>
-            <Flex w="100%" align="center" justify="center">
+            <Flex
+              w="100%"
+              align="center"
+              justify="center"
+              flexDir={["column", null, "row"]}
+            >
               <Text
                 fontSize={30}
                 fontFamily="MontserratBold"

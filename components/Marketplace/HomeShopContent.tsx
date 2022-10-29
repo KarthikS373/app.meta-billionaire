@@ -46,8 +46,6 @@ const ShopContent = (/*{ raffleWinner }: any*/) => {
     getActiveProduct();
   }, []);
 
-  console.log(activeProducts);
-
   return (
     <Flex
       align="center"
