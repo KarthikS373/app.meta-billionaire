@@ -30,7 +30,7 @@ const AdminStoreList = ({
   return (
     <Flex align="center" mt={20} flexDir={"column"} justify="center" flex={1}>
       <Text
-        fontSize={[17, 17, 20, 20]}
+        fontSize={[20, 20, 30, 40]}
         color="customBlue.500"
         fontFamily="METAB"
       >
@@ -48,7 +48,13 @@ const AdminStoreList = ({
           );
         })}
       </Flex>
-      <Text>Raffle</Text>
+      <Text
+        fontSize={[20, 20, 30, 40]}
+        color="customBlue.500"
+        fontFamily="METAB"
+      >
+        Raffle
+      </Text>
       <Flex mt="md" w="100%" flexDir="column" align="center" justify="center">
         {raffle.map((item: any, key: number) => {
           return (

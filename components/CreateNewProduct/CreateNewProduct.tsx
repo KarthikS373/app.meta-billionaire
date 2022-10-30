@@ -205,11 +205,17 @@ const CreateNewProduct = ({ setCreateNewMode }: CreateNewProductProps) => {
             </Text>
             <Input
               w="100%"
-              value={productStart}
               mt={2}
-              type="number"
+              // value={productStart}
+              // type="number"
+              // required
+              // onChange={(e) => setProductStart(e.target.value)}
+              type="datetime-local"
               required
-              onChange={(e) => setProductStart(e.target.value)}
+              onChange={(e) => {
+                // console.log(Date.parse(e.target.value).toString());
+                setProductStart(Date.parse(e.target.value).toString());
+              }}
               colorScheme="customBlue"
               fontSize={20}
               placeholder="Product start sale time"
