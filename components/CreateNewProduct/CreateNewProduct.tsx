@@ -268,8 +268,8 @@ const CreateNewProduct = ({ setCreateNewMode }: CreateNewProductProps) => {
               fontFamily={"sans-serif"}
               fontSize={["14px", null, "sm"]}
               w="100%"
-              // value={productEnd}
               mt={2}
+              // value={productEnd}
               // type="number"
               // required
               // onChange={(e) => setProductEnd(e.target.value)}
