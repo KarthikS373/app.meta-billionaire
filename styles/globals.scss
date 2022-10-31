@@ -115,6 +115,10 @@ td::after {
     Force table elements to not behave like tables anymore
     Hide table headers (but not display: none; for accessibility)
   */
+  .responsiveTable thead,
+  .responsiveTable tbody {
+    width: 82vw;
+  }
 
   .responsiveTable table,
   .responsiveTable thead,
@@ -133,6 +137,24 @@ td::after {
 
   .responsiveTable tbody tr {
     padding: 0.25em;
+    margin: 2.5rem 0;
+  }
+
+  .responsiveTable tbody tr td:first-child {
+    background-color: gray;
+    border-radius: 15px 15px 0 0;
+  }
+
+  .responsiveTable tbody tr:hover td:first-child {
+    background-color: transparent;
+  }
+
+  .responsiveTable tbody tr td:first-child::before {
+    content: "#";
+  }
+
+  .responsiveTable tbody tr td:nth-child(4)::before {
+    content: "Quantity:  ";
   }
 
   .responsiveTable td.pivoted {
@@ -140,7 +162,7 @@ td::after {
 
     border: none !important;
     position: relative;
-    padding-left: calc(50% + 10px) !important;
+    // padding-left: calc(50% + 10px) !important;
     text-align: left !important;
     white-space: pre-wrap;
     overflow-wrap: break-word;
@@ -510,17 +532,17 @@ td::after {
     font-size: 6rem;
   }
 }
-@media screen and (max-width: 768px){
+@media screen and (max-width: 768px) {
   #crane-content h1 {
     font-size: 2.2rem;
   }
 }
-@media screen and (max-height: 768px){
+@media screen and (max-height: 768px) {
   #crane-content {
     transform: translateY(-30%);
   }
 }
-@media screen and (max-height: 568px){
+@media screen and (max-height: 568px) {
   #crane-content {
     transform: translateY(-50%);
   }

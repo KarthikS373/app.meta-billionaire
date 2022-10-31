@@ -90,14 +90,13 @@ const AdminContent = ({ products, raffleWinner }: any) => {
       }
     };
 
+    manageResize();
     window.addEventListener("resize", manageResize);
 
     return () => {
       window.removeEventListener("resize", manageResize);
     };
   }, []);
-
-  console.log(activeProducts);
 
   const sortProduct = [...products].sort(
     (a, b) => Number(a.productId) - Number(b.productId)
@@ -267,46 +266,30 @@ const AdminContent = ({ products, raffleWinner }: any) => {
               margin: "0",
               padding: "0",
               width: "100%",
-              tableLayout: "fixed",
+              tableLayout: "auto",
             }}
           >
-            <Thead
-              position="sticky"
-              top={0}
-              bgColor="#ffffff"
-              style={
-                isLessThan600
-                  ? {
-                      border: "none",
-                      clip: "rect(0 0 0 0)",
-                      height: "1px",
-                      margin: "-1px",
-                      overflow: "hidden",
-                      padding: "0",
-                      position: "absolute",
-                      width: "1px",
-                    }
-                  : {}
-              }
-            >
-              <Tr>
-                <Th fontFamily="Montserrat" fontSize={15}>
-                  #
-                </Th>
-                <Th fontFamily="Montserrat" fontSize={15}>
-                  Name
-                </Th>
-                <Th fontFamily="Montserrat" fontSize={15}>
-                  Wallet
-                </Th>
-                <Th fontFamily="Montserrat" fontSize={15}>
-                  Quantity
-                </Th>
-                <Th fontFamily="Montserrat" fontSize={15}>
-                  Product
-                </Th>
-              </Tr>
-            </Thead>
+            {!isLessThan600 && (
+              <Thead position="sticky" top={0} bgColor="#ffffff">
+                <Tr>
+                  <Th fontFamily="Montserrat" fontSize={15}>
+                    #
+                  </Th>
+                  <Th fontFamily="Montserrat" fontSize={15}>
+                    Name
+                  </Th>
+                  <Th fontFamily="Montserrat" fontSize={15}>
+                    Wallet
+                  </Th>
+                  <Th fontFamily="Montserrat" fontSize={15}>
+                    Quantity
+                  </Th>
+                  <Th fontFamily="Montserrat" fontSize={15}>
+                    Product
+                  </Th>
+                </Tr>
+              </Thead>
+            )}
             <Tbody fontFamily="Montserrat" bgColor="#f7f7f7">
               {sortProduct.map((x: any, i: number) => {
                 return (
@@ -314,19 +297,14 @@ const AdminContent = ({ products, raffleWinner }: any) => {
                     cursor="pointer"
                     transition="all ease 0.3s"
                     key={i}
-                    _hover={{ bgColor: "customBlue.500", color: "white" }}
-                    style={
-                      isLessThan600
-                        ? {
-                            borderBottom: "3px solid #ddd",
-                            display: "block",
-                            marginBottom: "1.625em",
-                          }
-                        : {}
-                    }
+                    _hover={{
+                      bgColor: "customBlue.500",
+                      color: "white",
+                      borderRadius: "15px",
+                    }}
+                    borderRadius={10}
                   >
-                    {/*! https://codepen.io/AllThingsSmitty/pen/MyqmdM?editors=1100 */}
-                    <Td>{i}</Td>
+                    <Td textAlign={"left"}>{i}</Td>
                     <Td>{x.owner.name}</Td>
                     <Td>{x.authorId}</Td>
                     <Td>{x.quantity}</Td>
