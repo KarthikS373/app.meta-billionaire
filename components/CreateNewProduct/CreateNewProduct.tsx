@@ -11,6 +11,7 @@ import {
   NumberInputStepper,
   NumberIncrementStepper,
   NumberDecrementStepper,
+  Image,
 } from "@chakra-ui/react";
 import { ethers } from "ethers";
 import useEthersProvider from "../../hooks/useEthersProvider";
@@ -22,6 +23,8 @@ interface CreateNewProductProps {
 }
 
 const CreateNewProduct = ({ setCreateNewMode }: CreateNewProductProps) => {
+  const [previewProductImage, setPreviewProductImage] = useState<string>("");
+
   const { provider, chainId } = useEthersProvider();
   const [productName, setProductName] = useState<string>("");
   const [productImage, setProductImage] = useState<string>("");
@@ -94,7 +97,12 @@ const CreateNewProduct = ({ setCreateNewMode }: CreateNewProductProps) => {
 
   return (
     <>
-      <Flex w="100%" align="center" justify="center">
+      <Flex
+        w="100%"
+        align="center"
+        justify="center"
+        flexDir={["column", null, "row"]}
+      >
         <Text
           fontSize={30}
           fontFamily="MontserratBold"
@@ -140,13 +148,15 @@ const CreateNewProduct = ({ setCreateNewMode }: CreateNewProductProps) => {
               Product Name :
             </Text>
             <Input
+              fontFamily={"sans-serif"}
+              fontSize={["14px", null, "sm"]}
               w="100%"
               value={productName}
               mt={2}
               required
               onChange={(e) => setProductName(e.target.value)}
               colorScheme="customBlue"
-              fontSize={20}
+              // fontSize={20}
               placeholder="Product name"
             />
           </Flex>
@@ -154,21 +164,41 @@ const CreateNewProduct = ({ setCreateNewMode }: CreateNewProductProps) => {
           <Flex
             w="100%"
             mt="sm"
-            align="center"
+            // align="center"
+            // flexDir="column"
+            // justify="center"
+            align={["center", "flex-start", "flex-start"]}
             flexDir="column"
             justify="center"
           >
+            {productImage.length > 0 && (
+              <Image
+                src={previewProductImage}
+                alt=""
+                objectFit="cover"
+                w={200}
+                h={200}
+                marginY={3}
+                borderRadius={10}
+                shadow="lg"
+              />
+            )}
             <Text w="100%" fontSize={16} textTransform="uppercase">
               Product Image (URL) :
             </Text>
             <Input
+              fontFamily={"sans-serif"}
+              fontSize={["14px", null, "sm"]}
               w="100%"
               value={productImage}
               mt={2}
               required
-              onChange={(e) => setProductImage(e.target.value)}
+              onChange={(e) => {
+                setPreviewProductImage(e.target.value);
+                setProductImage(e.target.value);
+              }}
               colorScheme="customBlue"
-              fontSize={20}
+              // fontSize={20}
               placeholder="Product image"
             />
           </Flex>
@@ -210,6 +240,9 @@ const CreateNewProduct = ({ setCreateNewMode }: CreateNewProductProps) => {
               // type="number"
               // required
               // onChange={(e) => setProductStart(e.target.value)}
+              // fontSize={20}
+              fontFamily={"sans-serif"}
+              fontSize={["14px", null, "sm"]}
               type="datetime-local"
               required
               onChange={(e) => {
@@ -217,7 +250,6 @@ const CreateNewProduct = ({ setCreateNewMode }: CreateNewProductProps) => {
                 setProductStart(Date.parse(e.target.value).toString());
               }}
               colorScheme="customBlue"
-              fontSize={20}
               placeholder="Product start sale time"
             />
           </Flex>
@@ -233,14 +265,22 @@ const CreateNewProduct = ({ setCreateNewMode }: CreateNewProductProps) => {
               Product Sale End Time (Timestamp) :
             </Text>
             <Input
+              fontFamily={"sans-serif"}
+              fontSize={["14px", null, "sm"]}
               w="100%"
-              value={productEnd}
+              // value={productEnd}
               mt={2}
-              type="number"
+              // type="number"
+              // required
+              // onChange={(e) => setProductEnd(e.target.value)}
+              // fontSize={20}
+              type="datetime-local"
               required
-              onChange={(e) => setProductEnd(e.target.value)}
+              onChange={(e) => {
+                // console.log(Date.parse(e.target.value).toString());
+                setProductEnd(Date.parse(e.target.value).toString());
+              }}
               colorScheme="customBlue"
-              fontSize={20}
               placeholder="Product end sale time"
             />
           </Flex>
@@ -259,10 +299,12 @@ const CreateNewProduct = ({ setCreateNewMode }: CreateNewProductProps) => {
               w="100%"
               isRequired
               colorScheme="customBlue"
-              fontSize={20}
+              // fontSize={20}
               defaultValue={productSpot}
               min={0}
               mt={2}
+              fontFamily={"sans-serif"}
+              fontSize={["14px", null, "sm"]}
               onChange={(e: any) => setProductSpot(e)}
             >
               <NumberInputField />
@@ -284,10 +326,12 @@ const CreateNewProduct = ({ setCreateNewMode }: CreateNewProductProps) => {
               Product Price in MBUC :
             </Text>
             <NumberInput
+              fontFamily={"sans-serif"}
+              fontSize={["14px", null, "sm"]}
               w="100%"
               isRequired
               colorScheme="customBlue"
-              fontSize={20}
+              // fontSize={20}
               defaultValue={productPrice}
               min={0}
               mt={2}
@@ -315,7 +359,9 @@ const CreateNewProduct = ({ setCreateNewMode }: CreateNewProductProps) => {
               w="100%"
               isRequired
               colorScheme="customBlue"
-              fontSize={20}
+              // fontSize={20}
+              fontFamily={"sans-serif"}
+              fontSize={["14px", null, "sm"]}
               defaultValue={productMaxPerUser}
               min={1}
               mt={2}
