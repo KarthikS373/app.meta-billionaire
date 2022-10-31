@@ -16,6 +16,7 @@ import AdminStoreList from "../AdminStoreList/AdminStoreList";
 import { Table, Thead, Tbody, Tr, Th, Td } from "../../components/CustomTable";
 
 const AdminContent = ({ products, raffleWinner }: any) => {
+  const [isLessThan600, setIsLessThan600] = useState(false);
   const [activeProducts, setActiveProducts] = useState<any>(null);
   const [createNewMode, setCreateNewMode] = useState<boolean>(false);
   const [loadingName, setLoadingName] = useState<boolean>(false);
@@ -80,9 +81,68 @@ const AdminContent = ({ products, raffleWinner }: any) => {
     }
   }, [provider]);
 
+  useEffect(() => {
+    const manageResize = () => {
+      if (window.innerWidth < 600) {
+        setIsLessThan600(true);
+      } else {
+        setIsLessThan600(false);
+      }
+    };
+
+    manageResize();
+    window.addEventListener("resize", manageResize);
+
+    return () => {
+      window.removeEventListener("resize", manageResize);
+    };
+  }, []);
+
   const sortProduct = [...products].sort(
     (a, b) => Number(a.productId) - Number(b.productId)
   );
+
+  // Table
+  const ProductColumns = [
+    {
+      key: "id",
+      label: "#",
+      primary: true,
+    },
+    {
+      key: "name",
+      label: "Name",
+    },
+    {
+      key: "wallet",
+      label: "Wallet",
+    },
+    {
+      key: "quantity",
+      label: "Quantity",
+    },
+    {
+      key: "product",
+      label: "Product",
+    },
+  ];
+
+  const ProductData = sortProduct.map((x: any, i: number) => {
+    return {
+      id: i,
+      name: x.owner.name,
+      wallet: x.authorId,
+      quantity: x.qunatity,
+      product:
+        loadingName != null ? (
+          <Spinner m="0 auto" size="md" color="customBlue.500" />
+        ) : productNameArray === null ? (
+          <Text fontSize={12}>Please connect wallet</Text>
+        ) : (
+          productNameArray[x.productId]
+        ),
+    };
+  });
 
   return (
     <Flex
@@ -115,7 +175,12 @@ const AdminContent = ({ products, raffleWinner }: any) => {
           <CreateNewProduct setCreateNewMode={setCreateNewMode} />
         ) : (
           <>
-            <Flex w="100%" align="center" justify="center">
+            <Flex
+              w="100%"
+              align="center"
+              justify="center"
+              flexDir={["column", null, "row"]}
+            >
               <Text
                 fontSize={30}
                 fontFamily="MontserratBold"
@@ -191,26 +256,40 @@ const AdminContent = ({ products, raffleWinner }: any) => {
           shadow="md"
           my="md"
         >
-          <Table variant="simple" colorScheme="customBlue" size="md">
-            <Thead position="sticky" top={0} bgColor="#ffffff">
-              <Tr>
-                <Th fontFamily="Montserrat" fontSize={15}>
-                  #
-                </Th>
-                <Th fontFamily="Montserrat" fontSize={15}>
-                  Name
-                </Th>
-                <Th fontFamily="Montserrat" fontSize={15}>
-                  Wallet
-                </Th>
-                <Th fontFamily="Montserrat" fontSize={15}>
-                  Quantity
-                </Th>
-                <Th fontFamily="Montserrat" fontSize={15}>
-                  Product
-                </Th>
-              </Tr>
-            </Thead>
+          <Table
+            variant="simple"
+            colorScheme="customBlue"
+            size="md"
+            style={{
+              border: "1px solid #ccc",
+              borderCollapse: "collapse",
+              margin: "0",
+              padding: "0",
+              width: "100%",
+              tableLayout: "auto",
+            }}
+          >
+            {!isLessThan600 && (
+              <Thead position="sticky" top={0} bgColor="#ffffff">
+                <Tr>
+                  <Th fontFamily="Montserrat" fontSize={15}>
+                    #
+                  </Th>
+                  <Th fontFamily="Montserrat" fontSize={15}>
+                    Name
+                  </Th>
+                  <Th fontFamily="Montserrat" fontSize={15}>
+                    Wallet
+                  </Th>
+                  <Th fontFamily="Montserrat" fontSize={15}>
+                    Quantity
+                  </Th>
+                  <Th fontFamily="Montserrat" fontSize={15}>
+                    Product
+                  </Th>
+                </Tr>
+              </Thead>
+            )}
             <Tbody fontFamily="Montserrat" bgColor="#f7f7f7">
               {sortProduct.map((x: any, i: number) => {
                 return (
@@ -218,9 +297,14 @@ const AdminContent = ({ products, raffleWinner }: any) => {
                     cursor="pointer"
                     transition="all ease 0.3s"
                     key={i}
-                    _hover={{ bgColor: "customBlue.500", color: "white" }}
+                    _hover={{
+                      bgColor: "customBlue.500",
+                      color: "white",
+                      borderRadius: "15px",
+                    }}
+                    borderRadius={10}
                   >
-                    <Td>{i}</Td>
+                    <Td textAlign={"left"}>{i}</Td>
                     <Td>{x.owner.name}</Td>
                     <Td>{x.authorId}</Td>
                     <Td>{x.quantity}</Td>

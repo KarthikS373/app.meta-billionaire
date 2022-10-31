@@ -53,6 +53,7 @@ const AdminStoreItem = ({ data, getActiveProduct, raffleWinner }: any) => {
   const { provider, chainId } = useEthersProvider();
   const { executeRecaptcha } = useGoogleReCaptcha();
 
+  const [previewProductImage, setPreviewProductImage] = useState<string>("");
   const [productName, setProductName] = useState<string>(data.name);
   const [productImage, setProductImage] = useState<string>(data.image);
   const [productState, setProductState] = useState<boolean>(data.active);
@@ -278,7 +279,7 @@ const AdminStoreItem = ({ data, getActiveProduct, raffleWinner }: any) => {
       {editMode === finalProductId ? (
         <>
           <form style={{ width: "100%" }} onSubmit={updateOne}>
-            <Button
+            {/* <Button
               fontSize={15}
               size="md"
               w="100%"
@@ -291,40 +292,57 @@ const AdminStoreItem = ({ data, getActiveProduct, raffleWinner }: any) => {
               mb="sm"
             >
               Back
-            </Button>
+            </Button> */}
             <Flex w="100%" align="center" flexDir="column" justify="center">
               <Text w="100%" fontSize={16} textTransform="uppercase">
                 Product Name :
               </Text>
               <Input
+                fontFamily={"sans-serif"}
+                fontSize={["14px", null, "sm"]}
                 w="100%"
                 value={productName}
                 mt={2}
                 required
                 onChange={(e) => setProductName(e.target.value)}
                 colorScheme="customBlue"
-                fontSize={20}
+                // fontSize={20}
                 placeholder={data.name}
               />
             </Flex>
             <Flex
               w="100%"
               mt="sm"
-              align="center"
+              align={["center", "flex-start", "flex-start"]}
               flexDir="column"
               justify="center"
             >
+              <Image
+                src={previewProductImage || data.image}
+                alt={data.name}
+                objectFit="cover"
+                w={200}
+                h={200}
+                marginY={3}
+                borderRadius={10}
+                shadow="lg"
+              />
               <Text w="100%" fontSize={16} textTransform="uppercase">
                 Product Image (URL) :
               </Text>
               <Input
+                fontFamily={"sans-serif"}
+                fontSize={["14px", null, "sm"]}
                 w="100%"
                 value={productImage}
                 mt={2}
                 required
-                onChange={(e) => setProductImage(e.target.value)}
+                onChange={(e) => {
+                  setPreviewProductImage(e.target.value);
+                  setProductImage(e.target.value);
+                }}
                 colorScheme="customBlue"
-                fontSize={20}
+                // fontSize={20}
                 placeholder={data.image}
               />
             </Flex>
@@ -359,13 +377,21 @@ const AdminStoreItem = ({ data, getActiveProduct, raffleWinner }: any) => {
               </Text>
               <Input
                 w="100%"
-                value={productStart}
                 mt={2}
-                type="number"
+                // value={productStart}
+                // type="number"
+                // required
+                // onChange={(e) => setProductStart(e.target.value)}
+                type="datetime-local"
                 required
-                onChange={(e) => setProductStart(e.target.value)}
+                onChange={(e) => {
+                  // console.log(Date.parse(e.target.value).toString());
+                  setProductStart(Date.parse(e.target.value).toString());
+                }}
                 colorScheme="customBlue"
-                fontSize={20}
+                // fontSize={20}
+                fontFamily={"sans-serif"}
+                fontSize={["14px", null, "sm"]}
                 placeholder="Product start sale time"
               />
             </Flex>
@@ -381,13 +407,21 @@ const AdminStoreItem = ({ data, getActiveProduct, raffleWinner }: any) => {
               </Text>
               <Input
                 w="100%"
-                value={productEnd}
                 mt={2}
-                type="number"
+                // value={productEnd}
+                // type="number"
+                // required
+                // onChange={(e) => setProductEnd(e.target.value)}
+                type="datetime-local"
                 required
-                onChange={(e) => setProductEnd(e.target.value)}
+                onChange={(e) => {
+                  // console.log(Date.parse(e.target.value).toString());
+                  setProductEnd(Date.parse(e.target.value).toString());
+                }}
                 colorScheme="customBlue"
-                fontSize={20}
+                // fontSize={20}
+                fontFamily={"sans-serif"}
+                fontSize={["14px", null, "sm"]}
                 placeholder="Product end sale time"
               />
             </Flex>
@@ -405,7 +439,9 @@ const AdminStoreItem = ({ data, getActiveProduct, raffleWinner }: any) => {
                 w="100%"
                 isRequired
                 colorScheme="customBlue"
-                fontSize={20}
+                // fontSize={20}
+                fontFamily={"sans-serif"}
+                fontSize={["14px", null, "sm"]}
                 defaultValue={productSpot}
                 min={0}
                 mt={2}
@@ -432,7 +468,9 @@ const AdminStoreItem = ({ data, getActiveProduct, raffleWinner }: any) => {
                 w="100%"
                 isRequired
                 colorScheme="customBlue"
-                fontSize={20}
+                // fontSize={20}
+                fontFamily={"sans-serif"}
+                fontSize={["14px", null, "sm"]}
                 defaultValue={productPrice}
                 min={0}
                 mt={2}
@@ -459,7 +497,9 @@ const AdminStoreItem = ({ data, getActiveProduct, raffleWinner }: any) => {
                 w="100%"
                 isRequired
                 colorScheme="customBlue"
-                fontSize={20}
+                // fontSize={20}
+                fontFamily={"sans-serif"}
+                fontSize={["14px", null, "sm"]}
                 defaultValue={productMaxPerUser}
                 min={1}
                 mt={2}
@@ -477,7 +517,7 @@ const AdminStoreItem = ({ data, getActiveProduct, raffleWinner }: any) => {
               size="md"
               w="100%"
               isLoading={isLoading}
-              borderRadius="full"
+              borderRadius="5"
               colorScheme="customBlue"
               shadow="md"
               mt="sm"
@@ -498,19 +538,21 @@ const AdminStoreItem = ({ data, getActiveProduct, raffleWinner }: any) => {
                 Winner of Raffle :
               </Text>
               <Input
+                fontFamily={"sans-serif"}
+                fontSize={["14px", null, "sm"]}
                 w="100%"
                 value={productWinner}
                 mt={2}
                 onChange={(e) => setProductWinner(e.target.value)}
                 colorScheme="customBlue"
-                fontSize={20}
+                // fontSize={20}
               />
               <Button
                 fontSize={15}
                 size="md"
                 w="100%"
                 isLoading={isLoading}
-                borderRadius="full"
+                borderRadius="5"
                 colorScheme="customBlue"
                 shadow="md"
                 mt="sm"
@@ -521,6 +563,21 @@ const AdminStoreItem = ({ data, getActiveProduct, raffleWinner }: any) => {
                 Update Winner
               </Button>
             </Flex>
+            <Button
+              mt={"md"}
+              fontSize={15}
+              size="md"
+              w="100%"
+              borderRadius="5"
+              // colorScheme="customBlue"
+              shadow="md"
+              textTransform="uppercase"
+              fontFamily="METAB"
+              onClick={() => setEditMode(-1)}
+              mb="sm"
+            >
+              Back
+            </Button>
           </form>
         </>
       ) : (
@@ -545,7 +602,8 @@ const AdminStoreItem = ({ data, getActiveProduct, raffleWinner }: any) => {
             <Text
               fontSize={[17, 17, 20, 20]}
               textAlign="center"
-              fontFamily="METAB"
+              // fontFamily="METAB"
+              fontFamily={"sans-serif"}
             >
               {data.name}
             </Text>

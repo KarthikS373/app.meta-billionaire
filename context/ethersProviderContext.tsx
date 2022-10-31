@@ -44,7 +44,7 @@ export const EthersProvider = ({ children }: any) => {
         package: CoinbaseWalletSDK,
         options: {
           appName: "Web 3 Modal Demo",
-          infuraId: process.env.INFURA_KEY
+          infuraId: process.env.NEXT_PUBLIC_INFURA_API_KEY
         }
       },
       walletconnect: {
@@ -133,7 +133,7 @@ export const EthersProvider = ({ children }: any) => {
         }
       };
     }
-  }, [provider, disconnect]);
+  }, [provider, disconnect, router]);
 
   const getUser = async () => {
     const { data } = await axios.post(`/getUser`, {
@@ -180,13 +180,13 @@ export const EthersProvider = ({ children }: any) => {
     if (secondToken && address) {
       refreshUser();
     }
-  }, [secondToken]);
+  }, [address, secondToken]);
 
   useEffect(() => {
     if (token && address) {
       getUser();
     }
-  }, [token]);
+  }, [address, token]);
 
   const checkUserExist = async () => {
     if (!executeRecaptcha) {
