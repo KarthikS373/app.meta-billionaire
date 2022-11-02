@@ -17,4 +17,5 @@ async function handler(req, res) {
   });
 }
 
-export default protectAPI(handler);
+//! export default protectAPI(handler);
+export default handler;

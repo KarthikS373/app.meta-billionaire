@@ -9,10 +9,7 @@ import {
   Link,
   Icon,
 } from "@chakra-ui/react";
-import {
-  IoLogoDiscord,
-  IoLogoTwitter,
-} from "react-icons/io5";
+import { IoLogoDiscord, IoLogoTwitter } from "react-icons/io5";
 import Layout from "../components/Layout/Layout";
 import useEthersProvider from "../hooks/useEthersProvider";
 import contractABI from "../utils/contract.json";
@@ -22,13 +19,16 @@ import ReplayList from "../components/ReplayList/ReplayList";
 const contractAddress = "0xc6C817cd60E17Fed0AF2A759624e02Dd6c812E64";
 
 const Home = () => {
-  const { address, provider } = useEthersProvider();
+  const {
+    // address,
+    provider,
+  } = useEthersProvider();
   const [isLoading, setIsLoading] = useState(false);
   const [isOwner, setIsOwner] = useState(false);
   const [nftCount, setNftCount] = useState(false);
   const toast = useToast();
 
-  //const address = "0x67fe11c921dc44cf0f68e733833abd5bd07dd077";
+  const address = "0x67fe11c921dc44cf0f68e733833abd5bd07dd077";
 
   useEffect(() => {
     if (address && provider) {
@@ -84,27 +84,27 @@ const Home = () => {
         alignItems={isOwner ? "stretch" : "center"}
         flex={1}
       >
-        {isLoading ? (
+        {/* {isLoading ? (
           <Spinner color="customGray" mt="lg" />
-        ) : isOwner ? (
-          <Flex
-            align="center"
-            justify="flex-start"
-            flexDir="column"
-            width="100%"
-            flex={1}
+        ) : isOwner ? ( */}
+        <Flex
+          align="center"
+          justify="flex-start"
+          flexDir="column"
+          width="100%"
+          flex={1}
+        >
+          <Text
+            fontSize={[25, 25, 30, 30]}
+            letterSpacing={2}
+            fontWeight={600}
+            mt={["sm", "sm", 0, 0]}
           >
-            <Text
-              fontSize={[25, 25, 30, 30]}
-              letterSpacing={2}
-              fontWeight={600}
-              mt={["sm", "sm", 0, 0]}
-            >
-              MEMBER AREA
-            </Text>
-            <ReplayList />
-          </Flex>
-        ) : address ? (
+            MEMBER AREA
+          </Text>
+          <ReplayList />
+        </Flex>
+        {/* ) : address ? (
           <Box textAlign="center" px="md">
             <Text
               fontSize={[25, 25, 30, 30]}
@@ -141,7 +141,7 @@ const Home = () => {
             connect your wallet <br />
             to access the content
           </Text>
-        )}
+        )} */}
       </Flex>
       <Flex
         bgColor="customBlue.500"

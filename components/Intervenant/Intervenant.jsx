@@ -25,6 +25,7 @@ const Intervenant = ({ name, image, job, isModal, speakersCount }) => {
           fontSize={[isModal ? 15 : 20, isModal ? 15 : 20, 20, 20]}
           fontWeight={800}
           ml={["xs", "xs", "sm", "sm"]}
+          color="black"
         >
           {name}
         </Text>
@@ -32,6 +33,7 @@ const Intervenant = ({ name, image, job, isModal, speakersCount }) => {
           fontSize={[isModal ? 12 : 15, isModal ? 12 : 15, 15, 15]}
           fontWeight={400}
           ml={["xs", "xs", "sm", "sm"]}
+          color="black"
         >
           {job}
         </Text>

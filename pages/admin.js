@@ -100,13 +100,13 @@ const Admin = () => {
         flex={1}
         textAlign="center"
       >
-        {isAdmin ? (
+        {/* {isAdmin ? ( */}
           <AdminContent
             userPassword={userPassword}
             videoListData={videoListData}
             fetchAllItem={fetchAllItem}
           />
-        ) : isLoading ? (
+        {/* ) : isLoading ? (
           <Spinner color="customGray" m="0 auto" mt="md" />
         ) : (
           <form onSubmit={handleSubmit}>
@@ -154,7 +154,7 @@ const Admin = () => {
               </Button>
             </Flex>
           </form>
-        )}
+        )} */}
       </Flex>
     </Layout>
   );

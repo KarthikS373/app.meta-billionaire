@@ -92,6 +92,7 @@ const ReplayList = () => {
               mb="sm"
               fontSize={22}
               fontWeight={500}
+              color="black"
             >
               REPLAY PODCASTS
             </Text>
@@ -173,7 +174,12 @@ const ReplayList = () => {
             flexDir="column"
             mt={["sm", "sm", 0, 0]}
           >
-            <Text textTransform="uppercase" fontSize={22} fontWeight={500}>
+            <Text
+              textTransform="uppercase"
+              fontSize={22}
+              fontWeight={500}
+              color="black"
+            >
               Speakers
             </Text>
 
@@ -200,7 +206,13 @@ const ReplayList = () => {
             )}
           </Flex>
         </Flex>
-        <Text my="sm" textTransform="uppercase" fontSize={22} fontWeight={500}>
+        <Text
+          my="sm"
+          textTransform="uppercase"
+          fontSize={22}
+          fontWeight={500}
+          color="black"
+        >
           REPLAY AMA
         </Text>
         <Flex w={["100%", "100%", "60%", "60%"]} flexDir="column">
@@ -218,6 +230,7 @@ const ReplayList = () => {
                       fontWeight={400}
                       mt="md"
                       key={i}
+                      color="black"
                     >
                       List is empty
                     </Text>
@@ -274,7 +287,13 @@ const ReplayList = () => {
             <Spinner color="customGray" m="0 auto" mt="md" />
           )}
         </Flex>
-        <Text my="sm" textTransform="uppercase" fontSize={22} fontWeight={500}>
+        <Text
+          my="sm"
+          textTransform="uppercase"
+          fontSize={22}
+          fontWeight={500}
+          color="black"
+        >
           VALUE
         </Text>
         <Flex w={["100%", "100%", "60%", "60%"]} flexDir="column">
