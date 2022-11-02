@@ -21,7 +21,8 @@
 # misc
 .DS_Store
 *.pem
-
+*.notes.txt
+notes.txt
 *.env
 
 # debug

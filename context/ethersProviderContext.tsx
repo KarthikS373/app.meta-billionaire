@@ -88,7 +88,7 @@ export const EthersProvider = ({ children }: any) => {
     async function () {
       setLoading(true);
 
-      await web3Modal.clearCachedProvider();
+      web3Modal.clearCachedProvider();
       if (provider) {
         if (provider.disconnect && typeof provider.disconnect === "function") {
           await provider.disconnect();
@@ -133,7 +133,7 @@ export const EthersProvider = ({ children }: any) => {
         }
       };
     }
-  }, [provider, disconnect]);
+  }, [provider, disconnect, router]);
 
   const getUser = async () => {
     const { data } = await axios.post(`/getUser`, {

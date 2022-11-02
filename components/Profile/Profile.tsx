@@ -32,20 +32,42 @@ import NFTCard from "./NFTCard";
 interface StatData {
   label: string;
   score: string;
+  content: any | undefined;
 }
 
 const statData: StatData[] = [
   {
-    label: "Current Holdings",
-    score: "999 MBUC",
-  },
-  {
     label: "Staked",
     score: "38",
+    content: <></>,
   },
   {
     label: "Raffle Entered",
     score: "18",
+    content: <></>,
+  },
+  {
+    // label: "Current Holdings",
+    label: '',
+    score: "999 MBUC",
+    content: (
+      <Button
+        fontFamily={"sans-serif"}
+        fontSize={"sm"}
+        p={"0 12px"}
+        w={"min-content"}
+        aria-pressed="true"
+        onClick={(e) => e.preventDefault()}
+        colorScheme="customBlue"
+        color="white"
+        _hover={{
+          bgColor: "customBlue.500",
+          borderColor: "customBlue.500",
+        }}
+      >
+        Claim MBUC
+      </Button>
+    ),
   },
 ];
 
@@ -71,7 +93,7 @@ const UserProfile = ({
               );
             })
           ) : (
-            <NFTCard />
+            <>Loading....</>
           )}
         </SimpleGrid>
       ),
@@ -106,13 +128,14 @@ const UserProfile = ({
       alignItems={"stretch"}
       m="auto"
     >
-      <Flex flexDir={"column"} gap={"md"} m="auto">
+      <Flex flexDir={"column"} gap={"md"} m={isLessThan550 ? "auto" : ""}>
         <Box
           maxW={"320px"}
           minW={isLessThan360 ? "160px" : "320px"}
           alignItems={"flex-start"}
           maxH={"min-content"}
           m="auto"
+          p="auto"
           w={"full"}
           bg={useColorModeValue("white", "gray.800")}
           boxShadow={"2xl"}
@@ -150,6 +173,32 @@ const UserProfile = ({
                 {userId.slice(0, 3)}....{userId.slice(-5)}
               </Text>
             </VStack>
+            <Flex justifyContent={"space-evenly"} mt={4} flex={1}>
+              {/* <Button
+                color="primary"
+                fontFamily={"sans-serif"}
+                fontSize={"sm"}
+                aria-pressed="true"
+                onClick={(e) => e.preventDefault()}
+                colorScheme="customBlue"
+                _hover={{
+                  color: "white",
+                  bgColor: "customBlue.500",
+                  borderColor: "customBlue.500",
+                }}
+              >
+                Claim MBUC
+              </Button> */}
+              <Button
+                color="secondary"
+                fontFamily={"sans-serif"}
+                fontSize={"small"}
+                aria-pressed="true"
+                onClick={(e) => e.preventDefault()}
+              >
+                Edit Profile
+              </Button>
+            </Flex>
             <Text
               pt="16px"
               fontWeight="light"
@@ -254,10 +303,11 @@ const UserProfile = ({
                 pr={1}
                 borderLeft="2px solid"
                 borderLeftColor="customBlue.500"
-                justifyContent="space-between"
+                justifyContent="space-evenly"
               >
                 <Box
                   fontSize="md"
+                  lineHeight={"shorter"}
                   fontWeight="bold"
                   color="customBlue.500"
                   fontFamily={"sans-serif"}
@@ -271,6 +321,7 @@ const UserProfile = ({
                 >
                   {data.label}
                 </Text>
+                {data.content && data.content}
               </Stack>
             ))}
           </SimpleGrid>
