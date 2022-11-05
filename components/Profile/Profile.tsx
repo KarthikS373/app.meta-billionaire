@@ -35,6 +35,7 @@ const UserProfile = ({
   products = [],
   balance = 0,
   stakedNfts = [],
+  holding = "0",
 }) => {
   const TABS = [
     {
@@ -47,7 +48,7 @@ const UserProfile = ({
               return (
                 <NFTCard
                   key={nft.dna}
-                  nftName={nft.name}
+                  nftName={`#${nft.name}`}
                   nftImage={nft.image}
                 />
               );
@@ -68,7 +69,7 @@ const UserProfile = ({
               return (
                 <NFTCard
                   key={nft.dna}
-                  nftName={`#${nft.name}`}
+                  nftName={nft.name}
                   nftImage={nft.image}
                 />
               );
@@ -79,16 +80,6 @@ const UserProfile = ({
         </SimpleGrid>
       ),
     },
-    {
-      id: 3,
-      title: "Title 3",
-      content: <div>Content 3</div>,
-    },
-    {
-      id: 4,
-      title: "Title 4",
-      content: <div>Content 4</div>,
-    },
   ];
 
   const statData = [
@@ -98,13 +89,13 @@ const UserProfile = ({
       content: <></>,
     },
     {
-      label: "Raffle Entered",
-      score: "18",
+      label: "$MBUC Holdings",
+      score: holding,
       content: <></>,
     },
     {
       label: "",
-      score: "999 MBUC",
+      score: "99",
       content: (
         <Button
           fontFamily={"sans-serif"}
@@ -112,7 +103,10 @@ const UserProfile = ({
           p={"0 12px"}
           w={"min-content"}
           aria-pressed="true"
-          onClick={(e) => e.preventDefault()}
+          onClick={(e) => {
+            e.preventDefault();
+            window.open("https://staking.metabillionaire.com/#/staking");
+          }}
           colorScheme="customBlue"
           color="white"
           _hover={{
@@ -120,7 +114,7 @@ const UserProfile = ({
             borderColor: "customBlue.500",
           }}
         >
-          Claim MBUC
+          Claim $MBUC
         </Button>
       ),
     },
@@ -139,12 +133,18 @@ const UserProfile = ({
       alignItems={"stretch"}
       m="auto"
     >
-      <Flex flexDir={"column"} gap={"md"} m={isLessThan550 ? "auto" : ""}>
+      <Flex
+        flexDir={"column"}
+        gap={"md"}
+        m={isLessThan550 ? "auto" : ""}
+        alignItems="flex-start"
+        maxH={"850px"}
+      >
         <Box
           maxW={"320px"}
+          maxH={"720px"}
           minW={isLessThan360 ? "160px" : "320px"}
           alignItems={"flex-start"}
-          maxH={"min-content"}
           m="auto"
           p="auto"
           w={"full"}

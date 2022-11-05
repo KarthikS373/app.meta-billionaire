@@ -5,10 +5,11 @@ import { ethers } from "ethers";
 
 import Layout from "../../components/Layout/Layout";
 import UserProfile from "../../components/Profile/Profile";
+import useEthersProvider from "../../hooks/useEthersProvider";
+
 import StakingContract from "../../utils/ABIs/Staking";
 import ERC721Contract from "../../utils/ABIs/ERC721";
-import { Web3Provider } from "@coinbase/wallet-sdk/dist/provider/Web3Provider";
-import useEthersProvider from "../../hooks/useEthersProvider";
+import HoldingsContract from "../../utils/ABIs/Holdings";
 
 const Post = () => {
   const router = useRouter();
@@ -18,6 +19,7 @@ const Post = () => {
   const [userProducts, setUserProducts] = useState([]);
   const [stakeAmount, setStakeAmount] = useState(0);
   const [stakedNfts, setStakedNfts] = useState([]);
+  const [holdings, setHoldings] = useState("0");
 
   useEffect(() => {
     const web3 = walletProvider;
@@ -74,7 +76,6 @@ const Post = () => {
               });
             }
           }
-
           setUserProducts(nfts);
         } catch (e) {
           console.log(e);
@@ -82,8 +83,35 @@ const Post = () => {
       }
     };
 
-    // fetchUserData();
+    fetchUserData();
   }, [provider, router.query.address]);
+
+  useEffect(() => {
+    const fetchHoldingsData = async () => {
+      const polygonProvider = new ethers.providers.JsonRpcProvider(
+        process.env.NEXT_PUBLIC_POLYGON_API_KEY
+      );
+      const holdingContract = new ethers.Contract(
+        HoldingsContract.address,
+        HoldingsContract.abi,
+        polygonProvider
+      );
+
+      try {
+        const val = (
+          await holdingContract.balanceOf(router.query.address)
+        ).toString();
+        console.log();
+        setHoldings((val / 10 ** 18).toFixed(2));
+      } catch (e) {
+        console.log(e);
+      }
+    };
+
+    if (router.query.address) {
+      fetchHoldingsData();
+    }
+  }, [router.query.address]);
 
   useEffect(() => {
     let walletAddress = router.query.address;
@@ -93,7 +121,7 @@ const Post = () => {
         StakingContract.abi,
         provider
       );
-        const tokens = [];
+      const tokens = [];
 
       try {
         let amount = (
@@ -133,6 +161,7 @@ const Post = () => {
               throw new Error(err.message);
             });
 
+          console.log(meta);
           if (meta.image.startsWith("ipfs://")) {
             const image = `https://ipfs.io/ipfs/${
               meta.image.split("ipfs://")[1]
@@ -141,12 +170,11 @@ const Post = () => {
             nfts.push({
               dna: meta.dna,
               name: meta.name.split(" ")[1],
-              image: image || "",
+              image: image,
             });
           }
+          setStakedNfts(nfts);
         }
-
-        setStakedNfts(nfts);
       } catch (e) {
         console.log(e);
       }
@@ -155,14 +183,13 @@ const Post = () => {
     FetchStakingData();
   }, [provider, router.query.address]);
 
-  useEffect(() => {}, []);
-
   return (
     <Layout>
       <UserProfile
         userId={router.query.address?.toString()}
         // @ts-ignore
         products={userProducts}
+        holding={holdings}
         balance={stakeAmount}
         stakedNfts={stakedNfts}
       />
