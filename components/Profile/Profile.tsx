@@ -29,52 +29,12 @@ import {
 } from "@chakra-ui/react";
 import NFTCard from "./NFTCard";
 
-interface StatData {
-  label: string;
-  score: string;
-  content: any | undefined;
-}
-
-const statData: StatData[] = [
-  {
-    label: "Staked",
-    score: "38",
-    content: <></>,
-  },
-  {
-    label: "Raffle Entered",
-    score: "18",
-    content: <></>,
-  },
-  {
-    // label: "Current Holdings",
-    label: '',
-    score: "999 MBUC",
-    content: (
-      <Button
-        fontFamily={"sans-serif"}
-        fontSize={"sm"}
-        p={"0 12px"}
-        w={"min-content"}
-        aria-pressed="true"
-        onClick={(e) => e.preventDefault()}
-        colorScheme="customBlue"
-        color="white"
-        _hover={{
-          bgColor: "customBlue.500",
-          borderColor: "customBlue.500",
-        }}
-      >
-        Claim MBUC
-      </Button>
-    ),
-  },
-];
-
 const UserProfile = ({
   username = "cyberpunk373",
   userId = "",
   products = [],
+  balance = 0,
+  stakedNfts = [],
 }) => {
   const TABS = [
     {
@@ -84,6 +44,27 @@ const UserProfile = ({
         <SimpleGrid columns={[1, null, 3]} spacing={10}>
           {products.length != 0 ? (
             products.map((nft: any) => {
+              return (
+                <NFTCard
+                  key={nft.dna}
+                  nftName={nft.name}
+                  nftImage={nft.image}
+                />
+              );
+            })
+          ) : (
+            <>Loading....</>
+          )}
+        </SimpleGrid>
+      ),
+    },
+    {
+      id: 2,
+      title: "Staked NFT",
+      content: (
+        <SimpleGrid columns={[1, null, 3]} spacing={10}>
+          {stakedNfts.length != 0 ? (
+            stakedNfts.map((nft: any) => {
               return (
                 <NFTCard
                   key={nft.dna}
@@ -99,11 +80,6 @@ const UserProfile = ({
       ),
     },
     {
-      id: 2,
-      title: "Title 2",
-      content: <div>Content 2</div>,
-    },
-    {
       id: 3,
       title: "Title 3",
       content: <div>Content 3</div>,
@@ -112,6 +88,41 @@ const UserProfile = ({
       id: 4,
       title: "Title 4",
       content: <div>Content 4</div>,
+    },
+  ];
+
+  const statData = [
+    {
+      label: "Staked",
+      score: `${balance} NFT`,
+      content: <></>,
+    },
+    {
+      label: "Raffle Entered",
+      score: "18",
+      content: <></>,
+    },
+    {
+      label: "",
+      score: "999 MBUC",
+      content: (
+        <Button
+          fontFamily={"sans-serif"}
+          fontSize={"sm"}
+          p={"0 12px"}
+          w={"min-content"}
+          aria-pressed="true"
+          onClick={(e) => e.preventDefault()}
+          colorScheme="customBlue"
+          color="white"
+          _hover={{
+            bgColor: "customBlue.500",
+            borderColor: "customBlue.500",
+          }}
+        >
+          Claim MBUC
+        </Button>
+      ),
     },
   ];
 

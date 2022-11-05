@@ -1,76 +1,171 @@
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { ethers } from "ethers";
 
 import Layout from "../../components/Layout/Layout";
 import UserProfile from "../../components/Profile/Profile";
+import StakingContract from "../../utils/ABIs/Staking";
+import ERC721Contract from "../../utils/ABIs/ERC721";
+import { Web3Provider } from "@coinbase/wallet-sdk/dist/provider/Web3Provider";
+import useEthersProvider from "../../hooks/useEthersProvider";
 
 const Post = () => {
   const router = useRouter();
-  const { address } = router.query;
+  const { provider: walletProvider } = useEthersProvider();
 
+  const [provider, setProvider] = useState();
   const [userProducts, setUserProducts] = useState([]);
+  const [stakeAmount, setStakeAmount] = useState(0);
+  const [stakedNfts, setStakedNfts] = useState([]);
+
+  useEffect(() => {
+    const web3 = walletProvider;
+    if (!web3)
+      if (window && window.ethereum) {
+        const web3 = new ethers.providers.Web3Provider(window.ethereum);
+        // @ts-ignore
+        setProvider(web3);
+      }
+  }, [walletProvider]);
 
   useEffect(() => {
     const fetchUserData = async () => {
-      axios
-        .request({
-          method: "GET",
-          url: `https://deep-index.moralis.io/api/v2/${address}/nft`,
-          params: { chain: "eth", format: "decimal" },
-          headers: { accept: "application/json", "X-API-Key": "test" },
-        })
-        .then(async (response) => {
-          let filteredData = response.data.result.filter((nft: any) => {
-            if (nft.name == null) {
-              const metadata = JSON.parse(nft.metadata);
-              return metadata["name"].toLowerCase().includes("metabillionaire");
+      if (provider && router.query.address) {
+        try {
+          const ERC721 = new ethers.Contract(
+            ERC721Contract.address,
+            ERC721Contract.abi,
+            provider
+          );
+
+          let walletAddress = router.query.address;
+          let balance = (await ERC721.balanceOf(walletAddress)).toString();
+
+          let nfts: any = [];
+          let tokens = [];
+
+          for (let i = 0; i < balance; i++) {
+            tokens.push(
+              (await ERC721.tokenOfOwnerByIndex(walletAddress, i)).toString()
+            );
+          }
+
+          for (let i = 0; i < tokens.length; i++) {
+            const ipfs = await ERC721.tokenURI(tokens[i]);
+
+            const meta = await fetch(
+              `https://ipfs.io/ipfs/${ipfs.split("ipfs://")[1]}`
+            )
+              .then((response) => response.json())
+              .catch((err) => {
+                throw new Error(err.message);
+              });
+
+            if (meta.image.startsWith("ipfs://")) {
+              const image = `https://ipfs.io/ipfs/${
+                meta.image.split("ipfs://")[1]
+              }`;
+
+              nfts.push({
+                dna: i,
+                name: tokens[i],
+                image: image || "",
+              });
             }
+          }
 
-            return nft.name?.includes("MetaBillionaire") || nft.symbol == "MB";
-          });
-
-          const promises = filteredData.map(async (nft: any) => {
-            let meta;
-
-            if (nft.token_uri) {
-              meta = await fetch(
-                `https://ipfs.io/ipfs/${
-                  nft.token_uri.split("https://ipfs.moralis.io:2053/ipfs/")[1]
-                }`
-              )
-                .then((responseData) => responseData.json())
-                .catch((err) => console.log(err));
-
-              if (meta.image.startsWith("ipfs://"))
-                meta.image = `https://ipfs.io/ipfs/${
-                  meta.image.split("ipfs://")[1]
-                }`;
-              console.log(meta!.image);
-            }
-            return {
-              dna: meta.dna,
-              name: nft.token_id,
-              image: meta.image,
-            };
-          });
-
-          const originalData = await Promise.all(promises);
-
-          // @ts-ignore
-          setUserProducts(originalData);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+          setUserProducts(nfts);
+        } catch (e) {
+          console.log(e);
+        }
+      }
     };
 
-    fetchUserData();
-  }, [address]);
+    // fetchUserData();
+  }, [provider, router.query.address]);
+
+  useEffect(() => {
+    let walletAddress = router.query.address;
+    const FetchStakingData = async () => {
+      const stakingContract = new ethers.Contract(
+        StakingContract.address,
+        StakingContract.abi,
+        provider
+      );
+        const tokens = [];
+
+      try {
+        let amount = (
+          await stakingContract.depositedTokenAmounts(walletAddress)
+        ).toString();
+
+        setStakeAmount(amount);
+
+        for (let i = 0; i < amount; ++i) {
+          const stakedNft = (
+            await stakingContract.depositedTokenIds(walletAddress, i)
+          ).toString();
+          tokens.push(stakedNft);
+        }
+      } catch (e) {
+        console.log(e);
+      }
+
+      // Fetching staked NFTs
+      try {
+        const ERC721 = new ethers.Contract(
+          ERC721Contract.address,
+          ERC721Contract.abi,
+          provider
+        );
+
+        let nfts: any = [];
+
+        for (let i = 0; i < tokens.length; i++) {
+          const ipfs = await ERC721.tokenURI(tokens[i]);
+
+          const meta = await fetch(
+            `https://ipfs.io/ipfs/${ipfs.split("ipfs://")[1]}`
+          )
+            .then((response) => response.json())
+            .catch((err) => {
+              throw new Error(err.message);
+            });
+
+          if (meta.image.startsWith("ipfs://")) {
+            const image = `https://ipfs.io/ipfs/${
+              meta.image.split("ipfs://")[1]
+            }`;
+
+            nfts.push({
+              dna: meta.dna,
+              name: meta.name.split(" ")[1],
+              image: image || "",
+            });
+          }
+        }
+
+        setStakedNfts(nfts);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+
+    FetchStakingData();
+  }, [provider, router.query.address]);
+
+  useEffect(() => {}, []);
 
   return (
     <Layout>
-      <UserProfile userId={address?.toString()} products={userProducts} />
+      <UserProfile
+        userId={router.query.address?.toString()}
+        // @ts-ignore
+        products={userProducts}
+        balance={stakeAmount}
+        stakedNfts={stakedNfts}
+      />
     </Layout>
   );
 };
