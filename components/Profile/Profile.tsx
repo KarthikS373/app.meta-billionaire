@@ -36,48 +36,69 @@ const UserProfile = ({
   balance = 0,
   stakedNfts = [],
   holding = "0",
+  claims = "0",
 }) => {
   const TABS = [
     {
       id: 1,
       title: "NFTs",
       content: (
-        <SimpleGrid columns={[1, null, 3]} spacing={10}>
+        <>
           {products.length != 0 ? (
-            products.map((nft: any) => {
-              return (
-                <NFTCard
-                  key={nft.dna}
-                  nftName={`#${nft.name}`}
-                  nftImage={nft.image}
-                />
-              );
-            })
+            <SimpleGrid columns={[1, null, 3]} spacing={10}>
+              {products.map((nft: any) => {
+                return (
+                  <NFTCard
+                    key={nft.dna}
+                    nftName={`#${nft.name}`}
+                    nftImage={nft.image}
+                  />
+                );
+              })}
+            </SimpleGrid>
           ) : (
-            <>Loading....</>
+            <Box
+              w={"100%"}
+              h={["10vh", null, "40vh"]}
+              display={"flex"}
+              justifyContent={"center"}
+              alignItems={"center"}
+            >
+              <>Loading....</>
+            </Box>
           )}
-        </SimpleGrid>
+        </>
       ),
     },
     {
       id: 2,
       title: "Staked NFT",
       content: (
-        <SimpleGrid columns={[1, null, 3]} spacing={10}>
+        <>
           {stakedNfts.length != 0 ? (
-            stakedNfts.map((nft: any) => {
-              return (
-                <NFTCard
-                  key={nft.dna}
-                  nftName={nft.name}
-                  nftImage={nft.image}
-                />
-              );
-            })
+            <SimpleGrid columns={[1, null, 3]} spacing={10}>
+              {stakedNfts.map((nft: any) => {
+                return (
+                  <NFTCard
+                    key={nft.dna}
+                    nftName={nft.name}
+                    nftImage={nft.image}
+                  />
+                );
+              })}
+            </SimpleGrid>
           ) : (
-            <>Loading....</>
+            <Box
+              w={"100%"}
+              h={["10vh", null, "40vh"]}
+              display={"flex"}
+              justifyContent={"center"}
+              alignItems={"center"}
+            >
+              <>Loading....</>
+            </Box>
           )}
-        </SimpleGrid>
+        </>
       ),
     },
   ];
@@ -95,7 +116,7 @@ const UserProfile = ({
     },
     {
       label: "",
-      score: "99",
+      score: claims,
       content: (
         <Button
           fontFamily={"sans-serif"}

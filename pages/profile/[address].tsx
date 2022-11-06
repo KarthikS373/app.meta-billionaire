@@ -10,6 +10,7 @@ import useEthersProvider from "../../hooks/useEthersProvider";
 import StakingContract from "../../utils/ABIs/Staking";
 import ERC721Contract from "../../utils/ABIs/ERC721";
 import HoldingsContract from "../../utils/ABIs/Holdings";
+import ClaimContract from "../../utils/ABIs/Claim";
 
 const Post = () => {
   const router = useRouter();
@@ -20,6 +21,11 @@ const Post = () => {
   const [stakeAmount, setStakeAmount] = useState(0);
   const [stakedNfts, setStakedNfts] = useState([]);
   const [holdings, setHoldings] = useState("0");
+  const [claims, setClaims] = useState("0");
+
+  const polygonProvider = new ethers.providers.JsonRpcProvider(
+    process.env.NEXT_PUBLIC_POLYGON_API_KEY
+  );
 
   useEffect(() => {
     const web3 = walletProvider;
@@ -29,6 +35,15 @@ const Post = () => {
         // @ts-ignore
         setProvider(web3);
       }
+
+    if (!web3) {
+      setProvider(
+        // @ts-ignore
+        new ethers.providers.JsonRpcProvider(
+          process.env.NEXT_PUBLIC_INFURA_MAIN_NET
+        )
+      );
+    }
   }, [walletProvider]);
 
   useEffect(() => {
@@ -83,35 +98,47 @@ const Post = () => {
       }
     };
 
-    fetchUserData();
+    // fetchUserData();
   }, [provider, router.query.address]);
 
   useEffect(() => {
     const fetchHoldingsData = async () => {
-      const polygonProvider = new ethers.providers.JsonRpcProvider(
-        process.env.NEXT_PUBLIC_POLYGON_API_KEY
-      );
-      const holdingContract = new ethers.Contract(
-        HoldingsContract.address,
-        HoldingsContract.abi,
-        polygonProvider
-      );
+      if (router.query.address) {
+        const holdingContract = new ethers.Contract(
+          HoldingsContract.address,
+          HoldingsContract.abi,
+          polygonProvider
+        );
 
-      try {
-        const val = (
-          await holdingContract.balanceOf(router.query.address)
-        ).toString();
-        console.log();
-        setHoldings((val / 10 ** 18).toFixed(2));
-      } catch (e) {
-        console.log(e);
+        const claimingContract = new ethers.Contract(
+          ClaimContract.address,
+          ClaimContract.abi,
+          polygonProvider
+        );
+
+        try {
+          const holding = (
+            await holdingContract.balanceOf(router.query.address)
+          ).toString();
+          console.log();
+          setHoldings((holding / 10 ** 18).toFixed(2));
+        } catch (e) {
+          console.log(e);
+        }
+
+        try {
+          const claiming = (
+            await claimingContract.claimableAmounts(router.query.address)
+          ).toString();
+          setClaims((claiming / 10 ** 18).toFixed(2));
+        } catch (e) {
+          console.log(e);
+        }
       }
     };
 
-    if (router.query.address) {
-      fetchHoldingsData();
-    }
-  }, [router.query.address]);
+    fetchHoldingsData();
+  }, [polygonProvider, router.query.address]);
 
   useEffect(() => {
     let walletAddress = router.query.address;
@@ -127,6 +154,8 @@ const Post = () => {
         let amount = (
           await stakingContract.depositedTokenAmounts(walletAddress)
         ).toString();
+
+        console.log(amount);
 
         setStakeAmount(amount);
 
@@ -158,6 +187,7 @@ const Post = () => {
           )
             .then((response) => response.json())
             .catch((err) => {
+              console.log(err);
               throw new Error(err.message);
             });
 
@@ -180,7 +210,7 @@ const Post = () => {
       }
     };
 
-    FetchStakingData();
+    // FetchStakingData();
   }, [provider, router.query.address]);
 
   return (
@@ -192,6 +222,7 @@ const Post = () => {
         holding={holdings}
         balance={stakeAmount}
         stakedNfts={stakedNfts}
+        claims={claims}
       />
     </Layout>
   );
