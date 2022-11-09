@@ -104,7 +104,7 @@ const Post = () => {
       if (router.query && router.query.address) {
         axios
           .get(
-            `http://localhost:3000/api/fetchNickname?address=${router.query.address}`
+            `https://app.metabillionaire.com/api/fetchNickname?address=${router.query.address}`
           )
           .then((res) => {
             if (res && res.data && res.data.data && res.data.data[0]) {
