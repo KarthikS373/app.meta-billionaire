@@ -156,7 +156,7 @@ const Post = () => {
       setProvider(
         // @ts-ignore
         new ethers.providers.JsonRpcProvider(
-          process.env.NEXT_PUBLIC_INFURA_MAINNET
+          process.env.NEXT_PUBLIC_INFURA_MAIN_NET
         )
       );
     }
