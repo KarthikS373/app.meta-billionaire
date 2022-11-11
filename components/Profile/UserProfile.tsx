@@ -99,7 +99,7 @@ const UserProfile = ({
               textAlign={"center"}
               alignItems={"center"}
             >
-              You don&apos;t have any MBUC in your wallet
+              You don&apos;t have any MBs in your wallet
             </Box>
           )}
         </>

@@ -59,7 +59,7 @@ const Post = () => {
     }
 
     setRenderFlag(flag);
-  }, [connectedAddress, router.query.address, toast]);
+  }, [connectedAddress, router, router.query.address, toast]);
 
   useEffect(() => {
     if (router.query.address != connectedAddress) {

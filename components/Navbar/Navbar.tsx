@@ -69,10 +69,10 @@ const Navbar = () => {
       name: "Faq",
       link: "/faq",
     },
-    {
-      name: "Search profile",
-      link: "/profile",
-    },
+    // {
+    //   name: "Search profile",
+    //   link: "/profile",
+    // },
     {
       name: address ? "My Profile" : "",
       link: `/profile/${address}`,
