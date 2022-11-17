@@ -22,6 +22,8 @@ import {
 import { useToast } from "@chakra-ui/react";
 import useEthersProvider from "../../hooks/useEthersProvider";
 import { uploadProfilePic } from "../../lib/firebase";
+import { useSession, signIn } from "next-auth/react";
+import axios from "axios";
 
 interface UserInterface {
   image: File;
@@ -29,6 +31,7 @@ interface UserInterface {
   email: string;
   about: string;
   website: string;
+  discord: string;
 }
 
 const user = {} as UserInterface;
@@ -187,6 +190,42 @@ const Form2 = () => {
 
 const Form3 = () => {
   const [website, setWebsite] = useState("");
+  // const [twitter, setTwitter] = useState("");
+  const [discord, setDiscord] = useState("");
+  const session = useSession();
+
+  useEffect(() => {
+    if (user.discord) {
+      setDiscord(user.discord);
+    }
+  }, []);
+
+  useEffect(() => {
+    // @ts-ignore
+    if (session && session.data && session.data.user && session.data.user.id!) {
+      // @ts-ignore
+      user.discord = session.data.user.id!;
+      // @ts-ignore
+      setDiscord(session.data.user.id!);
+
+      console.log(user.discord);
+
+      // const TOKEN = ;
+      console.log("------------------------------------------------------");
+      axios
+        .get(`https://discord.com/api/v10/users/${user.discord}`, {
+          headers: {
+            Authorization: `Bearer ${user.discord}`,
+            // "User-Agent": ,  
+            // "Access-Control-Allow-Origin": "*",
+          },
+        })
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => console.log(err));
+    }
+  }, [session]);
 
   return (
     <>
@@ -216,7 +255,7 @@ const Form3 = () => {
               fontSize={["16px", null, "18px"]}
               fontFamily={"sans-serif"}
             >
-              http://
+              https://
             </InputLeftAddon>
             <Input
               fontSize={["16px", null, "18px"]}
@@ -228,7 +267,55 @@ const Form3 = () => {
             />
           </InputGroup>
         </FormControl>
-        <FormControl>
+        {/* <FormControl as={GridItem} colSpan={[3, 2]}>
+          <FormLabel
+            fontSize="sm"
+            fontWeight="md"
+            color="gray.700"
+            _dark={{
+              color: "gray.50",
+            }}
+          >
+            Twitter
+          </FormLabel>
+          <InputGroup size="sm">
+            <InputLeftAddon
+              bg="gray.50"
+              _dark={{
+                bg: "gray.800",
+              }}
+              color="gray.500"
+              rounded="md"
+              fontSize={["16px", null, "18px"]}
+              fontFamily={"sans-serif"}
+            >
+              https://twitter.com/
+            </InputLeftAddon>
+            <Input
+              fontSize={["16px", null, "18px"]}
+              fontFamily={"sans-serif"}
+              type="tel"
+              placeholder="username"
+              focusBorderColor="brand.400"
+              rounded="md"
+            />
+          </InputGroup>
+        </FormControl> */}
+        <FormControl as={GridItem} colSpan={[3, 2]}>
+          {discord && (
+            <a href={`https://discord.com/users/${discord!}`}>{discord}</a>
+          )}
+          <Button
+            fontSize={["16px", null, "18px"]}
+            fontFamily={"sans-serif"}
+            w={"100%"}
+            onClick={() => signIn()}
+            mt={"5%"}
+          >
+            Connect Discord
+          </Button>
+        </FormControl>
+        {/* <FormControl>
           <Button
             fontSize={["16px", null, "18px"]}
             fontFamily={"sans-serif"}
@@ -245,7 +332,7 @@ const Form3 = () => {
           >
             Connect Discord
           </Button>
-        </FormControl>
+        </FormControl> */}
       </SimpleGrid>
     </>
   );

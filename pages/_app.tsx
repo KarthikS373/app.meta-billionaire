@@ -1,6 +1,7 @@
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import customTheme from "../utils/theme";
 import { EthersProvider } from "../context/ethersProviderContext";
+import { SessionProvider } from "next-auth/react";
 import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
 import "../styles/globals.scss";
 import "../fonts/font.css";
@@ -14,7 +15,9 @@ function MyApp({ Component, pageProps }: any) {
     >
       <EthersProvider>
         <ChakraProvider theme={theme}>
-          <Component {...pageProps} />
+          <SessionProvider>
+            <Component {...pageProps} />
+          </SessionProvider>
         </ChakraProvider>
       </EthersProvider>
     </GoogleReCaptchaProvider>
