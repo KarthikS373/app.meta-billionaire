@@ -21,9 +21,14 @@ import {
 } from "@chakra-ui/react";
 import { useToast } from "@chakra-ui/react";
 import useEthersProvider from "../../hooks/useEthersProvider";
-import { uploadProfilePic } from "../../lib/firebase";
+import {
+  fetchFirestoreData,
+  uploadData,
+  uploadProfilePic,
+} from "../../lib/firebase";
 import { useSession, signIn } from "next-auth/react";
-import axios from "axios";
+import { fetchData } from "next-auth/client/_utils";
+import { useRouter } from "next/router";
 
 interface UserInterface {
   image: File;
@@ -32,15 +37,13 @@ interface UserInterface {
   about: string;
   website: string;
   discord: string;
+  url: string;
 }
 
 const user = {} as UserInterface;
 
-const Form1 = () => {
+const Form1 = ({ dp, setDp, email, setEmail }) => {
   const { address } = useEthersProvider();
-
-  const [dp, setDp] = useState<string | undefined>(undefined);
-  const [email, setEmail] = useState<string | undefined>(undefined);
 
   useEffect(() => {
     if (user.preview) {
@@ -90,7 +93,7 @@ const Form1 = () => {
       <Flex wrap={"wrap"} alignItems="center" justifyContent={"center"}>
         <div
           style={{
-            backgroundImage: `url(${dp})`,
+            backgroundImage: `url(${dp || ""})`,
             objectFit: "contain",
             backgroundSize: "250px 250px",
             height: dp ? "250px" : "0",
@@ -113,6 +116,7 @@ const Form1 = () => {
             type={"file"}
             accept="image/*"
             onChange={showPreview}
+            fontFamily={"sans-serif"}
             fontFamily={"sans-serif"}
             fontSize={["16px", null, "18px"]}
           />
@@ -139,14 +143,12 @@ const Form1 = () => {
   );
 };
 
-const Form2 = () => {
-  const [about, setAbout] = useState("");
-
+const Form2 = ({ about, setAbout }) => {
   useEffect(() => {
     if (user.about) {
       setAbout(user.about);
     }
-  }, []);
+  }, [user.about]);
 
   const handleBio = (event: { target: { value: string } }) => {
     setAbout(event.target.value);
@@ -188,15 +190,15 @@ const Form2 = () => {
   );
 };
 
-const Form3 = () => {
-  const [website, setWebsite] = useState("");
-  // const [twitter, setTwitter] = useState("");
-  const [discord, setDiscord] = useState("");
+const Form3 = ({ website, setWebsite, discord, setDiscord }) => {
   const session = useSession();
 
   useEffect(() => {
     if (user.discord) {
       setDiscord(user.discord);
+    }
+    if (user.website) {
+      setWebsite(user.website);
     }
   }, []);
 
@@ -207,25 +209,14 @@ const Form3 = () => {
       user.discord = session.data.user.id!;
       // @ts-ignore
       setDiscord(session.data.user.id!);
-
-      console.log(user.discord);
-
-      // const TOKEN = ;
-      console.log("------------------------------------------------------");
-      axios
-        .get(`https://discord.com/api/v10/users/${user.discord}`, {
-          headers: {
-            Authorization: `Bearer ${user.discord}`,
-            // "User-Agent": ,  
-            // "Access-Control-Allow-Origin": "*",
-          },
-        })
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((err) => console.log(err));
     }
   }, [session]);
+
+  const handleWebsite = (event: any) => {
+    setWebsite(event.target.value);
+
+    user.website = event.target.value;
+  };
 
   return (
     <>
@@ -258,6 +249,8 @@ const Form3 = () => {
               https://
             </InputLeftAddon>
             <Input
+              onChange={handleWebsite}
+              value={website}
               fontSize={["16px", null, "18px"]}
               fontFamily={"sans-serif"}
               type="tel"
@@ -268,40 +261,6 @@ const Form3 = () => {
           </InputGroup>
         </FormControl>
         {/* <FormControl as={GridItem} colSpan={[3, 2]}>
-          <FormLabel
-            fontSize="sm"
-            fontWeight="md"
-            color="gray.700"
-            _dark={{
-              color: "gray.50",
-            }}
-          >
-            Twitter
-          </FormLabel>
-          <InputGroup size="sm">
-            <InputLeftAddon
-              bg="gray.50"
-              _dark={{
-                bg: "gray.800",
-              }}
-              color="gray.500"
-              rounded="md"
-              fontSize={["16px", null, "18px"]}
-              fontFamily={"sans-serif"}
-            >
-              https://twitter.com/
-            </InputLeftAddon>
-            <Input
-              fontSize={["16px", null, "18px"]}
-              fontFamily={"sans-serif"}
-              type="tel"
-              placeholder="username"
-              focusBorderColor="brand.400"
-              rounded="md"
-            />
-          </InputGroup>
-        </FormControl> */}
-        <FormControl as={GridItem} colSpan={[3, 2]}>
           {discord && (
             <a href={`https://discord.com/users/${discord!}`}>{discord}</a>
           )}
@@ -314,24 +273,6 @@ const Form3 = () => {
           >
             Connect Discord
           </Button>
-        </FormControl>
-        {/* <FormControl>
-          <Button
-            fontSize={["16px", null, "18px"]}
-            fontFamily={"sans-serif"}
-            w={"105%"}
-            mt={"5%"}
-          >
-            Connect Twitter
-          </Button>
-          <Button
-            fontSize={["16px", null, "18px"]}
-            fontFamily={"sans-serif"}
-            w={"105%"}
-            mt={"5%"}
-          >
-            Connect Discord
-          </Button>
         </FormControl> */}
       </SimpleGrid>
     </>
@@ -339,10 +280,21 @@ const Form3 = () => {
 };
 
 const ProfileEdit = () => {
+  const [about, setAbout] = useState<string | undefined>("");
+
+  const [dp, setDp] = useState<string | undefined>(undefined);
+  const [email, setEmail] = useState<string | undefined>(undefined);
+
+  const [website, setWebsite] = useState("");
+  // const [twitter, setTwitter] = useState("");
+  const [discord, setDiscord] = useState("");
+
   const { address } = useEthersProvider();
   const toast = useToast();
   const [step, setStep] = useState(1);
   const [progress, setProgress] = useState(33.33);
+
+  const router = useRouter();
 
   const handleSubmit = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
@@ -352,6 +304,16 @@ const ProfileEdit = () => {
       if (address) {
         const url = await uploadProfilePic(user.image, address.toString());
         console.log("URL : " + url);
+        user.url = url.toString();
+
+        uploadData(address, {
+          id: address,
+          about: user.about || "",
+          email: user.email || "",
+          discord: user.discord || "",
+          website: user.website || "",
+          dp: url.toString() || "",
+        });
       }
       toast({
         title: "Profile updated",
@@ -360,6 +322,10 @@ const ProfileEdit = () => {
         duration: 3000,
         isClosable: true,
       });
+
+      setTimeout(() => {
+        router.replace(`./${address}`);
+      }, 1000);
     } catch (e) {
       toast({
         title: "An error occured",
@@ -369,6 +335,26 @@ const ProfileEdit = () => {
       });
     }
   };
+
+  useEffect(() => {
+    const getData = async () => {
+      fetchFirestoreData(address).then((res) => {
+        console.log(res);
+        setEmail(res.email || "");
+        setDp(res.dp || "");
+        setWebsite(res.website || "");
+        setAbout(res.about || "");
+        setDiscord(res.discord || "");
+
+        user.email = res.email || "";
+        user.about = res.about || "";
+        user.discord = res.discord || "";
+        user.website = res.website || "";
+      });
+    };
+
+    if (address) getData();
+  }, [address]);
 
   return (
     <>
@@ -389,7 +375,18 @@ const ProfileEdit = () => {
           mx="5%"
           isAnimated
         ></Progress>
-        {step === 1 ? <Form1 /> : step === 2 ? <Form2 /> : <Form3 />}
+        {step === 1 ? (
+          <Form1 dp={dp} setDp={setDp} email={email} setEmail={setEmail} />
+        ) : step === 2 ? (
+          <Form2 about={about} setAbout={setAbout} />
+        ) : (
+          <Form3
+            website={website}
+            discord={discord}
+            setDiscord={setDiscord}
+            setWebsite={setWebsite}
+          />
+        )}
         <ButtonGroup mt="5%" w="100%">
           <Flex w="100%" justifyContent="space-between">
             <Flex>

@@ -1,7 +1,7 @@
 import NextAuth from "next-auth";
-import TwitterProvider from "next-auth/providers/twitter";
+// import TwitterProvider from "next-auth/providers/twitter";
 import DiscordProvider from "next-auth/providers/discord";
-import { getSession } from "next-auth/react";
+// import { getSession } from "next-auth/react";
 
 export default NextAuth({
   providers: [
@@ -22,7 +22,6 @@ export default NextAuth({
   callbacks: {
     // @ts-ignore
     session: async (res: { session: { user: { id: any } }; token: string }) => {
-      console.log(res);
       res.session.user.id = res.token.sub;
       return Promise.resolve(res.session);
     },

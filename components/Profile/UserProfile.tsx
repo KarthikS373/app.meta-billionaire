@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { BsTwitter } from "react-icons/bs";
 import { FaDiscord } from "react-icons/fa";
+import { CgWebsite } from "react-icons/cg";
 import NextImage from "next/image";
 import {
   Heading,
@@ -32,6 +33,8 @@ import {
 
 import NFTCard from "./NFTCard";
 import backdrop from "../../assets/backdrop.jpeg";
+import { fetchFirestoreData } from "../../lib/firebase";
+import { useRouter } from "next/router";
 
 const UserProfile = ({
   username = "cyberpunk373",
@@ -46,19 +49,46 @@ const UserProfile = ({
   visitor = false,
 }) => {
   const [profileImage, setProfileImage] = useState("");
+  const [user, setUser] = useState({
+    about: "",
+    email: "",
+    discord: null,
+    website: "",
+    twitter: null,
+  });
 
   useEffect(() => {
-    if (products.length > 0) {
-      // @ts-ignore
-      setProfileImage(products[0].image);
-    } else if (stakedNfts.length > 0) {
-      // @ts-ignore
-      setProfileImage(stakedNfts[0].image);
-    } else {
-      // @ts-ignore
-      setProfileImage(null);
+    fetchFirestoreData(userId)
+      .then((res) => {
+        if (res) {
+          setProfileImage(res.dp);
+          setUser({
+            about: res.about,
+            email: res.email,
+            // discord: res.discord,
+            discord: null,
+            website: res.website,
+            twitter: null,
+          });
+        }
+      })
+      .catch((err) => console.log(err));
+  }, [userId]);
+
+  useEffect(() => {
+    if (!profileImage) {
+      if (products.length > 0) {
+        // @ts-ignore
+        setProfileImage(products[0].image);
+      } else if (stakedNfts.length > 0) {
+        // @ts-ignore
+        setProfileImage(stakedNfts[0].image);
+      } else {
+        // @ts-ignore
+        setProfileImage(null);
+      }
     }
-  }, [products, stakedNfts]);
+  }, [products, profileImage, stakedNfts]);
 
   const TABS = [
     {
@@ -209,6 +239,8 @@ const UserProfile = ({
   const [isLessThan360] = useMediaQuery("(max-width: 360px)");
   const [isLessThan768] = useMediaQuery("(max-width: 768px)");
 
+  const router = useRouter();
+
   return (
     <Flex
       py={6}
@@ -224,11 +256,11 @@ const UserProfile = ({
         m={isLessThan550 ? "auto" : ""}
         alignItems="flex-start"
         // maxH={"850px"}
-        maxH={"320px"}
+        maxH={"80vh"}
       >
         <Box
           maxW={"320px"}
-          maxH={"720px"}
+          maxH={"80vh"}
           minW={isLessThan360 ? "160px" : "320px"}
           alignItems={"flex-start"}
           m="auto"
@@ -269,6 +301,16 @@ const UserProfile = ({
               </Text>
             </VStack>
             <Flex justifyContent={"space-evenly"} mt={4} flex={1}>
+              {!visitor && (
+                <Button
+                  fontSize={["12px", null, "14px"]}
+                  mb={"12%"}
+                  fontFamily={"sans-serif"}
+                  onClick={() => router.push("./edit")}
+                >
+                  Edit profile
+                </Button>
+              )}
               {/* <Button
                 color="primary"
                 fontFamily={"sans-serif"}
@@ -298,66 +340,87 @@ const UserProfile = ({
               pt="16px"
               fontWeight="light"
               fontFamily="sans-serif"
-              textAlign="justify"
+              textAlign={user.about.length > 40 ? "justify" : "center"}
             >
-              {/* Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsum,
-              ipsa. Repudiandae similique numquam saepe aliquam provident veniam
-              eveniet, quis cupiditate vitae minima unde nobis. Ut sit totam,
-              vitae saepe voluptas voluptates unde. */}
+              {user.about && user.about}
             </Text>
 
-            {/* <VStack mt={8} direction={"row"} spacing={4}>
-              <Button
-                flex={1}
-                py={1.5}
-                px={14}
-                fontSize={"sm"}
-                rounded={"full"}
-                bg={"blue.400"}
-                color={"white"}
-                boxShadow={
-                  "0px 1px 25px -5px rgb(66 153 225 / 48%), 0 10px 10px -5px rgb(66 153 225 / 43%)"
-                }
-                _hover={{
-                  bg: "blue.500",
-                }}
-                _focus={{
-                  bg: "blue.500",
-                }}
-              >
-                <Icon as={BsTwitter} boxSize={10} />
-                &nbsp;
-                <Text
-                  fontFamily={"sans-serif"}
-                  fontWeight="200"
-                  fontSize={"22"}
-                  pt="1"
+            <VStack mt={8} direction={"row"} spacing={4}>
+              {user.twitter && (
+                <Button
+                  flex={1}
+                  py={1}
+                  px={14}
+                  fontSize={"sm"}
+                  rounded={"full"}
+                  bg={"blue.400"}
+                  color={"white"}
+                  boxShadow={
+                    "0px 1px 25px -5px rgb(66 153 225 / 48%), 0 10px 10px -5px rgb(66 153 225 / 43%)"
+                  }
+                  _hover={{
+                    bg: "blue.500",
+                  }}
+                  _focus={{
+                    bg: "blue.500",
+                  }}
                 >
-                  Twitter
-                </Text>
-              </Button>
-              <Button
-                flex={1}
-                py={1.5}
-                px={14}
-                fontSize={"md"}
-                rounded={"full"}
-                _focus={{
-                  bg: "gray.200",
-                }}
-              >
-                <Icon as={FaDiscord} boxSize={10} />
-                &nbsp;
-                <Text
-                  fontFamily={"sans-serif"}
-                  fontWeight="200"
-                  fontSize={"22"}
-                  pt="1"
+                  <Icon as={BsTwitter} boxSize={8} />
+                  &nbsp;
+                  <Text
+                    fontFamily={"sans-serif"}
+                    fontWeight="200"
+                    fontSize={"22"}
+                    pt="1"
+                  >
+                    Twitter
+                  </Text>
+                </Button>
+              )}
+              {user.discord && (
+                <Button
+                  flex={1}
+                  py={1}
+                  px={14}
+                  fontSize={"md"}
+                  rounded={"full"}
+                  onClick={() =>
+                    window.open(`https://discordapp.com/users/${user.discord}`)
+                  }
+                  _focus={{
+                    bg: "gray.200",
+                  }}
                 >
-                  Discord
-                </Text>
-              </Button>
-            </VStack> */}
+                  <Icon as={FaDiscord} boxSize={8} />
+                  &nbsp;
+                  <Text
+                    fontFamily={"sans-serif"}
+                    fontWeight="200"
+                    fontSize={"22"}
+                    pt="1"
+                  >
+                    Discord
+                  </Text>
+                </Button>
+              )}
+              {user.website && (
+                <div>
+                  <Icon as={CgWebsite} boxSize={5} mr={5} />
+                  <a
+                    href={
+                      user.website.startsWith("http")
+                        ? user.website
+                        : `https://${user.website}`
+                    }
+                    target="__blank"
+                  >
+                    <Text color="customBlue.500" display={"inline"}>
+                      {user.website.slice(0, 10)}...
+                    </Text>
+                  </a>
+                </div>
+              )}
+            </VStack>
           </Box>
         </Box>
         {/* <Button
