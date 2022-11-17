@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Progress,
   Box,
@@ -10,13 +10,11 @@ import {
   GridItem,
   FormLabel,
   Input,
-  Select,
   SimpleGrid,
   InputLeftAddon,
   InputGroup,
   Textarea,
   FormHelperText,
-  InputRightElement,
   Text,
 } from "@chakra-ui/react";
 import { useToast } from "@chakra-ui/react";
@@ -26,8 +24,6 @@ import {
   uploadData,
   uploadProfilePic,
 } from "../../lib/firebase";
-import { useSession, signIn } from "next-auth/react";
-import { fetchData } from "next-auth/client/_utils";
 import { useRouter } from "next/router";
 
 interface UserInterface {
@@ -191,7 +187,6 @@ const Form2 = ({ about, setAbout }) => {
 };
 
 const Form3 = ({ website, setWebsite, discord, setDiscord }) => {
-  const session = useSession();
 
   useEffect(() => {
     if (user.discord) {
@@ -202,15 +197,15 @@ const Form3 = ({ website, setWebsite, discord, setDiscord }) => {
     }
   }, []);
 
-  useEffect(() => {
-    // @ts-ignore
-    if (session && session.data && session.data.user && session.data.user.id!) {
-      // @ts-ignore
-      user.discord = session.data.user.id!;
-      // @ts-ignore
-      setDiscord(session.data.user.id!);
-    }
-  }, [session]);
+  // useEffect(() => {
+  //   // @ts-ignore
+  //   if (session && session.data && session.data.user && session.data.user.id!) {
+  //     // @ts-ignore
+  //     user.discord = session.data.user.id!;
+  //     // @ts-ignore
+  //     setDiscord(session.data.user.id!);
+  //   }
+  // }, [session]);
 
   const handleWebsite = (event: any) => {
     setWebsite(event.target.value);

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { BsTwitter } from "react-icons/bs";
 import { FaDiscord } from "react-icons/fa";
 import { CgWebsite } from "react-icons/cg";
@@ -13,8 +13,6 @@ import {
   Button,
   useColorModeValue,
   Icon,
-  HStack,
-  Image,
   VStack,
   useMediaQuery,
   SimpleGrid,
