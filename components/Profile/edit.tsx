@@ -38,7 +38,16 @@ interface UserInterface {
 
 const user = {} as UserInterface;
 
-const Form1 = ({ dp, setDp, email, setEmail }) => {
+const Form1 = ({
+  dp = "",
+  setDp = (e: any) => {
+    console.log(e);
+  },
+  email = "",
+  setEmail = (e: any) => {
+    console.log(e);
+  },
+}) => {
   const { address } = useEthersProvider();
 
   useEffect(() => {
@@ -49,7 +58,7 @@ const Form1 = ({ dp, setDp, email, setEmail }) => {
     if (user.email) {
       setEmail(user.email);
     }
-  }, []);
+  }, [setDp, setEmail]);
 
   const showPreview = (event: any) => {
     if (event.target.files[0]) {
@@ -113,7 +122,6 @@ const Form1 = ({ dp, setDp, email, setEmail }) => {
             accept="image/*"
             onChange={showPreview}
             fontFamily={"sans-serif"}
-            fontFamily={"sans-serif"}
             fontSize={["16px", null, "18px"]}
           />
         </FormControl>
@@ -139,12 +147,17 @@ const Form1 = ({ dp, setDp, email, setEmail }) => {
   );
 };
 
-const Form2 = ({ about, setAbout }) => {
+const Form2 = ({
+  about = "",
+  setAbout = (e: any) => {
+    console.log(e);
+  },
+}) => {
   useEffect(() => {
     if (user.about) {
       setAbout(user.about);
     }
-  }, [user.about]);
+  }, [setAbout]);
 
   const handleBio = (event: { target: { value: string } }) => {
     setAbout(event.target.value);
@@ -186,8 +199,16 @@ const Form2 = ({ about, setAbout }) => {
   );
 };
 
-const Form3 = ({ website, setWebsite, discord, setDiscord }) => {
-
+const Form3 = ({
+  website = "",
+  setWebsite = (e: any) => {
+    console.log(e);
+  },
+  discord = "",
+  setDiscord = (e: any) => {
+    console.log(e);
+  },
+}) => {
   useEffect(() => {
     if (user.discord) {
       setDiscord(user.discord);
@@ -195,7 +216,7 @@ const Form3 = ({ website, setWebsite, discord, setDiscord }) => {
     if (user.website) {
       setWebsite(user.website);
     }
-  }, []);
+  }, [setDiscord, setWebsite]);
 
   // useEffect(() => {
   //   // @ts-ignore
@@ -333,19 +354,22 @@ const ProfileEdit = () => {
 
   useEffect(() => {
     const getData = async () => {
-      fetchFirestoreData(address).then((res) => {
-        console.log(res);
-        setEmail(res.email || "");
-        setDp(res.dp || "");
-        setWebsite(res.website || "");
-        setAbout(res.about || "");
-        setDiscord(res.discord || "");
+      fetchFirestoreData(address)
+        .then((res) => {
+          if (res) {
+            setEmail(res.email || "");
+            setDp(res.dp || "");
+            setWebsite(res.website || "");
+            setAbout(res.about || "");
+            setDiscord(res.discord || "");
 
-        user.email = res.email || "";
-        user.about = res.about || "";
-        user.discord = res.discord || "";
-        user.website = res.website || "";
-      });
+            user.email = res.email || "";
+            user.about = res.about || "";
+            user.discord = res.discord || "";
+            user.website = res.website || "";
+          }
+        })
+        .catch((err) => console.warn(err));
     };
 
     if (address) getData();
