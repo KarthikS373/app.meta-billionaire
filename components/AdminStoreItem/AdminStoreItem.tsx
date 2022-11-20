@@ -386,7 +386,7 @@ const AdminStoreItem = ({ data, getActiveProduct, raffleWinner }: any) => {
                 required
                 onChange={(e) => {
                   // console.log(Date.parse(e.target.value).toString());
-                  setProductStart(Date.parse(e.target.value).toString());
+                  setProductStart(Date.parse(e.target.value).toString().slice(0,10));
                 }}
                 colorScheme="customBlue"
                 // fontSize={20}
@@ -416,7 +416,7 @@ const AdminStoreItem = ({ data, getActiveProduct, raffleWinner }: any) => {
                 required
                 onChange={(e) => {
                   // console.log(Date.parse(e.target.value).toString());
-                  setProductEnd(Date.parse(e.target.value).toString());
+                  setProductEnd(Date.parse(e.target.value).toString().slice(0,10));
                 }}
                 colorScheme="customBlue"
                 // fontSize={20}
