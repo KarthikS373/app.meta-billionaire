@@ -33,6 +33,7 @@ interface UserInterface {
   about: string;
   website: string;
   discord: string;
+  twitter: string;
   url: string;
 }
 
@@ -208,6 +209,10 @@ const Form3 = ({
   setDiscord = (e: any) => {
     console.log(e);
   },
+  twitter = "",
+  setTwitter = (e: any) => {
+    console.log(e);
+  },
 }) => {
   useEffect(() => {
     if (user.discord) {
@@ -232,6 +237,18 @@ const Form3 = ({
     setWebsite(event.target.value);
 
     user.website = event.target.value;
+  };
+
+  const handleDiscord = (event: any) => {
+    setDiscord(event.target.value);
+
+    user.discord = event.target.value;
+  };
+
+  const handleTwitter = (event: any) => {
+    setTwitter(event.target.value);
+
+    user.twitter = event.target.value;
   };
 
   return (
@@ -276,6 +293,54 @@ const Form3 = ({
             />
           </InputGroup>
         </FormControl>
+        <FormControl as={GridItem} colSpan={[3, 2]}>
+          <FormLabel
+            fontSize="sm"
+            fontWeight="md"
+            color="gray.700"
+            _dark={{
+              color: "gray.50",
+            }}
+          >
+            Discord
+          </FormLabel>
+          <InputGroup size="sm">
+            <Input
+              onChange={handleDiscord}
+              value={discord}
+              fontSize={["16px", null, "18px"]}
+              fontFamily={"sans-serif"}
+              type="tel"
+              placeholder="username#tag"
+              focusBorderColor="brand.400"
+              rounded="md"
+            />
+          </InputGroup>
+        </FormControl>
+        <FormControl as={GridItem} colSpan={[3, 2]}>
+          <FormLabel
+            fontSize="sm"
+            fontWeight="md"
+            color="gray.700"
+            _dark={{
+              color: "gray.50",
+            }}
+          >
+            Twitter
+          </FormLabel>
+          <InputGroup size="sm">
+            <Input
+              onChange={handleTwitter}
+              value={twitter}
+              fontSize={["16px", null, "18px"]}
+              fontFamily={"sans-serif"}
+              type="tel"
+              placeholder="username"
+              focusBorderColor="brand.400"
+              rounded="md"
+            />
+          </InputGroup>
+        </FormControl>
         {/* <FormControl as={GridItem} colSpan={[3, 2]}>
           {discord && (
             <a href={`https://discord.com/users/${discord!}`}>{discord}</a>
@@ -302,7 +367,7 @@ const ProfileEdit = () => {
   const [email, setEmail] = useState<string | undefined>(undefined);
 
   const [website, setWebsite] = useState("");
-  // const [twitter, setTwitter] = useState("");
+  const [twitter, setTwitter] = useState("");
   const [discord, setDiscord] = useState("");
 
   const { address } = useEthersProvider();
@@ -327,6 +392,7 @@ const ProfileEdit = () => {
           about: user.about || "",
           email: user.email || "",
           discord: user.discord || "",
+          twitter: user.twitter || "",
           website: user.website || "",
           dp: url.toString() || "",
         });
@@ -362,11 +428,13 @@ const ProfileEdit = () => {
             setWebsite(res.website || "");
             setAbout(res.about || "");
             setDiscord(res.discord || "");
+            setTwitter(res.twitter || "");
 
             user.email = res.email || "";
             user.about = res.about || "";
             user.discord = res.discord || "";
             user.website = res.website || "";
+            user.twitter = res.twitter || "";
           }
         })
         .catch((err) => console.warn(err));
@@ -402,8 +470,10 @@ const ProfileEdit = () => {
           <Form3
             website={website}
             discord={discord}
+            twitter={twitter}
             setDiscord={setDiscord}
             setWebsite={setWebsite}
+            setTwitter={setTwitter}
           />
         )}
         <ButtonGroup mt="5%" w="100%">

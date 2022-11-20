@@ -27,6 +27,7 @@ import {
   AccordionIcon,
   AccordionPanel,
   Spinner,
+  useToast,
 } from "@chakra-ui/react";
 
 import NFTCard from "./NFTCard";
@@ -50,9 +51,9 @@ const UserProfile = ({
   const [user, setUser] = useState({
     about: "",
     email: "",
-    discord: null,
+    discord: "",
     website: "",
-    twitter: null,
+    twitter: "",
   });
 
   useEffect(() => {
@@ -63,10 +64,9 @@ const UserProfile = ({
           setUser({
             about: res.about,
             email: res.email,
-            // discord: res.discord,
-            discord: null,
+            discord: res.discord,
             website: res.website,
-            twitter: null,
+            twitter: res.twitter,
           });
         }
       })
@@ -238,6 +238,7 @@ const UserProfile = ({
   const [isLessThan768] = useMediaQuery("(max-width: 768px)");
 
   const router = useRouter();
+  const toast = useToast();
 
   return (
     <Flex
@@ -344,7 +345,7 @@ const UserProfile = ({
             </Text>
 
             <VStack mt={8} direction={"row"} spacing={4}>
-              {user.twitter && (
+              {user.twitter && user.twitter.length > 0 && (
                 <Button
                   flex={1}
                   py={1}
@@ -353,6 +354,9 @@ const UserProfile = ({
                   rounded={"full"}
                   bg={"blue.400"}
                   color={"white"}
+                  onClick={() => {
+                    window.open(`https://twitter.com/${user.twitter}`);
+                  }}
                   boxShadow={
                     "0px 1px 25px -5px rgb(66 153 225 / 48%), 0 10px 10px -5px rgb(66 153 225 / 43%)"
                   }
@@ -375,16 +379,28 @@ const UserProfile = ({
                   </Text>
                 </Button>
               )}
-              {user.discord && (
+              {user.discord && user.discord.length > 0 && (
                 <Button
                   flex={1}
                   py={1}
                   px={14}
-                  fontSize={"md"}
+                  fontSize={"sm"}
                   rounded={"full"}
-                  onClick={() =>
-                    window.open(`https://discordapp.com/users/${user.discord}`)
-                  }
+                  maxW={"218.42px "}
+                  onClick={() => {
+                    //   window.open(`https://discordapp.com/users/${user.discord}`)
+                    navigator.clipboard.writeText(
+                      (user.discord || "").toString()
+                    );
+
+                    toast({
+                      title: "",
+                      description: "Discord username copied to clipboard",
+                      status: "info",
+                      duration: 3000,
+                      isClosable: true,
+                    });
+                  }}
                   _focus={{
                     bg: "gray.200",
                   }}
@@ -401,7 +417,7 @@ const UserProfile = ({
                   </Text>
                 </Button>
               )}
-              {user.website && (
+              {/* {user.website && user.website.length > 0 && (
                 <div>
                   <Icon as={CgWebsite} boxSize={5} mr={5} />
                   <a
@@ -417,7 +433,7 @@ const UserProfile = ({
                     </Text>
                   </a>
                 </div>
-              )}
+              )} */}
             </VStack>
           </Box>
         </Box>
