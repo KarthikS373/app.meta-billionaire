@@ -1,4 +1,4 @@
-import { Flex, Spacer, Spinner, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, Spacer, Spinner, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import Layout from "../components/Layout/Layout";
 import StoreItem from "../components/StoreItem/StoreItem";
@@ -7,10 +7,12 @@ import { ethers } from "ethers";
 import RaffleItem from "../components/RaffleItem/RaffleItem";
 import { GetServerSideProps } from "next";
 import prisma from "../lib/prisma";
+import { useRouter } from "next/router";
 
 const Marketplace = ({ raffleWinner }: any) => {
   const [activeProducts, setActiveProducts] = useState<any>(null);
   const [activeRaffle, setActiveRaffle] = useState<any>(null);
+  const router = useRouter();
 
   const getActiveProduct = async () => {
     const provider = new ethers.providers.JsonRpcProvider(
@@ -65,34 +67,34 @@ const Marketplace = ({ raffleWinner }: any) => {
             MARKETPLACE
           </Text>
         </Flex>
-        <Flex flexWrap="wrap" >
-        {activeProducts ? (
-          activeProducts.length > 0 ? (
-            activeProducts.map((product: any, key: number) => {
-              return (
-                <StoreItem
-                  key={key}
-                  data={product}
-                  getActiveProduct={getActiveProduct}
-                />
-              );
-            })
+        <Flex flexWrap="wrap">
+          {activeProducts ? (
+            activeProducts.length > 0 ? (
+              activeProducts.map((product: any, key: number) => {
+                return (
+                  <StoreItem
+                    key={key}
+                    data={product}
+                    getActiveProduct={getActiveProduct}
+                  />
+                );
+              })
+            ) : (
+              <Flex align="center" justify="center" flex={1}>
+                <Text
+                  fontSize={25}
+                  fontFamily="MontserratBold"
+                  color="customBlue.500"
+                  textAlign="center"
+                >
+                  There is no active product
+                  <br /> on Marketplace actually
+                </Text>
+              </Flex>
+            )
           ) : (
-            <Flex align="center" justify="center" flex={1}>
-              <Text
-                fontSize={25}
-                fontFamily="MontserratBold"
-                color="customBlue.500"
-                textAlign="center"
-              >
-                There is no active product
-                <br /> on Marketplace actually
-              </Text>
-            </Flex>
-          )
-        ) : (
-          <Spinner m="0 auto" size="xl" mt="lg" color="customBlue.500" />
-        )}
+            <Spinner m="0 auto" size="xl" mt="lg" color="customBlue.500" />
+          )}
         </Flex>
         <Flex align="center" justify="center" my="md" flexDir="column">
           <Text fontSize={35} color="black">
@@ -130,6 +132,23 @@ const Marketplace = ({ raffleWinner }: any) => {
           )}
         </Flex>
       </Flex>
+      <Box textAlign={"center"}>
+        <Button
+          fontSize={[15, 15, 17, 17]}
+          px="md"
+          py={6}
+          borderRadius="full"
+          colorScheme="customBlue"
+          shadow="lg"
+          fontFamily="MontserratBold"
+          onClick={() => {
+            router.push("/submissions");
+          }}
+          mr="sm"
+        >
+          Submit your Product
+        </Button>
+      </Box>
     </Layout>
   );
 };
