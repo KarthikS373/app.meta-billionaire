@@ -50,8 +50,10 @@ export const uploadSubmissions = async (userId: any, data: SubmissionData) => {
   data.id = uuid;
   data.status = "Pending";
 
+  const dbRef = doc(db, `Submissions/${userId}/`);
   const collectionRef = collection(db, `Submissions/${userId}/submission/`);
 
+  setDoc(dbRef, { exist: true });
   addDoc(collectionRef, data);
 };
 
@@ -61,4 +63,13 @@ export const fetchSubmissions = async (userId: any) => {
   const snapshot = await getDocs(collectionRef);
 
   return snapshot;
+};
+
+export const fetchAllSubmissions = async () => {
+  const response: Array<any> = [];
+
+  const primeCollectionRef = collection(db, `Submissions`);
+  const primeSnapshot = await getDocs(primeCollectionRef);
+
+  return primeSnapshot;
 };

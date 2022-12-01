@@ -14,6 +14,7 @@ import { useEffect, useState } from "react";
 import CreateNewProduct from "../CreateNewProduct/CreateNewProduct";
 import AdminStoreList from "../AdminStoreList/AdminStoreList";
 import { Table, Thead, Tbody, Tr, Th, Td } from "../../components/CustomTable";
+import UserSubmissionTable from "../AdminStoreItem/UserSubmissionTable";
 
 const AdminContent = ({ products, raffleWinner }: any) => {
   const [isLessThan600, setIsLessThan600] = useState(false);
@@ -325,6 +326,7 @@ const AdminContent = ({ products, raffleWinner }: any) => {
           </Table>
         </TableContainer>
       </Flex>
+      <UserSubmissionTable />
     </Flex>
   );
 };
