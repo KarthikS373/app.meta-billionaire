@@ -33,6 +33,7 @@ interface Submission {
   quantity: number;
   price: number;
   id: string;
+  color: string;
 }
 
 const CreateNewSubmission = () => {
@@ -53,29 +54,59 @@ const CreateNewSubmission = () => {
   const [viewSubmissionMode, setViewSubmissionMode] = useState<boolean>(false);
   const [submissions, setSubmissions] = useState<Array<Submission>>([]);
 
-  useEffect(() => {
+  const fetchUserSubmission = () => {
+    setSubmissions([]);
+
     fetchSubmissions(address)
       .then((docs) => {
+        const temporarySubmissions: Array<Submission> = [];
+
         const subs = docs.forEach((doc) => {
           if (doc.exists()) {
             const sub = doc.data();
             sub.docId = doc.id;
 
+            let color = "white";
+
+            console.log(sub.status)
+            switch (sub.status) {
+              case "approved":
+                color = "green";
+                break;
+              case "pending":
+                color = "yellow";
+                break;
+              case "rejected":
+                color = "red";
+                break;
+
+              default:
+                color = "white";
+                break;
+            }
+
             const data = {
-              status: "approved", // "pending", "rejected"
+              status: sub.status || "pending",
               product: sub.product || "",
               quantity: sub.quantity || "",
               price: sub.price || "",
               id: sub.id || sub.docId,
+              color: color,
             };
 
-            setSubmissions((prev) => [...prev, data]);
+            temporarySubmissions.push(data);
           }
         });
+
+        setSubmissions([...temporarySubmissions]);
       })
       .catch((err) => {
         console.log(err);
       });
+  };
+
+  useEffect(() => {
+    fetchUserSubmission();
   }, [address]);
 
   const submitNew = async (e: any) => {
@@ -93,6 +124,7 @@ const CreateNewSubmission = () => {
         price: productPrice || 0,
         maxPerUser: productMaxPerUser || 0,
         id: "",
+        status: "",
       };
 
       uploadSubmissions(address, data);
@@ -104,6 +136,15 @@ const CreateNewSubmission = () => {
         duration: 9000,
         isClosable: true,
       });
+
+      setProductName("");
+      setProductImage("");
+      setProductDesc("");
+      setProductSpot(1);
+      setProductMaxPerUser(undefined);
+      setProductPrice(undefined);
+
+      fetchUserSubmission();
     } catch (err) {
       setIsLoading(false);
       toast({
@@ -448,7 +489,20 @@ const CreateNewSubmission = () => {
                         <Td>{submission.product}</Td>
                         <Td>{submission.quantity}</Td>
                         <Td>{submission.price}</Td>
-                        <Td>{submission.status}</Td>
+                        <Td>
+                          <div
+                            style={{
+                              height: "10px",
+                              width: "10px",
+                              backgroundColor: submission.color,
+                              borderRadius: "50%",
+                              display: "inline-block",
+                              marginRight: "10px",
+                              marginLeft: "2px",
+                            }}
+                          />
+                          {submission.status}
+                        </Td>
                       </Tr>
                     );
                   })}

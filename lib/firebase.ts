@@ -41,12 +41,14 @@ interface SubmissionData {
   price: number;
   maxPerUser: number;
   id: string;
+  status: string;
 }
 
 export const uploadSubmissions = async (userId: any, data: SubmissionData) => {
   const uuid = uuidv4();
 
   data.id = uuid;
+  data.status = "Pending";
 
   const collectionRef = collection(db, `Submissions/${userId}/submission/`);
 
