@@ -795,3 +795,39 @@ td::after {
   }
 }
 
+.marquee-wrapper {
+  margin: auto;
+  max-width: 100vw;
+}
+.marquee {
+  display: flex;
+  gap: 25px;
+}
+.marquee-group {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  gap: 25px;
+  min-width: 100%;
+  animation: scrollleft 150s linear infinite;
+}
+
+.marquee-group:hover {
+  animation-play-state: paused;
+}
+
+@keyframes scrollleft {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(-100% - 25px));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-group {
+    animation-play-state: paused;
+  }
+}

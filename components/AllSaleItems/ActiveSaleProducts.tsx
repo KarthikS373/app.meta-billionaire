@@ -21,71 +21,63 @@ const ActiveSaleProducts = ({ products = [] }) => {
   }
 
   return (
-    <marquee>
-      <Flex
-        align="center"
-        justify="center"
-        flex={1}
-        h={330}
-        w={"max"}
-        mb={20}
-        overflowY={"hidden"}
-        overflow={"hidden"}
-        flexWrap={"nowrap"}
-      >
-        {products.map((product, index) => {
-          const priceBigNumber = ethers.BigNumber.from(
-            product[7] && product[7].hex
-          );
-          const price = ethers.utils.formatEther(priceBigNumber);
+    <div className="marquee-wrapper">
+      <div className="marquee">
+        <div className="marquee-group">
+          {products.map((product, index) => {
+            const priceBigNumber = ethers.BigNumber.from(
+              product[7] && product[7].hex
+            );
+            const price = ethers.utils.formatEther(priceBigNumber);
 
-          let title: string = product[1];
+            let title: string = product[1];
 
-          try {
-            title = title.replace("(*RAFFLE*)", "");
-          } catch (e) {}
+            try {
+              title = title.replace("(*RAFFLE*)", "");
+            } catch (e) {}
 
-          try {
-            title = title.replace("(*FOR SALE*)", "");
-          } catch (e) {}
+            try {
+              title = title.replace("(*FOR SALE*)", "");
+            } catch (e) {}
 
-          return (
-            <Box
-              key={product && product.id}
-              display={"flex"}
-              h={300}
-              w={350}
-              minW={350}
-              mx={10}
-              my={25}
-              border={"2px solid"}
-              borderColor={"customBlue.500"}
-              p={"15px 25px"}
-              borderRadius={15}
-              flexDir={"column"}
-              justifyContent={"flex-start"}
-              alignItems={"center"}
-            >
-              <Image
-                src={product[2]}
-                alt=""
-                height={120}
-                width={120}
-                borderRadius={10}
-                mb={5}
-              />
-              <Text textAlign={"center"} whiteSpace={"break-spaces"}>
-                {title}
-              </Text>
-              <Spacer />
-              <Text textAlign={"center"} whiteSpace={"break-spaces"}>
-                Price: $MBUC {price}
-              </Text>
-            </Box>
-          );
-        })}
-      </Flex>
-    </marquee>
+            return (
+              <Box
+                key={product && product.id}
+                display={"flex"}
+                h={300}
+                w={350}
+                minW={350}
+                mx={10}
+                my={25}
+                border={"2px solid"}
+                borderColor={"customBlue.500"}
+                p={"15px 25px"}
+                borderRadius={15}
+                flexDir={"column"}
+                justifyContent={"flex-start"}
+                alignItems={"center"}
+              >
+                <Image
+                  src={product[2]}
+                  alt=""
+                  height={120}
+                  width={120}
+                  borderRadius={10}
+                  mb={5}
+                />
+                <Text textAlign={"center"} whiteSpace={"break-spaces"}>
+                  {title}
+                </Text>
+                <Spacer />
+                <Text textAlign={"center"} whiteSpace={"break-spaces"}>
+                  Price: $MBUC {price}
+                </Text>
+              </Box>
+            );
+          })}
+        </div>
+      </div>
+    </div>
   );
 };
 
