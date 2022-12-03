@@ -18,26 +18,29 @@ import {
   Thead,
   Tr,
   useDisclosure,
-  Card,
-  CardBody,
-  CardFooter,
-  Image,
-  Stack,
-  Heading,
-  Divider,
   ButtonGroup,
+  Image,
+  Spacer,
+  useMediaQuery,
+  Accordion,
+  AccordionItem,
+  AccordionButton,
+  AccordionIcon,
+  AccordionPanel,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { fetchAllSubmissions, fetchSubmissions } from "../../lib/firebase";
+import CreateUserSubmittedProduct from "../CreateNewProduct/CreatePrePopulatedProduct";
 
 const UserSubmissionTable = () => {
+  const [isLessThan768] = useMediaQuery("(max-width: 768px)");
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const [submissions, setSubmissions] = useState<Array<any>>([]);
   const [currentProduct, setCurrentProduct] = useState({});
+  const [createMode, setCreateMode] = useState(false);
 
   useEffect(() => {
-    setSubmissions([]);
     fetchAllSubmissions()
       .then((primeSnapshot) => {
         setSubmissions(() => []);
@@ -59,7 +62,6 @@ const UserSubmissionTable = () => {
                 status: dt.quantity,
               };
 
-              console.log("--- rep ---");
               setSubmissions((prev) => [...prev, temp]);
             }
           });
@@ -80,118 +82,235 @@ const UserSubmissionTable = () => {
         User Submissions
       </Text>
 
-      <Flex
-        fontFamily="MontserratBold"
-        align="center"
-        flex={1}
-        minH={500}
-        p="md"
-        w="100%"
-        borderWidth={3}
-        borderColor="customBlue.500"
-        borderRadius={15}
-        mt="sm"
-        flexDir="column"
-      >
-        <TableContainer w={"100%"} h={"100%"}>
-          <Table variant="striped" colorScheme="customBlue">
-            <Thead>
-              <Tr>
-                <Th>ID</Th>
-                <Th>User</Th>
-                <Th>Product Name</Th>
-                <Th>Product Price ($MBUC)</Th>
-              </Tr>
-            </Thead>
-            <Tbody>
+      {createMode ? (
+        <CreateUserSubmittedProduct
+          img={currentProduct.image}
+          name={currentProduct.product}
+          maxperuser={currentProduct.maxPerUser}
+          price={currentProduct.price}
+          spot={currentProduct.quantity}
+        />
+      ) : (
+        <Flex
+          fontFamily="MontserratBold"
+          align="center"
+          flex={1}
+          minH={500}
+          p="md"
+          w="100%"
+          borderWidth={3}
+          borderColor="customBlue.500"
+          borderRadius={15}
+          mt="sm"
+          flexDir="column"
+        >
+          {isLessThan768 ? (
+            <Accordion>
               {submissions.map((sub, index) => {
                 return (
-                  <>
-                    <Tr
-                      key={sub.id}
-                      onClick={(e) => {
-                        setCurrentProduct(sub);
-                        onOpen();
-                      }}
-                    >
-                      <Td>{index + 1}</Td>
-                      <Td>{sub.address}</Td>
-                      <Td>{sub.product}</Td>
-                      <Td>{sub.price}</Td>
-                    </Tr>
-                  </>
+                  <AccordionItem key={sub.id}>
+                    <h2>
+                      <AccordionButton>
+                        <Box flex="1" textAlign="left">
+                          {(sub.product && sub.product) || ""}
+                        </Box>
+                        <AccordionIcon />
+                      </AccordionButton>
+                    </h2>
+                    <AccordionPanel pb={4} fontFamily={"sans-serif"}>
+                      <Image
+                        textAlign={"center"}
+                        src={sub.image}
+                        alt={(sub.product && sub.product) || ""}
+                      />
+                      <Box>
+                        <Text textAlign={"center"} mt={5}>
+                          <strong>Description</strong> <Spacer />{" "}
+                          {sub.description}
+                        </Text>
+                      </Box>
+
+                      <Box>
+                        <Text textAlign={"center"} mt={5}>
+                          <strong>Price</strong> <Spacer /> $MBUC {sub.price}
+                        </Text>
+                      </Box>
+
+                      <Box>
+                        <Text textAlign={"center"} mt={5}>
+                          <strong>Quantity</strong> <Spacer /> {sub.quantity}
+                        </Text>
+                      </Box>
+
+                      <Box>
+                        <Text textAlign={"center"} mt={5}>
+                          <strong>Max per user</strong> <Spacer /> $MBUC{" "}
+                          {sub.maxPerUser}
+                        </Text>
+                      </Box>
+
+                      <ButtonGroup mt={5}>
+                        <Button
+                          fontFamily={"sans-serif"}
+                          fontSize={16}
+                          bgColor={"customBlue.500"}
+                          color={"white"}
+                          onClick={() => {
+                            setCurrentProduct(sub);
+                            setCreateMode(true);
+                          }}
+                        >
+                          Approve
+                        </Button>
+                        <Button fontFamily={"sans-serif"} fontSize={16}>
+                          Reject
+                        </Button>
+                      </ButtonGroup>
+                    </AccordionPanel>
+                  </AccordionItem>
                 );
               })}
-              {/* {submissions.map((submission, index) => {
-                return (
-                  <Tr key={submission.id}>
-                    <Td>{index + 1}</Td>
-                    <Td>{submission.product}</Td>
-                    <Td>{submission.quantity}</Td>
-                    <Td>{submission.price}</Td>
-                    <Td>
-                      <div
-                        style={{
-                          height: "10px",
-                          width: "10px",
-                          backgroundColor: submission.color,
-                          borderRadius: "50%",
-                          display: "inline-block",
-                          marginRight: "10px",
-                          marginLeft: "2px",
-                        }}
-                      />
-                      {submission.status}
-                    </Td>
+            </Accordion>
+          ) : (
+            <TableContainer w={"100%"} h={"100%"}>
+              <Table variant="striped" colorScheme="customBlue">
+                <Thead>
+                  <Tr>
+                    <Th>ID</Th>
+                    <Th>User</Th>
+                    <Th>Product Name</Th>
+                    <Th>Product Price ($MBUC)</Th>
                   </Tr>
-                );
-              })} */}
-            </Tbody>
-          </Table>
-        </TableContainer>
-      </Flex>
-      <Modal onClose={onClose} isOpen={isOpen} isCentered>
+                </Thead>
+                <Tbody>
+                  {submissions.map((sub, index) => {
+                    return (
+                      <>
+                        <Tr
+                          key={sub.id}
+                          onClick={(e) => {
+                            setCurrentProduct(sub);
+                            onOpen();
+                          }}
+                        >
+                          <Td>{index + 1}</Td>
+                          <Td>{sub.address}</Td>
+                          <Td>{sub.product}</Td>
+                          <Td>{sub.price}</Td>
+                        </Tr>
+                      </>
+                    );
+                  })}
+                  {/* {submissions.map((submission, index) => {
+                  return (
+                    <Tr key={submission.id}>
+                      <Td>{index + 1}</Td>
+                      <Td>{submission.product}</Td>
+                      <Td>{submission.quantity}</Td>
+                      <Td>{submission.price}</Td>
+                      <Td>
+                        <div
+                          style={{
+                            height: "10px",
+                            width: "10px",
+                            backgroundColor: submission.color,
+                            borderRadius: "50%",
+                            display: "inline-block",
+                            marginRight: "10px",
+                            marginLeft: "2px",
+                          }}
+                        />
+                        {submission.status}
+                      </Td>
+                    </Tr>
+                  );
+                })} */}
+                </Tbody>
+              </Table>
+            </TableContainer>
+          )}
+        </Flex>
+      )}
+      <Modal onClose={onClose} isOpen={isOpen} isCentered size={"3xl"}>
         <ModalOverlay />
-        <ModalContent>
-          {/* <ModalHeader>
-            {currentProduct.product && currentProduct.product}
-          </ModalHeader> */}
+        <ModalContent p={0} m={0}>
+          <ModalHeader
+            fontFamily={"sans-serif"}
+            textAlign={"center"}
+            display={"flex"}
+            justifyContent={"center"}
+          >
+            <Image
+              src={currentProduct.image}
+              alt={(currentProduct.product && currentProduct.product) || ""}
+            />
+          </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Card maxW="sm">
-              <CardBody>
-                <Image
-                  src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
-                  alt="Green double couch with wooden legs"
-                  borderRadius="lg"
-                />
-                <Stack mt="6" spacing="3">
-                  <Heading size="md">Living room Sofa</Heading>
-                  <Text>
-                    This sofa is perfect for modern tropical spaces, baroque
-                    inspired spaces, earthy toned spaces and for people who love
-                    a chic design with a sprinkle of vintage design.
-                  </Text>
-                  <Text color="blue.600" fontSize="2xl">
-                    $450
-                  </Text>
-                </Stack>
-              </CardBody>
-              <Divider />
-              <CardFooter>
-                <ButtonGroup spacing="2">
-                  <Button variant="solid" colorScheme="blue">
-                    Buy now
-                  </Button>
-                  <Button variant="ghost" colorScheme="blue">
-                    Add to cart
-                  </Button>
-                </ButtonGroup>
-              </CardFooter>
-            </Card>
+            <Box
+              bgColor={"#eef"}
+              border={"1px solid black"}
+              p={"25px"}
+              borderRadius={15}
+            >
+              <Table>
+                <Tr>
+                  <Td textAlign={"left"}>Name</Td>
+                  <Td textAlign={"right"}>
+                    {(currentProduct.product && currentProduct.product) || ""}
+                  </Td>
+                </Tr>
+                <Tr>
+                  <Td textAlign={"left"}>Desc</Td>
+                  <Td textAlign={"right"}>
+                    {(currentProduct.description &&
+                      currentProduct.description) ||
+                      ""}
+                  </Td>
+                </Tr>
+                <Tr>
+                  <Td textAlign={"left"}>Quantity</Td>
+                  <Td textAlign={"right"}>
+                    {(currentProduct.quantity && currentProduct.quantity) || ""}
+                  </Td>
+                </Tr>
+                <Tr>
+                  <Td textAlign={"left"}>Price</Td>
+                  <Td textAlign={"right"}>
+                    $MBUC {(currentProduct.price && currentProduct.price) || ""}
+                  </Td>
+                </Tr>
+                <Tr>
+                  <Td textAlign={"left"}>Max per user</Td>
+                  <Td textAlign={"right"}>
+                    {(currentProduct.maxPerUser && currentProduct.maxPerUser) ||
+                      ""}
+                  </Td>
+                </Tr>
+              </Table>
+            </Box>
           </ModalBody>
           <ModalFooter>
-            <Button onClick={onClose}>Close</Button>
+            <ButtonGroup mt={5}>
+              <Button
+                fontFamily={"sans-serif"}
+                fontSize={16}
+                bgColor={"customBlue.500"}
+                color={"white"}
+                onClick={() => {
+                  setCreateMode(true);
+                  onClose();
+                }}
+              >
+                Approve
+              </Button>
+              <Button fontFamily={"sans-serif"} fontSize={16}>
+                Reject
+              </Button>
+              <Button onClick={onClose} fontFamily={"sans-serif"} fontSize={16}>
+                Close
+              </Button>
+            </ButtonGroup>
           </ModalFooter>
         </ModalContent>
       </Modal>
