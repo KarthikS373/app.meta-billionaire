@@ -32,18 +32,35 @@ import React, { useEffect, useState } from "react";
 import { fetchAllSubmissions, fetchSubmissions } from "../../lib/firebase";
 import CreateUserSubmittedProduct from "../CreateNewProduct/CreatePrePopulatedProduct";
 
+interface Submission {
+  id: string;
+  generate: string;
+  address: string;
+  product: string;
+  description: string;
+  image: string;
+  maxPerUser: number;
+  quantity: number;
+  price: number;
+  status: string;
+}
+
 const UserSubmissionTable = () => {
   const [isLessThan768] = useMediaQuery("(max-width: 768px)");
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const [submissions, setSubmissions] = useState<Array<any>>([]);
-  const [currentProduct, setCurrentProduct] = useState({});
+  const [submissions, setSubmissions] = useState<Array<Submission>>([]);
+  const [currentProduct, setCurrentProduct] = useState<Submission | null>(null);
   const [createMode, setCreateMode] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    setIsLoading(true);
+    const _submissions: Array<Submission> = [];
+    setSubmissions(() => []);
+
     fetchAllSubmissions()
       .then((primeSnapshot) => {
-        setSubmissions(() => []);
         primeSnapshot.docs.forEach(async (doc) => {
           const subs = await fetchSubmissions(doc.id);
           subs.forEach(async (sub) => {
@@ -59,15 +76,27 @@ const UserSubmissionTable = () => {
                 price: dt.price,
                 product: dt.product,
                 quantity: dt.quantity,
-                status: dt.quantity,
+                status: dt.status,
               };
 
-              setSubmissions((prev) => [...prev, temp]);
+              if (dt.status != "approved") {
+                _submissions.push(temp);
+                console.log(_submissions);
+                // setSubmissions((prev) => [...prev, temp]);
+              }
             }
           });
+          setTimeout(() => {
+            setSubmissions(_submissions);
+          }, 1500);
         });
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   }, []);
 
   return (
@@ -84,11 +113,14 @@ const UserSubmissionTable = () => {
 
       {createMode ? (
         <CreateUserSubmittedProduct
-          img={currentProduct.image}
-          name={currentProduct.product}
-          maxperuser={currentProduct.maxPerUser}
-          price={currentProduct.price}
-          spot={currentProduct.quantity}
+          setCreateMode={setCreateMode}
+          id={(currentProduct && currentProduct.generate) || undefined}
+          img={(currentProduct && currentProduct.image) || undefined}
+          address={(currentProduct && currentProduct.address) || undefined}
+          name={(currentProduct && currentProduct.product) || undefined}
+          maxperuser={(currentProduct && currentProduct.maxPerUser) || 1}
+          price={(currentProduct && currentProduct.price) || 0}
+          spot={(currentProduct && currentProduct.quantity) || 0}
         />
       ) : (
         <Flex
@@ -149,7 +181,12 @@ const UserSubmissionTable = () => {
                         </Text>
                       </Box>
 
-                      <ButtonGroup mt={5}>
+                      <ButtonGroup
+                        mt={5}
+                        textAlign={"center"}
+                        display={"flex"}
+                        justifyContent={"center"}
+                      >
                         <Button
                           fontFamily={"sans-serif"}
                           fontSize={16}
@@ -161,9 +198,6 @@ const UserSubmissionTable = () => {
                           }}
                         >
                           Approve
-                        </Button>
-                        <Button fontFamily={"sans-serif"} fontSize={16}>
-                          Reject
                         </Button>
                       </ButtonGroup>
                     </AccordionPanel>
@@ -241,8 +275,8 @@ const UserSubmissionTable = () => {
             justifyContent={"center"}
           >
             <Image
-              src={currentProduct.image}
-              alt={(currentProduct.product && currentProduct.product) || ""}
+              src={(currentProduct && currentProduct.image) || ""}
+              alt={(currentProduct && currentProduct.product) || ""}
             />
           </ModalHeader>
           <ModalCloseButton />
@@ -257,13 +291,17 @@ const UserSubmissionTable = () => {
                 <Tr>
                   <Td textAlign={"left"}>Name</Td>
                   <Td textAlign={"right"}>
-                    {(currentProduct.product && currentProduct.product) || ""}
+                    {(currentProduct &&
+                      currentProduct.product &&
+                      currentProduct.product) ||
+                      ""}
                   </Td>
                 </Tr>
                 <Tr>
                   <Td textAlign={"left"}>Desc</Td>
                   <Td textAlign={"right"}>
-                    {(currentProduct.description &&
+                    {(currentProduct &&
+                      currentProduct.description &&
                       currentProduct.description) ||
                       ""}
                   </Td>
@@ -271,19 +309,28 @@ const UserSubmissionTable = () => {
                 <Tr>
                   <Td textAlign={"left"}>Quantity</Td>
                   <Td textAlign={"right"}>
-                    {(currentProduct.quantity && currentProduct.quantity) || ""}
+                    {(currentProduct &&
+                      currentProduct.quantity &&
+                      currentProduct.quantity) ||
+                      ""}
                   </Td>
                 </Tr>
                 <Tr>
                   <Td textAlign={"left"}>Price</Td>
                   <Td textAlign={"right"}>
-                    $MBUC {(currentProduct.price && currentProduct.price) || ""}
+                    $MBUC{" "}
+                    {(currentProduct &&
+                      currentProduct.price &&
+                      currentProduct.price) ||
+                      ""}
                   </Td>
                 </Tr>
                 <Tr>
                   <Td textAlign={"left"}>Max per user</Td>
                   <Td textAlign={"right"}>
-                    {(currentProduct.maxPerUser && currentProduct.maxPerUser) ||
+                    {(currentProduct &&
+                      currentProduct.maxPerUser &&
+                      currentProduct.maxPerUser) ||
                       ""}
                   </Td>
                 </Tr>
@@ -303,9 +350,6 @@ const UserSubmissionTable = () => {
                 }}
               >
                 Approve
-              </Button>
-              <Button fontFamily={"sans-serif"} fontSize={16}>
-                Reject
               </Button>
               <Button onClick={onClose} fontFamily={"sans-serif"} fontSize={16}>
                 Close

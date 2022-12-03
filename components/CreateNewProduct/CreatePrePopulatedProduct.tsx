@@ -12,18 +12,25 @@ import {
   NumberIncrementStepper,
   NumberDecrementStepper,
   Image,
+  ButtonGroup,
 } from "@chakra-ui/react";
 import { ethers } from "ethers";
 import useEthersProvider from "../../hooks/useEthersProvider";
 import contractABI from "../../artifacts/contracts/MarketplaceERC20.sol/Marketplace.json";
 import { useState } from "react";
+import { setSubmissionStatus } from "../../lib/firebase";
 
 const CreateUserSubmittedProduct = ({
+  id = "",
   name = "",
   img = "",
   spot = 0,
   price = 0,
   maxperuser = 1,
+  address = "",
+  setCreateMode = (e: boolean) => {
+    console.log(e);
+  },
 }) => {
   const [previewProductImage, setPreviewProductImage] = useState<string>(img);
 
@@ -77,6 +84,8 @@ const CreateUserSubmittedProduct = ({
           duration: 9000,
           isClosable: true,
         });
+
+        setSubmissionStatus(address, id, "approved");
       } catch (err) {
         setIsLoading(false);
         toast({
@@ -97,6 +106,10 @@ const CreateUserSubmittedProduct = ({
       });
     }
   };
+
+  if (id == "") {
+    return <></>;
+  }
 
   return (
     <>
@@ -145,7 +158,7 @@ const CreateUserSubmittedProduct = ({
             {productImage.length > 0 && (
               <Image
                 src={previewProductImage}
-                alt=""
+                alt="Image is broken... Please replace with a valid link"
                 objectFit="cover"
                 w={200}
                 h={200}
@@ -349,21 +362,40 @@ const CreateUserSubmittedProduct = ({
               </NumberInputStepper>
             </NumberInput>
           </Flex>
-          <Button
-            fontSize={15}
-            size="md"
-            w="100%"
-            isLoading={isLoading}
-            borderRadius="full"
-            colorScheme="customBlue"
-            shadow="md"
-            mt="sm"
-            textTransform="uppercase"
-            type="submit"
-            fontFamily="METAB"
-          >
-            Create
-          </Button>
+          <ButtonGroup>
+            <Button
+              fontSize={15}
+              size="md"
+              w="450%"
+              isLoading={isLoading}
+              borderRadius="full"
+              colorScheme="customBlue"
+              shadow="md"
+              mt="sm"
+              textTransform="uppercase"
+              type="submit"
+              fontFamily="METAB"
+            >
+              Create
+            </Button>
+            <Button
+              fontSize={15}
+              size="md"
+              w="450%"
+              isLoading={isLoading}
+              borderRadius="full"
+              shadow="md"
+              mt="sm"
+              textTransform="uppercase"
+              type="submit"
+              onClick={() => {
+                setCreateMode(false);
+              }}
+              fontFamily="METAB"
+            >
+              Cancel
+            </Button>
+          </ButtonGroup>
         </form>
       </Flex>
     </>

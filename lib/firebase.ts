@@ -6,6 +6,7 @@ import {
   getDoc,
   getDocs,
   setDoc,
+  updateDoc,
 } from "firebase/firestore";
 import { db, storage } from "./firebase.config";
 import { uuidv4 } from "@firebase/util";
@@ -48,7 +49,7 @@ export const uploadSubmissions = async (userId: any, data: SubmissionData) => {
   const uuid = uuidv4();
 
   data.id = uuid;
-  data.status = "Pending";
+  data.status = "pending";
 
   const dbRef = doc(db, `Submissions/${userId}/`);
   const collectionRef = collection(db, `Submissions/${userId}/submission/`);
@@ -72,4 +73,16 @@ export const fetchAllSubmissions = async () => {
   const primeSnapshot = await getDocs(primeCollectionRef);
 
   return primeSnapshot;
+};
+
+export const setSubmissionStatus = async (
+  userId: any,
+  token: string,
+  status: string
+) => {
+  const docRef = doc(db, `Submissions/${userId}/submission/${token}`);
+
+  updateDoc(docRef, {
+    status: status,
+  });
 };
