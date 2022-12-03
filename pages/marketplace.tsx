@@ -8,6 +8,7 @@ import RaffleItem from "../components/RaffleItem/RaffleItem";
 import { GetServerSideProps } from "next";
 import prisma from "../lib/prisma";
 import { useRouter } from "next/router";
+import AllSaleItems from "../components/AllSaleItems/AllSaleItems";
 
 const Marketplace = ({ raffleWinner }: any) => {
   const [activeProducts, setActiveProducts] = useState<any>(null);
@@ -132,6 +133,7 @@ const Marketplace = ({ raffleWinner }: any) => {
           )}
         </Flex>
       </Flex>
+      <AllSaleItems />
       <Box textAlign={"center"}>
         <Button
           fontSize={[15, 15, 17, 17]}
