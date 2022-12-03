@@ -18,6 +18,14 @@ import {
   Thead,
   Tr,
   useDisclosure,
+  Card,
+  CardBody,
+  CardFooter,
+  Image,
+  Stack,
+  Heading,
+  Divider,
+  ButtonGroup,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { fetchAllSubmissions, fetchSubmissions } from "../../lib/firebase";
@@ -26,15 +34,15 @@ const UserSubmissionTable = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const [submissions, setSubmissions] = useState<Array<any>>([]);
+  const [currentProduct, setCurrentProduct] = useState({});
 
   useEffect(() => {
+    setSubmissions([]);
     fetchAllSubmissions()
       .then((primeSnapshot) => {
-        setSubmissions([]);
-        const data: Array<any> = [];
+        setSubmissions(() => []);
         primeSnapshot.docs.forEach(async (doc) => {
           const subs = await fetchSubmissions(doc.id);
-          let i = 0;
           subs.forEach(async (sub) => {
             if (sub.exists()) {
               const dt = sub.data();
@@ -51,12 +59,11 @@ const UserSubmissionTable = () => {
                 status: dt.quantity,
               };
 
-              setSubmissions([temp]);
+              console.log("--- rep ---");
+              setSubmissions((prev) => [...prev, temp]);
             }
           });
         });
-        console.log(data);
-        // setSubmissions(data);
       })
       .catch((err) => console.log(err));
   }, []);
@@ -100,7 +107,13 @@ const UserSubmissionTable = () => {
               {submissions.map((sub, index) => {
                 return (
                   <>
-                    <Tr key={sub.id} onClick={onOpen}>
+                    <Tr
+                      key={sub.id}
+                      onClick={(e) => {
+                        setCurrentProduct(sub);
+                        onOpen();
+                      }}
+                    >
                       <Td>{index + 1}</Td>
                       <Td>{sub.address}</Td>
                       <Td>{sub.product}</Td>
@@ -140,13 +153,42 @@ const UserSubmissionTable = () => {
       <Modal onClose={onClose} isOpen={isOpen} isCentered>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Modal Title</ModalHeader>
+          {/* <ModalHeader>
+            {currentProduct.product && currentProduct.product}
+          </ModalHeader> */}
           <ModalCloseButton />
           <ModalBody>
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dolor modi
-            molestias illum optio aperiam et mollitia laborum. Molestias, quas
-            voluptate saepe, laudantium consequatur eius ullam quos praesentium
-            animi ex facere aspernatur a!
+            <Card maxW="sm">
+              <CardBody>
+                <Image
+                  src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
+                  alt="Green double couch with wooden legs"
+                  borderRadius="lg"
+                />
+                <Stack mt="6" spacing="3">
+                  <Heading size="md">Living room Sofa</Heading>
+                  <Text>
+                    This sofa is perfect for modern tropical spaces, baroque
+                    inspired spaces, earthy toned spaces and for people who love
+                    a chic design with a sprinkle of vintage design.
+                  </Text>
+                  <Text color="blue.600" fontSize="2xl">
+                    $450
+                  </Text>
+                </Stack>
+              </CardBody>
+              <Divider />
+              <CardFooter>
+                <ButtonGroup spacing="2">
+                  <Button variant="solid" colorScheme="blue">
+                    Buy now
+                  </Button>
+                  <Button variant="ghost" colorScheme="blue">
+                    Add to cart
+                  </Button>
+                </ButtonGroup>
+              </CardFooter>
+            </Card>
           </ModalBody>
           <ModalFooter>
             <Button onClick={onClose}>Close</Button>
