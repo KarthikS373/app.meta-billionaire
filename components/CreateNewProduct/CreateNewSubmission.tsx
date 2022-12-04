@@ -22,6 +22,12 @@ import {
   Tbody,
   Td,
   Tfoot,
+  Accordion,
+  AccordionItem,
+  AccordionButton,
+  AccordionIcon,
+  AccordionPanel,
+  useMediaQuery,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import useEthersProvider from "../../hooks/useEthersProvider";
@@ -34,6 +40,7 @@ interface Submission {
   price: number;
   id: string;
   color: string;
+  image: string;
 }
 
 const CreateNewSubmission = () => {
@@ -68,7 +75,7 @@ const CreateNewSubmission = () => {
 
             let color = "white";
 
-            console.log(sub.status)
+            console.log(sub.status);
             switch (sub.status) {
               case "approved":
                 color = "green";
@@ -89,6 +96,7 @@ const CreateNewSubmission = () => {
               status: sub.status || "pending",
               product: sub.product || "",
               quantity: sub.quantity || "",
+              image: sub.image || "",
               price: sub.price || "",
               id: sub.id || sub.docId,
               color: color,
@@ -162,6 +170,8 @@ const CreateNewSubmission = () => {
     //   isClosable: true,
     // });
   };
+
+  const [isLessThan768] = useMediaQuery("(max-width: 768px)");
 
   return (
     <Box w={["98%", null, "80%"]} margin={"auto"} textAlign={"center"} pt={5}>
@@ -458,7 +468,7 @@ const CreateNewSubmission = () => {
           justify={!viewSubmissionMode ? "flex-start" : "center"}
           flex={1}
           minH={500}
-          p="md"
+          p={isLessThan768 ? "0" : "md"}
           w="100%"
           borderWidth={3}
           borderColor="customBlue.500"
@@ -468,6 +478,37 @@ const CreateNewSubmission = () => {
         >
           {submissions.length < 1 ? (
             <Text>You don&apos;t have any Submissions</Text>
+          ) : isLessThan768 ? (
+            <Accordion w={"100%"}>
+              {submissions.map((submission, index) => (
+                <AccordionItem key={submission.id}>
+                  <h2>
+                    <AccordionButton>
+                      <Text>{submission.product}</Text>
+                      <AccordionIcon />
+                    </AccordionButton>
+                  </h2>
+                  <AccordionPanel pb={4} fontFamily={"sans-serif"}>
+                    <Image
+                      textAlign={"center"}
+                      src={submission.image}
+                      alt={(submission.product && submission.product) || ""}
+                    />
+                    <Box>
+                      <Text textAlign={"center"} mt={5}>
+                        <strong>Price</strong> <Spacer /> {submission.price}
+                      </Text>
+                    </Box>
+                    <Box>
+                      <Text textAlign={"center"} mt={5}>
+                        <strong>Quantity</strong> <Spacer />{" "}
+                        {submission.quantity}
+                      </Text>
+                    </Box>
+                  </AccordionPanel>
+                </AccordionItem>
+              ))}
+            </Accordion>
           ) : (
             <TableContainer w={"100%"} h={"100%"}>
               <Table variant="striped" colorScheme="customBlue">

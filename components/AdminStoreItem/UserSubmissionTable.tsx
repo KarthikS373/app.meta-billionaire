@@ -128,7 +128,7 @@ const UserSubmissionTable = () => {
           align="center"
           flex={1}
           minH={500}
-          p="md"
+          py="md"
           w="100%"
           borderWidth={3}
           borderColor="customBlue.500"
@@ -207,10 +207,9 @@ const UserSubmissionTable = () => {
             </Accordion>
           ) : (
             <TableContainer w={"100%"} h={"100%"}>
-              <Table variant="striped" colorScheme="customBlue">
+              <Table variant="striped" colorScheme="customBlue" fontSize={14}>
                 <Thead>
-                  <Tr>
-                    <Th>ID</Th>
+                  <Tr fontSize={14}>
                     <Th>User</Th>
                     <Th>Product Name</Th>
                     <Th>Product Price ($MBUC)</Th>
@@ -227,8 +226,7 @@ const UserSubmissionTable = () => {
                             onOpen();
                           }}
                         >
-                          <Td>{index + 1}</Td>
-                          <Td>{sub.address}</Td>
+                            <Td>{sub.address}</Td>
                           <Td>{sub.product}</Td>
                           <Td>{sub.price}</Td>
                         </Tr>

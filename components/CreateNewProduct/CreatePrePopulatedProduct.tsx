@@ -48,6 +48,7 @@ const CreateUserSubmittedProduct = ({
   const toast = useToast();
 
   const createNew = async (e: any) => {
+    console.log(productStart, productEnd);
     e.preventDefault();
     if (chainId === 137) {
       const signer = provider.getSigner();
