@@ -6,7 +6,7 @@ import contractABI from "../../artifacts/contracts/MarketplaceERC20.sol/Marketpl
 import ActiveSaleProducts from "./ActiveSaleProducts";
 
 const AllSaleItems = () => {
-  const [inactiveProducts, setInactiveProducts] = useState<Array<any>>([]);
+  const [inactiveProducts, setInactiveProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const getAllProducts = async () => {
@@ -35,7 +35,7 @@ const AllSaleItems = () => {
       try {
         const productCount = await contract.getTotalProducts();
 
-        let inactiveProductArray: Array<any> = [];
+        let inactiveProductArray: any = [];
 
         for (let i = 0; i < productCount; ++i) {
           const product = await contract.products(i);
@@ -86,7 +86,7 @@ const AllSaleItems = () => {
           <Spinner m="0 auto" size="xl" mt="lg" color="customBlue.500" />{" "}
         </Flex>
       ) : (
-          <ActiveSaleProducts products={inactiveProducts} />
+        <ActiveSaleProducts products={inactiveProducts} />
       )}
     </>
   );
