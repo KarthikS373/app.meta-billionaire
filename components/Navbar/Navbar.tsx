@@ -258,11 +258,14 @@ const Navbar = () => {
                   textTransform="uppercase"
                   fontFamily="METAB"
                   leftIcon={<BiWallet size={20} />}
-                  onClick={() => router.push("/wallet")}
+                  // onClick={() => router.push("/wallet")}
+                  onClick={() => {}}
                 >
-                  My Wallet
+                  {/* My Wallet */}
+                  {address.substring(0, 6)}...
+                  {address.substring(address.length - 4, address.length)}
                 </Button>
-                <Text
+                {/* <Text
                   color="white"
                   fontSize={13}
                   position="absolute"
@@ -270,7 +273,7 @@ const Navbar = () => {
                 >
                   {address.substring(0, 6)}...
                   {address.substring(address.length - 4, address.length)}
-                </Text>
+                </Text> */}
               </Flex>
               <Flex align="center" flexDir="column" justify="center">
                 {ethPrice ? (
@@ -480,17 +483,20 @@ const Navbar = () => {
                       fontFamily="METAB"
                       leftIcon={<BiWallet size={20} />}
                       w="100%"
-                      onClick={() => {
-                        router.push("/wallet");
-                        onClose();
-                      }}
+                      // onClick={() => {
+                      //   router.push("/wallet");
+                      //   onClose();
+                      // }}
+                      onClick={() => {}}
                     >
-                      My Wallet
-                    </Button>
-                    <Text color="white" mt="xs" fontSize={13}>
+                      {/* My Wallet */}
                       {address.substring(0, 6)}...
                       {address.substring(address.length - 4, address.length)}
-                    </Text>
+                    </Button>
+                    {/* <Text color="white" mt="xs" fontSize={13}>
+                      {address.substring(0, 6)}...
+                      {address.substring(address.length - 4, address.length)}
+                    </Text> */}
                   </Flex>
                   <Flex
                     align="center"
