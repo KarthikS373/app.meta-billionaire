@@ -26,7 +26,7 @@ const ActiveSaleProducts = ({ products = [] }) => {
         <div className="marquee-group">
           {products.map((product, index) => {
             const priceBigNumber = ethers.BigNumber.from(
-              product[7] && product[7].hex
+              product[7] && product[7]["hex"]
             );
             const price = ethers.utils.formatEther(priceBigNumber);
 
@@ -42,7 +42,7 @@ const ActiveSaleProducts = ({ products = [] }) => {
 
             return (
               <Box
-                key={product && product.id}
+                key={(product && product["id"]) || index}
                 display={"flex"}
                 h={300}
                 w={350}
