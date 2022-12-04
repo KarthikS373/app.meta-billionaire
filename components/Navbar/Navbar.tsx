@@ -34,7 +34,7 @@ const Navbar = () => {
   const [ethPrice, setEthPrice] = useState<number>();
   const [gweiPrice, setGweiPrice] = useState<number>();
 
-  const { connect, address } = useEthersProvider();
+  const { connect, address, disconnect } = useEthersProvider();
   const router = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -259,13 +259,14 @@ const Navbar = () => {
                   fontFamily="METAB"
                   leftIcon={<BiWallet size={20} />}
                   // onClick={() => router.push("/wallet")}
-                  onClick={() => {}}
+                  onClick={() => {
+                    disconnect();
+                  }}
                 >
-                  {/* My Wallet */}
-                  {address.substring(0, 6)}...
-                  {address.substring(address.length - 4, address.length)}
+                  {/* My Wallet  */}
+                  Disconnect
                 </Button>
-                {/* <Text
+                <Text
                   color="white"
                   fontSize={13}
                   position="absolute"
@@ -273,7 +274,7 @@ const Navbar = () => {
                 >
                   {address.substring(0, 6)}...
                   {address.substring(address.length - 4, address.length)}
-                </Text> */}
+                </Text>
               </Flex>
               <Flex align="center" flexDir="column" justify="center">
                 {ethPrice ? (
@@ -487,16 +488,17 @@ const Navbar = () => {
                       //   router.push("/wallet");
                       //   onClose();
                       // }}
-                      onClick={() => {}}
+                      onClick={() => {
+                        disconnect();
+                      }}
                     >
                       {/* My Wallet */}
-                      {address.substring(0, 6)}...
-                      {address.substring(address.length - 4, address.length)}
+                      Disconnect
                     </Button>
-                    {/* <Text color="white" mt="xs" fontSize={13}>
+                    <Text color="white" mt="xs" fontSize={13}>
                       {address.substring(0, 6)}...
                       {address.substring(address.length - 4, address.length)}
-                    </Text> */}
+                    </Text>
                   </Flex>
                   <Flex
                     align="center"
