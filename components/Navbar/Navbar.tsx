@@ -22,7 +22,7 @@ import {
   chakra,
   Spinner,
 } from "@chakra-ui/react";
-import { BiMenu, BiWallet } from "react-icons/bi";
+import { BiMenu, BiWallet, BiSearch } from "react-icons/bi";
 import { FaShoppingCart } from "react-icons/fa";
 import useEthersProvider from "../../hooks/useEthersProvider";
 import Link from "next/link";
@@ -137,6 +137,21 @@ const Navbar = () => {
             cursor="pointer"
           />
         </Link>
+        {address && router.pathname.includes("profile") && (
+          <Box
+            fontSize={17}
+            cursor="pointer"
+            mx="xs"
+            display={["block", "block", "none"]}
+            backgroundColor={"#2081E2"}
+            borderRadius="50%"
+            p="3px"
+          >
+            <Link passHref href="/profile/">
+              <Icon as={BiSearch} w="30px" display="inline" pb="3px" />
+            </Link>
+          </Box>
+        )}
         <Box
           fontSize={17}
           cursor="pointer"
@@ -197,6 +212,20 @@ const Navbar = () => {
             </MenuList>
           </Menu>
           <Spacer />
+          {address && router.pathname.includes("profile") && (
+            <Box
+              fontSize={17}
+              cursor="pointer"
+              mx="xs"
+              backgroundColor={"#2081E2"}
+              borderRadius="50%"
+              p="3px"
+            >
+              <Link passHref href="/profile/">
+                <Icon as={BiSearch} w="30px" display="inline" pb="3px" />
+              </Link>
+            </Box>
+          )}
           <Box fontSize={17} cursor="pointer">
             <Link passHref href="https://opensea.io/collection/metabillionaire">
               <Image
