@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { BsTwitter } from "react-icons/bs";
 import { FaDiscord } from "react-icons/fa";
 import { CgWebsite } from "react-icons/cg";
+import { BiEdit } from "react-icons/bi";
+
 import NextImage from "next/image";
 import {
   Heading,
@@ -28,12 +30,16 @@ import {
   AccordionPanel,
   Spinner,
   useToast,
+  Input,
 } from "@chakra-ui/react";
+import { useRouter } from "next/router";
+import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 
 import NFTCard from "./NFTCard";
 import backdrop from "../../assets/backdrop.jpeg";
 import { fetchFirestoreData } from "../../lib/firebase";
-import { useRouter } from "next/router";
+import axios from "../../lib/api";
+import useEthersProvider from "../../hooks/useEthersProvider";
 
 const UserProfile = ({
   username = "cyberpunk373",
@@ -47,6 +53,8 @@ const UserProfile = ({
   haveStaked = true,
   visitor = false,
 }) => {
+  const { address } = useEthersProvider();
+
   const [profileImage, setProfileImage] = useState("");
   const [user, setUser] = useState({
     about: "",
@@ -55,6 +63,9 @@ const UserProfile = ({
     website: "",
     twitter: "",
   });
+  const [verifToken, setVerifToken] = useState<string | null>(null);
+
+  const { executeRecaptcha } = useGoogleReCaptcha();
 
   useEffect(() => {
     fetchFirestoreData(userId)
@@ -87,6 +98,67 @@ const UserProfile = ({
       }
     }
   }, [products, profileImage, stakedNfts]);
+  const [usernameEditMode, setUsernameEditMode] = useState(false);
+  const [newUserNickName, setNewUserNickName] = useState<string>("");
+
+  const updateNickName = async (e: any) => {
+    e.preventDefault();
+    if (!executeRecaptcha) {
+      toast({
+        description:
+          "An error occured with the robots verification, please try again...",
+        status: "error",
+        duration: 4000,
+        isClosable: true,
+      });
+      return;
+    }
+    const result = await executeRecaptcha("updateUser");
+    if (result) {
+      setVerifToken(result);
+    } else {
+      toast({
+        description:
+          "An error occured with the robots verification, please try again...",
+        status: "error",
+        duration: 4000,
+        isClosable: true,
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (verifToken) {
+      updateFinalUser();
+    }
+  }, [verifToken]);
+
+  const updateFinalUser = async () => {
+    const { data } = await axios.post(`/updateNickname`, {
+      address: address,
+      token: verifToken,
+      nickname: newUserNickName,
+    });
+
+    if (data) {
+      setUsernameEditMode(false);
+
+      toast({
+        description: "Nickname updated successfully",
+        status: "success",
+        duration: 9000,
+        isClosable: true,
+      });
+    } else {
+      setUsernameEditMode(false);
+      toast({
+        description: "An error occured",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+    }
+  };
 
   const TABS = [
     {
@@ -292,9 +364,76 @@ const UserProfile = ({
 
           <Box p={6}>
             <VStack textAlign={"center"} w="min-content" m="auto">
-              <Heading fontSize={"sm"} whiteSpace="nowrap">
-                {username}
-              </Heading>
+              {usernameEditMode ? (
+                <form onSubmit={updateNickName}>
+                  <Input
+                    required
+                    colorScheme="customBlue"
+                    fontSize={15}
+                    w={"100%"}
+                    type="text"
+                    my="xs"
+                    value={newUserNickName}
+                    onChange={(e) => setNewUserNickName(e.target.value)}
+                  />
+                  <Flex align="center" justify="center" w="90%">
+                    <Button
+                      fontSize={[12, 12, 15, 15]}
+                      px="sm"
+                      onClick={() => setUsernameEditMode(false)}
+                      borderRadius="full"
+                      borderWidth={1}
+                      borderColor="customBlue.500"
+                      colorScheme="customBlue"
+                      variant="outline"
+                      _hover={{
+                        color: "white",
+                        bgColor: "customBlue.500",
+                        borderColor: "white",
+                      }}
+                      shadow="md"
+                      fontWeight={400}
+                      ml="sm"
+                    >
+                      Cancel
+                    </Button>
+
+                    <Button
+                      fontSize={[12, 12, 15, 15]}
+                      px="sm"
+                      type="submit"
+                      borderRadius="full"
+                      borderWidth={1}
+                      borderColor="customBlue.500"
+                      colorScheme="customBlue"
+                      _hover={{
+                        color: "customBlue.500",
+                        bgColor: "white",
+                        borderColor: "customBlue.500",
+                      }}
+                      shadow="md"
+                      fontWeight={400}
+                      ml="sm"
+                    >
+                      Save
+                    </Button>
+                  </Flex>
+                </form>
+              ) : (
+                <Heading fontSize={"sm"} whiteSpace="nowrap">
+                  {username}{" "}
+                  {!visitor && (
+                    <Icon
+                      cursor="pointer"
+                      as={BiEdit}
+                      color="customBlue.500"
+                      w={5}
+                      h={5}
+                      onClick={() => setUsernameEditMode(true)}
+                    />
+                  )}
+                </Heading>
+              )}
               <Text color={"gray.500"} fontSize="small">
                 {userId.slice(0, 3)}....{userId.slice(-8)}
               </Text>

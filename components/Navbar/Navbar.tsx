@@ -260,13 +260,15 @@ const Navbar = () => {
                   leftIcon={<BiWallet size={20} />}
                   // onClick={() => router.push("/wallet")}
                   onClick={() => {
-                    disconnect();
+                    // disconnect();
                   }}
                 >
                   {/* My Wallet  */}
-                  Disconnect
+                  {/* Disconnect */}
+                  {address.substring(0, 6)}...
+                  {address.substring(address.length - 4, address.length)}
                 </Button>
-                <Text
+                {/* <Text
                   color="white"
                   fontSize={13}
                   position="absolute"
@@ -274,7 +276,7 @@ const Navbar = () => {
                 >
                   {address.substring(0, 6)}...
                   {address.substring(address.length - 4, address.length)}
-                </Text>
+                </Text> */}
               </Flex>
               <Flex align="center" flexDir="column" justify="center">
                 {ethPrice ? (
@@ -489,16 +491,18 @@ const Navbar = () => {
                       //   onClose();
                       // }}
                       onClick={() => {
-                        disconnect();
+                        // disconnect();
                       }}
                     >
                       {/* My Wallet */}
-                      Disconnect
-                    </Button>
-                    <Text color="white" mt="xs" fontSize={13}>
+                      {/* Disconnect */}
                       {address.substring(0, 6)}...
                       {address.substring(address.length - 4, address.length)}
-                    </Text>
+                    </Button>
+                    {/* <Text color="white" mt="xs" fontSize={13}>
+                      {address.substring(0, 6)}...
+                      {address.substring(address.length - 4, address.length)}
+                    </Text> */}
                   </Flex>
                   <Flex
                     align="center"
