@@ -18,13 +18,17 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { useToast } from "@chakra-ui/react";
+import CreatableSelect from "react-select/creatable";
+import { useRouter } from "next/router";
+
+import skills from "../../utils/skills";
 import useEthersProvider from "../../hooks/useEthersProvider";
 import {
   fetchFirestoreData,
+  setNetworkTags,
   uploadData,
   uploadProfilePic,
 } from "../../lib/firebase";
-import { useRouter } from "next/router";
 
 interface UserInterface {
   image: File;
@@ -153,6 +157,10 @@ const Form2 = ({
   setAbout = (e: any) => {
     console.log(e);
   },
+  tags = [],
+  setTags = (e: any) => {
+    console.log(e);
+  },
 }) => {
   useEffect(() => {
     if (user.about) {
@@ -170,7 +178,7 @@ const Form2 = ({
       <Heading w="100%" textAlign={"center"} fontWeight="normal" mb="2%">
         Bio
       </Heading>
-      <FormControl id="email" mt={1}>
+      <FormControl id="email" mt={1} mb={5}>
         <FormLabel
           fontSize="sm"
           fontWeight="md"
@@ -196,8 +204,65 @@ const Form2 = ({
           Brief description for your profile
         </FormHelperText>
       </FormControl>
+      <CreatableSelect
+        isMulti
+        isClearable
+        value={tags}
+        // @ts-ignore
+        options={skills}
+        styles={{
+          control: (styles) => ({
+            ...styles,
+            backgroundColor: "white",
+            border: "1px solid blue",
+            fontFamily: "sans-serif",
+          }),
+          option: (styles) => {
+            return {
+              ...styles,
+              backgroundColor: "white",
+              color: "black",
+              cursor: "pointer",
 
-      
+              ":active": {
+                ...styles[":active"],
+                backgroundColor: "blue",
+                color: "white",
+              },
+            };
+          },
+          input: (styles) => ({ ...styles }),
+          placeholder: (styles) => ({ ...styles }),
+          singleValue: (styles) => ({ ...styles }),
+          multiValue: (styles) => {
+            return {
+              ...styles,
+              color: "black",
+              fontFamily: "sans-serif",
+              backgroundColor: "#eee",
+              border: "none",
+              borderRadius: "3px",
+              padding: "1px 7px",
+            };
+          },
+          multiValueLabel: (styles) => ({
+            ...styles,
+            color: "black",
+            backgroundColor: "#eee",
+            padding: "5px",
+          }),
+          multiValueRemove: (styles) => ({
+            ...styles,
+
+            ":hover": {
+              color: "red",
+            },
+          }),
+        }}
+        onChange={(val) => {
+          setTags(val);
+        }}
+      />
     </>
   );
 };
@@ -379,9 +444,16 @@ const ProfileEdit = () => {
 
   const router = useRouter();
 
+  const [tags, setTags] = useState([]);
+
   const handleSubmit = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
     console.log(user);
+
+    console.log(address);
+    setNetworkTags(address, tags);
+
+    console.log(tags);
 
     try {
       if (address) {
@@ -397,6 +469,7 @@ const ProfileEdit = () => {
           twitter: user.twitter || "",
           website: user.website || "",
           dp: url.toString() || "",
+          tags: JSON.stringify(tags),
         });
       }
       toast({
@@ -407,9 +480,9 @@ const ProfileEdit = () => {
         isClosable: true,
       });
 
-      setTimeout(() => {
-        router.replace(`./${address}`);
-      }, 1000);
+      // setTimeout(() => {
+      //   router.replace(`./${address}`);
+      // }, 1000);
     } catch (e) {
       toast({
         title: "An error occured",
@@ -431,6 +504,7 @@ const ProfileEdit = () => {
             setAbout(res.about || "");
             setDiscord(res.discord || "");
             setTwitter(res.twitter || "");
+            setTags(JSON.parse(res.tags) || []);
 
             user.email = res.email || "";
             user.about = res.about || "";
@@ -467,7 +541,12 @@ const ProfileEdit = () => {
         {step === 1 ? (
           <Form1 dp={dp} setDp={setDp} email={email} setEmail={setEmail} />
         ) : step === 2 ? (
-          <Form2 about={about} setAbout={setAbout} />
+          <Form2
+            about={about}
+            setAbout={setAbout}
+            tags={tags}
+            setTags={setTags}
+          />
         ) : (
           <Form3
             website={website}

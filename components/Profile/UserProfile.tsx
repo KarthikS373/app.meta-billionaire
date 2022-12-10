@@ -331,7 +331,7 @@ const UserProfile = ({
       >
         <Box
           maxW={"320px"}
-          maxH={"80vh"}
+          maxH={"100vh"}
           minW={isLessThan360 ? "160px" : "320px"}
           alignItems={"flex-start"}
           m="auto"

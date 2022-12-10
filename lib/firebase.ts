@@ -22,15 +22,15 @@ export const uploadProfilePic = async (file: any, userId: any) => {
 };
 
 export const uploadData = async (userId: any, data: any) => {
-  const dbRef = doc(db, `Profiles/${userId}/`);
+  const docRef = doc(db, `Profiles/${userId}/`);
 
-  setDoc(dbRef, data);
+  setDoc(docRef, data);
 };
 
 export const fetchFirestoreData = async (userId: any) => {
-  const dbRef = doc(db, `Profiles/${userId}/`);
-  console.log(await getDoc(dbRef));
-  return (await getDoc(dbRef)).data();
+  const docRef = doc(db, `Profiles/${userId}/`);
+  console.log(await getDoc(docRef));
+  return (await getDoc(docRef)).data();
 };
 
 interface SubmissionData {
@@ -51,10 +51,10 @@ export const uploadSubmissions = async (userId: any, data: SubmissionData) => {
   data.id = uuid;
   data.status = "pending";
 
-  const dbRef = doc(db, `Submissions/${userId}/`);
+  const docRef = doc(db, `Submissions/${userId}/`);
   const collectionRef = collection(db, `Submissions/${userId}/submission/`);
 
-  setDoc(dbRef, { exist: true });
+  setDoc(docRef, { exist: true });
   addDoc(collectionRef, data);
 };
 
@@ -85,4 +85,18 @@ export const setSubmissionStatus = async (
   updateDoc(docRef, {
     status: status,
   });
+};
+
+interface Tag {
+  value: string;
+  label: string;
+}
+export const setNetworkTags = async (userId: any, tags: Array<Tag>) => {
+  for (let tag of tags) {
+    const docRef = doc(db, `NetworkTag/${tag.label}/`);
+    const collectionRef = collection(db, `NetworkTag/${tag.label}/network/`);
+
+    setDoc(docRef, { exist: true });
+    addDoc(collectionRef, { address: userId });
+  }
 };

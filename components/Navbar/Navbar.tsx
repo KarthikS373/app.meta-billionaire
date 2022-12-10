@@ -69,6 +69,10 @@ const Navbar = () => {
       name: "Faq",
       link: "/faq",
     },
+    {
+      name: "Network",
+      link: "/network",
+    },
     // {
     //   name: "Search profile",
     //   link: "/profile",
