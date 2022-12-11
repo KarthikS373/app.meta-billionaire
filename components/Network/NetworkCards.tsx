@@ -1,4 +1,10 @@
-import React from "react";
+import React, {
+  Component,
+  ReactChild,
+  ReactNode,
+  useEffect,
+  useState,
+} from "react";
 import {
   Box,
   Button,
@@ -9,8 +15,47 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { BsDiscord, BsMailbox, BsTwitter } from "react-icons/bs";
+import { AddressString } from "@coinbase/wallet-sdk/dist/types";
 
-const NetworkCard = () => {
+import { fetchFirestoreData } from "../../lib/firebase";
+
+interface Tags {
+  value: string | undefined;
+  label: string | undefined;
+}
+
+const NetworkCard = ({ address }: { address: AddressString }) => {
+  const [userDetails, setUserDetails] = useState({
+    discord: "",
+    email: "",
+    dp: "",
+    id: "",
+    twitter: "",
+    website: "",
+    tags: "",
+    about: "",
+  });
+
+  useEffect(() => {
+    fetchFirestoreData(address)
+      .then((res) => {
+        console.log(res);
+        setUserDetails({
+          discord: (res && res.discord) || "",
+          email: (res && res.email) || "",
+          dp: (res && res.dp) || "",
+          id: (res && res.id) || "",
+          twitter: (res && res.twitter) || "",
+          website: (res && res.website) || "",
+          tags: (res && res.tags) || "",
+          about: (res && res.about) || "",
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [address]);
+
   return (
     <Box
       textAlign={"center"}
@@ -32,11 +77,19 @@ const NetworkCard = () => {
       >
         <Image
           src={
-            "https://images.unsplash.com/photo-1661961110372-8a7682543120?ixlib=rb-4.0.3&ixid=MnwxMjA3fDF8MHxzZWFyY2h8MXx8cHJvamVjdHxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60"
+            (userDetails.dp && userDetails.dp) ||
+            "../../assets/default-profile-pic.jpeg"
           }
           alt="Profile"
         />
-        <Text>Username</Text>
+        <Text>
+          <abbr
+            title={address}
+            style={{ textTransform: "none", textDecoration: "none" }}
+          >
+            {address.slice(0, 3)}...{address.slice(-3)} | {}
+          </abbr>
+        </Text>
       </Flex>
       <Flex
         flex={3}
@@ -45,29 +98,45 @@ const NetworkCard = () => {
         gap={10}
         fontFamily={"sans-serif"}
       >
-        <Text>
-          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Dicta
-          dolorum obcaecati vero nesciunt temporibus nihil minus quam aliquam
-          ipsam ratione? Nam, accusantium nemo.
-        </Text>
+        <Text>{userDetails.about && userDetails.about}</Text>
         <Flex gap={1.2} flexWrap={"wrap"}>
-          <Tag />
-          <Tag />
-          <Tag />
-          <Tag />
-          <Tag />
+          {userDetails.tags &&
+            userDetails.tags.length > 0 &&
+            JSON.parse(userDetails.tags).map((tag: Tags, index: number) => {
+              return <Tag key={index} name={tag.label} />;
+            })}
         </Flex>
         <Flex alignItems={"center"} gap={5} flexWrap={"wrap"}>
           <ButtonGroup>
-            <Button>
-              <Icon as={BsTwitter} h={5} />
-            </Button>
-            <Button>
-              <Icon as={BsDiscord} h={5} />
-            </Button>
-            <Button>
-              <Icon as={BsMailbox} h={5} />
-            </Button>
+            {userDetails.twitter && (
+              <Button
+                onClick={() => {
+                  //   TODO: twitter
+                  //   window.open();
+                }}
+              >
+                <Icon as={BsTwitter} h={5} />
+              </Button>
+            )}
+            {userDetails.discord && (
+              <Button
+                onClick={() => {
+                  //   TODO: Copy discord
+                }}
+              >
+                <Icon as={BsDiscord} h={5} />
+              </Button>
+            )}
+            {userDetails.email && (
+              <Button
+                onClick={() => {
+                  //   TODO: MAIL
+                  //   window.open();
+                }}
+              >
+                <Icon as={BsMailbox} h={5} />
+              </Button>
+            )}
           </ButtonGroup>
         </Flex>
       </Flex>
@@ -77,7 +146,7 @@ const NetworkCard = () => {
 
 export default NetworkCard;
 
-const Tag = () => {
+const Tag = ({ name = "Hello" }) => {
   return (
     <Box
       border={"none"}
@@ -85,12 +154,11 @@ const Tag = () => {
       backgroundColor={"black"}
       color={"white"}
       h={"min-content"}
-      w={"min-content"}
       fontFamily={"sans-serif"}
       fontSize={"medium"}
       padding={"2px 8px"}
     >
-      Hello
+      {name}
     </Box>
   );
 };

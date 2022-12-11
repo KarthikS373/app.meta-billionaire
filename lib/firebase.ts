@@ -6,6 +6,7 @@ import {
   getDoc,
   getDocs,
   setDoc,
+  SnapshotOptions,
   updateDoc,
 } from "firebase/firestore";
 import { db, storage } from "./firebase.config";
@@ -99,4 +100,32 @@ export const setNetworkTags = async (userId: any, tags: Array<Tag>) => {
     setDoc(docRef, { exist: true });
     addDoc(collectionRef, { address: userId });
   }
+};
+
+export const getByNetworkTag = async (tag: string) => {
+  const collectionRef = collection(db, `NetworkTag/${tag}/network/`);
+
+  const snapshot: Array<SnapshotOptions | undefined> = [];
+  const data = await getDocs(collectionRef);
+  data.forEach(async (d) => {
+    if (d.exists()) {
+      snapshot.push(d.data().address);
+    }
+  });
+
+  return snapshot;
+};
+
+export const getAllTags = async () => {
+  const collectionRef = collection(db, `NetworkTag/`);
+
+  const snapshot: Array<string | undefined> = [];
+  const data = await getDocs(collectionRef);
+  data.forEach(async (d) => {
+    if (d.exists()) {
+      snapshot.push(d.id);
+    }
+  });
+
+  return snapshot;
 };
