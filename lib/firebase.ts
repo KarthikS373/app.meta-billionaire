@@ -2,6 +2,7 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import {
   addDoc,
   collection,
+  deleteDoc,
   doc,
   getDoc,
   getDocs,
@@ -59,6 +60,12 @@ export const uploadSubmissions = async (userId: any, data: SubmissionData) => {
   addDoc(collectionRef, data);
 };
 
+export const getProfilePic = async (address: any) => {
+  const imageRef = ref(storage, `profile/${address}.png`);
+
+  return await getDownloadURL(imageRef);
+};
+
 export const fetchSubmissions = async (userId: any) => {
   const collectionRef = collection(db, `Submissions/${userId}/submission/`);
 
@@ -95,21 +102,39 @@ interface Tag {
 export const setNetworkTags = async (userId: any, tags: Array<Tag>) => {
   for (let tag of tags) {
     const docRef = doc(db, `NetworkTag/${tag.label}/`);
-    const collectionRef = collection(db, `NetworkTag/${tag.label}/network/`);
+    const primeRef = doc(db, `NetworkTag/${tag.label}/network/${userId}`);
 
     setDoc(docRef, { exist: true });
-    addDoc(collectionRef, { address: userId });
+    setDoc(primeRef, { tag: true });
+  }
+};
+
+export const deleteOldTags = async (
+  oldTags: Array<any>,
+  tags: Array<Tag>,
+  address: any
+) => {
+  const toBeRemoved = oldTags.filter((object1) => {
+    return !tags.some((object2) => {
+      return object1.label === object2.label;
+    });
+  });
+
+  console.log(toBeRemoved);
+  for (let diff of toBeRemoved) {
+    const docRef = doc(db, `NetworkTag/${diff.label}/network/${address}`);
+    deleteDoc(docRef);
   }
 };
 
 export const getByNetworkTag = async (tag: string) => {
   const collectionRef = collection(db, `NetworkTag/${tag}/network/`);
 
-  const snapshot: Array<SnapshotOptions | undefined> = [];
+  const snapshot: Array<string | undefined> = [];
   const data = await getDocs(collectionRef);
   data.forEach(async (d) => {
     if (d.exists()) {
-      snapshot.push(d.data().address);
+      snapshot.push(d.id);
     }
   });
 

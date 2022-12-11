@@ -1,4 +1,4 @@
-import { Box, Flex, Text } from "@chakra-ui/react";
+import { Box, Flex, Grid, Text } from "@chakra-ui/react";
 import { SnapshotOptions } from "firebase/firestore";
 import Select from "react-select";
 import React, { useEffect, useState } from "react";
@@ -7,6 +7,7 @@ import Layout from "../components/Layout/Layout";
 import NetworkCard from "../components/Network/NetworkCards";
 import { getAllTags, getByNetworkTag } from "../lib/firebase";
 import { AddressString } from "@coinbase/wallet-sdk/dist/types";
+import TempNetworkCard from "../components/Network/TempNetworkCard";
 
 interface Tags {
   value: string | undefined;
@@ -19,7 +20,7 @@ const Network = () => {
     null
   );
   const [networkUsers, setNetworkUsers] = useState<
-    Array<SnapshotOptions | undefined>
+    Array<string | undefined>
   >([]);
 
   useEffect(() => {
@@ -45,9 +46,12 @@ const Network = () => {
 
   useEffect(() => {
     if (currentSearch) {
-      getByNetworkTag("Unboxing Videos")
+      console.log(currentSearch);
+      getByNetworkTag(currentSearch)
         .then((res) => {
-          setNetworkUsers(res!);
+          console.log(res);
+          if (res) setNetworkUsers(res!);
+          else setNetworkUsers([]);
         })
         .catch((err) => {
           console.log(err);
@@ -74,21 +78,29 @@ const Network = () => {
             />
           </Box>
         )}
-        {networkUsers &&
-          networkUsers.map((user, index) => {
-            return (
-              <NetworkCard
-                key={(user && user.toString()) || index}
-                address={
-                  (user && (user.toString() as AddressString)) ||
-                  ("" as AddressString)
-                }
-              />
-            );
-          })}
+        <Grid
+          w={["90vw", null, "65vw"]}
+          gridTemplateColumns={["1fr", "1fr 1fr", "1fr 1fr 1fr"]}
+          mt={5}
+          gap={3}
+          flexWrap={"wrap"}
+        >
+          {networkUsers &&
+            networkUsers.map((user, index) => {
+              return (
+                <TempNetworkCard
+                  key={(user && user.toString()) || index}
+                  address={
+                    (user && (user.toString() as AddressString)) ||
+                    ("" as AddressString)
+                  }
+                />
+              );
+            })}
+        </Grid>
       </Flex>
     </Layout>
   );
 };
 
-export default Network;
+export default React.memo(Network);

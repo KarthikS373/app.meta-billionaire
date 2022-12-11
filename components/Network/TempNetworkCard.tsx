@@ -29,7 +29,7 @@ interface Tags {
   label: string | undefined;
 }
 
-const NetworkCard = ({ address }: { address: AddressString }) => {
+const TempNetworkCard = ({ address }: { address: AddressString }) => {
   const toast = useToast();
 
   const [userDetails, setUserDetails] = useState({
@@ -44,12 +44,10 @@ const NetworkCard = ({ address }: { address: AddressString }) => {
 
   const [holdings, setHoldings] = useState("0.00");
   const [nickname, setNickname] = useState("");
-  const [profilePic, setProfilePic] = useState<string | null>(null);
 
   useEffect(() => {
     fetchFirestoreData(address)
       .then((res) => {
-        console.log(res);
         setUserDetails({
           discord: (res && res.discord) || "",
           email: (res && res.email) || "",
@@ -59,16 +57,6 @@ const NetworkCard = ({ address }: { address: AddressString }) => {
           tags: (res && res.tags) || "",
           about: (res && res.about) || "",
         });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, [address]);
-
-  useEffect(() => {
-    getProfilePic(address)
-      .then((dp) => {
-        setProfilePic(dp);
       })
       .catch((err) => {
         console.log(err);
@@ -110,15 +98,15 @@ const NetworkCard = ({ address }: { address: AddressString }) => {
         });
         console.log(e);
       });
-  }, [toast]);
+  }, [address]);
 
   return (
     <Box
       textAlign={"center"}
-      w={["95vw", null, "70vw"]}
+      w={["90vw", null, "20vw"]}
       border={"1px solid"}
       borderColor={"customBlue.500"}
-      padding={10}
+      padding={[10, null, null, 10]}
       borderRadius={20}
       display={"flex"}
       gap={5}
@@ -131,16 +119,6 @@ const NetworkCard = ({ address }: { address: AddressString }) => {
         textAlign={"left"}
         flexWrap={"wrap"}
       >
-        {/* {profilePic ? (
-          <Image src={profilePic} alt="Profile" />
-        ) : (
-          <NextImage
-            src={defaultProfilePic}
-            alt="Profile"
-            height={180}
-            width={50}
-          />
-        )} */}
         <Text>
           <abbr
             title={address}
@@ -203,7 +181,7 @@ const NetworkCard = ({ address }: { address: AddressString }) => {
   );
 };
 
-export default NetworkCard;
+export default React.memo(TempNetworkCard);
 
 const Tag = ({ name = "Hello" }) => {
   return (

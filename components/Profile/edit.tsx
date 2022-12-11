@@ -24,6 +24,7 @@ import { useRouter } from "next/router";
 import skills from "../../utils/skills";
 import useEthersProvider from "../../hooks/useEthersProvider";
 import {
+  deleteOldTags,
   fetchFirestoreData,
   setNetworkTags,
   uploadData,
@@ -152,6 +153,7 @@ const Form1 = ({
   );
 };
 
+let prevSkills: Array<any> = [];
 const Form2 = ({
   about = "",
   setAbout = (e: any) => {
@@ -480,9 +482,15 @@ const ProfileEdit = () => {
         isClosable: true,
       });
 
-      // setTimeout(() => {
-      //   router.replace(`./${address}`);
-      // }, 1000);
+      try {
+        deleteOldTags(prevSkills, tags, address);
+      } catch (e) {
+        console.log(e);
+      }
+
+      setTimeout(() => {
+        router.replace(`./${address}`);
+      }, 1000);
     } catch (e) {
       toast({
         title: "An error occured",
@@ -505,6 +513,8 @@ const ProfileEdit = () => {
             setDiscord(res.discord || "");
             setTwitter(res.twitter || "");
             setTags(JSON.parse(res.tags) || []);
+
+            prevSkills = JSON.parse(res.tags) || [];
 
             user.email = res.email || "";
             user.about = res.about || "";
