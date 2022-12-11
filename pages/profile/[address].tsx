@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { ethers } from "ethers";
+import { Flex, Text, useToast } from "@chakra-ui/react";
 
 import Layout from "../../components/Layout/Layout";
 import UserProfile from "../../components/Profile/UserProfile";
@@ -11,7 +12,7 @@ import StakingContract from "../../utils/ABIs/Staking";
 import ERC721Contract from "../../utils/ABIs/ERC721";
 import HoldingsContract from "../../utils/ABIs/Holdings";
 import ClaimContract from "../../utils/ABIs/Claim";
-import { Flex, Text, useToast } from "@chakra-ui/react";
+import MarketPlaceContract from "../../utils/ABIs/marketPlace";
 
 const Post = () => {
   const router = useRouter();
@@ -38,6 +39,8 @@ const Post = () => {
   const [haveNFT, setHaveNFT] = useState(true);
   const [haveStakedNFT, setHaveStakedNFT] = useState(true);
 
+  const [myProducts, setMyProducts] = useState<Array<any> | null>(null);
+
   useEffect(() => {
     let flag = false;
     if (connectedAddress) {
@@ -52,9 +55,8 @@ const Post = () => {
           isClosable: true,
           status: "error",
         });
-        
-        router.push('/');
 
+        router.push("/");
       }
     }
 
@@ -318,6 +320,46 @@ const Post = () => {
     if (renderFlag) FetchStakingData();
   }, [renderFlag, provider, router.query.address]);
 
+  useEffect(() => {
+    axios
+      .get(
+        "http://localhost:3000/api/getUserProducts?address=0x4C34AFA3B60E5c0e276ff5b7B7168d415eecD2bD"
+      )
+      .then(async (res) => {
+        console.log(res.data);
+        try {
+          if (res.data) {
+            const products: Array<any> = [];
+            const items = res.data;
+            const marketPlace = new ethers.Contract(
+              MarketPlaceContract.address,
+              MarketPlaceContract.abi,
+              polygonProvider
+            );
+            for (let item of items) {
+              if (item) {
+                const product = await marketPlace.products(item.productId);
+                products.push(product);
+                console.log(
+                  "-------------------------------------------------------------"
+                );
+                console.log(product);
+              }
+            }
+            setTimeout(() => {
+              setMyProducts(products);
+            }, 1000);
+          }
+        } catch (e) {
+          setMyProducts(null);
+          console.log(e);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [polygonProvider]);
+
   if (!connectedAddress) {
     return (
       <Layout>
@@ -345,6 +387,7 @@ const Post = () => {
         haveNFT={haveNFT}
         haveStaked={haveStakedNFT}
         visitor={visitor}
+        myProducts={myProducts}
       />
     </Layout>
   );

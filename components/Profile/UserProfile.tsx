@@ -40,6 +40,7 @@ import backdrop from "../../assets/backdrop.jpeg";
 import { fetchFirestoreData } from "../../lib/firebase";
 import axios from "../../lib/api";
 import useEthersProvider from "../../hooks/useEthersProvider";
+import MyProductCard from "./myProduct";
 
 const UserProfile = ({
   username = "cyberpunk373",
@@ -52,8 +53,23 @@ const UserProfile = ({
   haveNFT = true,
   haveStaked = true,
   visitor = false,
+  myProducts,
+}: {
+  username: string | undefined;
+  userId: string | undefined;
+  products: Array<any> | undefined | null;
+  balance: number | undefined;
+  stakedNfts: Array<any> | undefined;
+  holding: string | undefined;
+  claims: string | undefined;
+  haveNFT: boolean | undefined;
+  haveStaked: boolean | undefined;
+  visitor: boolean | undefined;
+  myProducts: Array<any> | null;
 }) => {
   const { address } = useEthersProvider();
+
+  console.log(myProducts);
 
   const [profileImage, setProfileImage] = useState("");
   const [user, setUser] = useState({
@@ -86,7 +102,7 @@ const UserProfile = ({
 
   useEffect(() => {
     if (!profileImage) {
-      if (products.length > 0) {
+      if (products && products.length > 0) {
         // @ts-ignore
         setProfileImage(products[0].image);
       } else if (stakedNfts.length > 0) {
@@ -167,7 +183,7 @@ const UserProfile = ({
       content: (
         <>
           {haveNFT ? (
-            products.length != 0 ? (
+            products && products.length != 0 ? (
               <SimpleGrid columns={[1, null, 3]} spacing={10}>
                 {products.map((nft: any) => {
                   return (
@@ -247,6 +263,49 @@ const UserProfile = ({
             </Box>
           )}
         </>
+      ),
+    },
+    {
+      id: 3,
+      title: "My Products",
+      content: myProducts ? (
+        myProducts.length > 0 ? (
+          <Box>
+            <SimpleGrid columns={[1, null, 3]} spacing={10}>
+              {myProducts.map((product, index) => {
+                return (
+                  <MyProductCard
+                    key={product[0].toString()}
+                    name={product[1] || "Item"}
+                    image={product[2] || ""}
+                    price={product[7].toString() || "0.00"}
+                  />
+                );
+              })}
+            </SimpleGrid>
+          </Box>
+        ) : (
+          <Box
+            w={"100%"}
+            h={["10vh", null, "40vh"]}
+            display={"flex"}
+            justifyContent={"center"}
+            alignItems={"center"}
+            textAlign={"center"}
+          >
+            You don&apos;t purchased Products
+          </Box>
+        )
+      ) : (
+        <Box
+          w={"100%"}
+          h={["10vh", null, "40vh"]}
+          display={"flex"}
+          justifyContent={"center"}
+          alignItems={"center"}
+        >
+          <Spinner m="0 auto" size="xl" mt="lg" color="customBlue.500" />
+        </Box>
       ),
     },
   ];

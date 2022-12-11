@@ -19,9 +19,9 @@ const Network = () => {
   const [currentSearch, setCurrentSearch] = useState<string | null | undefined>(
     null
   );
-  const [networkUsers, setNetworkUsers] = useState<
-    Array<string | undefined>
-  >([]);
+  const [networkUsers, setNetworkUsers] = useState<Array<string | undefined>>(
+    []
+  );
 
   useEffect(() => {
     getAllTags()
