@@ -468,9 +468,9 @@ const Home: NextPage = ({ investments, news }: any) => {
 };
 
 export async function getServerSideProps() {
-  const investments = await prisma.nFT.findMany();
+  // const investments = await prisma.nFT.findMany();
   const news = await client.fetch(`*[_type == "post"]`);
-  return { props: { investments, news } };
+  return { props: { news } };
 }
 
 export default Home;
