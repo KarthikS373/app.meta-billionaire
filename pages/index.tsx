@@ -24,7 +24,7 @@ import { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import contractABI from "../artifacts/contracts/MarketplaceERC20.sol/Marketplace.json";
 import ShopContent from "../components/Marketplace/HomeShopContent";
-import {client, urlFor} from "../lib/client";
+import { client, urlFor } from "../lib/client";
 
 const Home: NextPage = ({ investments, news }: any) => {
   const { connect, address } = useEthersProvider();
@@ -451,7 +451,7 @@ const Home: NextPage = ({ investments, news }: any) => {
                       mt="xs"
                       fontSize={15}
                       color="black"
-                      className={'truncate-desc'}
+                      className={"truncate-desc"}
                     >
                       {postData.description}
                     </Text>

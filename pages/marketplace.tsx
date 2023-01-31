@@ -39,7 +39,15 @@ const Marketplace = ({ raffleWinner }: any) => {
         }
       });
 
-      setActiveProducts(productsArray);
+      const _filteredArray = productsArray.filter(
+        (item: Array<any>, index: any) =>
+          !(
+            item[1].toLowerCase().includes("world cup") ||
+            item[1].toLowerCase().includes("goal")
+          )
+      );
+
+      setActiveProducts(_filteredArray);
       setActiveRaffle(raffleArray);
     } catch (err) {
       console.log("error when fetching store content on contract");
