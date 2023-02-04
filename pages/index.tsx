@@ -114,7 +114,7 @@ const Home: NextPage = ({ investments, news }: any) => {
           mt={["md", "md", "sm", "sm"]}
           px="sm"
         >
-          <Text
+          {/* <Text
             fontFamily="MontserratBold"
             textAlign="center"
             fontSize={[28, 28, 30, 35]}
@@ -180,7 +180,7 @@ const Home: NextPage = ({ investments, news }: any) => {
                 </Flex>
               );
             })}
-          </SimpleGrid>
+          </SimpleGrid> */}
 
           {!address && (
             <Flex w="100%" align="center" justify="center" mb="md">

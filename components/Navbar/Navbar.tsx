@@ -132,7 +132,7 @@ const Navbar = () => {
             alt="metabillionaire logo"
             paddingLeft="md"
             marginX="auto"
-            width={170}
+            width={200}
             height={75}
             cursor="pointer"
           />
