@@ -110,6 +110,12 @@ td::after {
   display: none;
 }
 
+.link {
+  color: #4662dd;
+  font-family: sans-serif;
+  margin: 4px 0;
+}
+
 @media screen and (max-width: 40em) {
   /*
     Force table elements to not behave like tables anymore
