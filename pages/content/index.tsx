@@ -3,13 +3,15 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import Layout from "../../components/Layout/Layout";
 import { ethers, providers } from "ethers";
-import { Text, Flex, useToast } from "@chakra-ui/react";
+import { Text, Flex, useToast, Icon, Spinner } from "@chakra-ui/react";
+import { IoLogoDiscord, IoLogoTwitter } from "react-icons/io5";
 
 import FooterLink from "../../components/Footer/FooterLink";
 import useEthersProvider from "../../hooks/useEthersProvider";
 
 import StakingContract from "../../utils/ABIs/Staking";
 import ERC721Contract from "../../utils/ABIs/ERC721";
+import ReplayList from "../../components/ReplayList/ReplayList";
 
 const ContentPage = () => {
   const router = useRouter();
@@ -20,6 +22,7 @@ const ContentPage = () => {
   const [provider, setProvider] = useState<providers.JsonRpcProvider | null>(
     null
   );
+  const [isLoading, setIsLoading] = useState(false);
   const [checking, setChecking] = useState(false);
   const [isNFT, setisNFT] = useState(false);
   const [isStakedNFT, setIsStakedNFT] = useState(false);
@@ -36,8 +39,11 @@ const ContentPage = () => {
             provider
           );
 
+          // console.log(await ERC721.balanceOf(address));
+
           try {
             let balance = (await ERC721.balanceOf(address)).toString();
+            // console.clear();
             console.log("Balance : ", balance);
 
             setisNFT(balance !== "0");
@@ -83,7 +89,7 @@ const ContentPage = () => {
   useEffect(() => {
     setProvider(
       new ethers.providers.JsonRpcProvider(
-        process.env.NEXT_PUBLIC_INFURA_MAIN_NET
+        process.env.NEXT_PUBLIC_INFURA_MAIN_API
       )
     );
   }, []);
@@ -145,21 +151,94 @@ const ContentPage = () => {
 
   return (
     <Layout>
-      <Text
-        fontSize={30}
-        w="80%"
-        textAlign="center"
-        textTransform="uppercase"
-        mx="auto"
-        mt="lg"
-        mb="md"
+      <Flex
+        align="center"
+        justify="center"
+        w="100%"
+        minH="90vh"
+        alignItems={"center"}
+        flex={1}
       >
-        Content
-        <div>Address : {address}</div>
-        <div>NFT : {isNFT ? "yes" : "no"}</div>
-        {!isNFT && <div>Staked : {isStakedNFT ? "yes" : "no"}</div>}
-      </Text>
-      <Flex direction="column" className={"md:px-[20%] px-7"}></Flex>
+        {isLoading ? (
+          <Spinner color="customGray" mt="lg" />
+        ) : (
+          <Flex
+            align="center"
+            justify="flex-start"
+            flexDir="column"
+            width="100%"
+            flex={1}
+          >
+            <Text
+              fontSize={[25, 25, 30, 30]}
+              letterSpacing={2}
+              fontWeight={600}
+              color={"black"}
+              mt={["sm", "sm", 0, 0]}
+            >
+              MEMBER AREA
+            </Text>
+            <ReplayList />
+          </Flex>
+        )}
+      </Flex>
+      <Flex
+        bgColor="customBlue.500"
+        w="100%"
+        align="center"
+        justify="center"
+        py="xs"
+        px="xs"
+        flexDir="column"
+        shadow="lg"
+      >
+        <Flex>
+          <Flex
+            w="100%"
+            as={Link}
+            href="https://discord.gg/metabillionaire"
+            align="center"
+            justify="center"
+            bgColor="#ffffff"
+            flexDir="column"
+            py="xs"
+            px="xs"
+            mx="20px"
+            my="5px"
+            borderRadius={10}
+            cursor="pointer"
+            transition="all ease 0.5s"
+            _hover={{
+              transform: "scale(1.05)",
+            }}
+            shadow="lg"
+          >
+            <Icon as={IoLogoDiscord} color="customBlue.500" w={42} h={42} />
+          </Flex>
+          <Flex
+            w="100%"
+            align="center"
+            as={Link}
+            href="https://twitter.com/metab_nft"
+            justify="center"
+            bgColor="#ffffff"
+            flexDir="column"
+            py="xs"
+            px="xs"
+            mx="20px"
+            my="5px"
+            borderRadius={10}
+            cursor="pointer"
+            transition="all ease 0.5s"
+            _hover={{
+              transform: "scale(1.05)",
+            }}
+            shadow="lg"
+          >
+            <Icon as={IoLogoTwitter} color="customBlue.500" w={42} h={42} />
+          </Flex>
+        </Flex>
+      </Flex>
       <FooterLink />
     </Layout>
   );
