@@ -174,7 +174,7 @@ const ContentPage = () => {
               letterSpacing={2}
               fontWeight={600}
               color={"black"}
-              mt={["sm", "sm", 0, 0]}
+              mt={["sm", "sm", 10, 12]}
             >
               MEMBER AREA
             </Text>
@@ -182,63 +182,7 @@ const ContentPage = () => {
           </Flex>
         )}
       </Flex>
-      <Flex
-        bgColor="customBlue.500"
-        w="100%"
-        align="center"
-        justify="center"
-        py="xs"
-        px="xs"
-        flexDir="column"
-        shadow="lg"
-      >
-        <Flex>
-          <Flex
-            w="100%"
-            as={Link}
-            href="https://discord.gg/metabillionaire"
-            align="center"
-            justify="center"
-            bgColor="#ffffff"
-            flexDir="column"
-            py="xs"
-            px="xs"
-            mx="20px"
-            my="5px"
-            borderRadius={10}
-            cursor="pointer"
-            transition="all ease 0.5s"
-            _hover={{
-              transform: "scale(1.05)",
-            }}
-            shadow="lg"
-          >
-            <Icon as={IoLogoDiscord} color="customBlue.500" w={42} h={42} />
-          </Flex>
-          <Flex
-            w="100%"
-            align="center"
-            as={Link}
-            href="https://twitter.com/metab_nft"
-            justify="center"
-            bgColor="#ffffff"
-            flexDir="column"
-            py="xs"
-            px="xs"
-            mx="20px"
-            my="5px"
-            borderRadius={10}
-            cursor="pointer"
-            transition="all ease 0.5s"
-            _hover={{
-              transform: "scale(1.05)",
-            }}
-            shadow="lg"
-          >
-            <Icon as={IoLogoTwitter} color="customBlue.500" w={42} h={42} />
-          </Flex>
-        </Flex>
-      </Flex>
+
       <FooterLink />
     </Layout>
   );

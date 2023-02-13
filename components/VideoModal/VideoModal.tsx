@@ -13,7 +13,13 @@ import {
 import ReactPlayer from "react-player";
 import Intervenant from "../Intervenant/Intervenant";
 
-const VideoModal = ({ isOpen, onClose, selectVideo, speakerList }: any) => {
+const VideoModal = ({
+  isOpen,
+  onClose,
+  selectVideo,
+  speakerList,
+  name,
+}: any) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="2xl">
       <ModalOverlay />
@@ -25,14 +31,14 @@ const VideoModal = ({ isOpen, onClose, selectVideo, speakerList }: any) => {
         {selectVideo ? (
           <>
             <ModalHeader fontSize={25} fontWeight={800}>
-              {selectVideo.name} #{selectVideo.id}
+              {name}
             </ModalHeader>
             <ModalCloseButton />
-            <ModalBody>
+            <ModalBody p={4}>
               <ReactPlayer
                 width="100%"
                 height={300}
-                url={selectVideo.url}
+                url={selectVideo.video}
                 controls
                 autoPlay
               />

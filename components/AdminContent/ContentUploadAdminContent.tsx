@@ -15,21 +15,33 @@ import {
 } from "@chakra-ui/react";
 import API from "../../lib/api";
 import { useRouter } from "next/router";
+import { addContent } from "../../lib/firebase";
 
-const AdminContent = ({ videoListData, fetchAllItem, userPassword }: any) => {
+const platforms = ["youtube", "wistia"];
+
+const AdminContent = ({
+  videoListData,
+  fetchAllItem,
+  userPassword,
+  user,
+}: any) => {
   const [isLoading, setIsLoading] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [actualProject, setActualProject] = useState<any | null>(null);
   const [itemImage, setItemImage] = useState("");
   const [itemName, setItemName] = useState("");
   const [itemVideo, setItemVideo] = useState("");
-  const [itemType, setItemType] = useState("");
+  const [itemType, setItemType] = useState<"podcast" | "ama" | "value">(
+    "podcast"
+  );
   const [moneyMakerHere, setMoneyMakerHere] = useState(false);
   const [robotomHere, setRobotomHere] = useState(false);
+  const [speaker, setSpeaker] = useState("");
+  const [platform, setPlatform] = useState(platforms[0]);
   const toast = useToast();
   const router = useRouter();
   const types = ["Podcast", "AMA", "Value"];
-  const speakersList = ["MONEYMAKER", "ROBOTOM"];
+  // const speakersList = ["MONEYMAKER", "ROBOTOM"];
 
   const checkValueCheckBox = (actualProjectData: string) => {
     if (actualProject) {
@@ -50,119 +62,139 @@ const AdminContent = ({ videoListData, fetchAllItem, userPassword }: any) => {
   };
 
   const deleteItem = async (item: { image?: any; name?: any; id?: any }) => {
-    setIsLoading(true);
-    await API.post("/item", {
-      itemId: item.id,
-      action: "delete",
-      userPassword,
-    })
-      .then((response) => {
-        fetchAllItem();
-        setIsLoading(false);
-        toast({
-          description: response.data.msg || "Item was removed successfully",
-          status: "success",
-          duration: 4000,
-          isClosable: true,
-        });
-      })
-      .catch((err) => {
-        setIsLoading(false);
-        toast({
-          description:
-            err.response.data.msg ||
-            "An error occured, please try again later...",
-          status: "error",
-          duration: 4000,
-          isClosable: true,
-        });
-      });
+    // setIsLoading(true);
+    // await API.post("/item", {
+    //   itemId: item.id,
+    //   action: "delete",
+    //   userPassword,
+    // })
+    //   .then((response) => {
+    //     fetchAllItem();
+    //     setIsLoading(false);
+    //     toast({
+    //       description: response.data.msg || "Item was removed successfully",
+    //       status: "success",
+    //       duration: 4000,
+    //       isClosable: true,
+    //     });
+    //   })
+    //   .catch((err) => {
+    //     setIsLoading(false);
+    //     toast({
+    //       description:
+    //         err.response.data.msg ||
+    //         "An error occured, please try again later...",
+    //       status: "error",
+    //       duration: 4000,
+    //       isClosable: true,
+    //     });
+    //   });
   };
 
   const updateItem = async () => {
-    setIsLoading(true);
-
-    await API.post("/item", {
-      image: itemImage,
-      name: itemName,
-      url: itemVideo,
-      type: itemType,
-      moneyMakerHere,
-      robotomHere,
-      action: "update",
-      itemId: actualProject?.id,
-      userPassword,
-    })
-      .then((response) => {
-        setIsLoading(false);
-        fetchAllItem();
-        setEditMode(false);
-        setItemImage("");
-        setItemName("");
-        setItemVideo("");
-        setItemType("");
-        setRobotomHere(false);
-        setMoneyMakerHere(false);
-        toast({
-          description: response.data.msg || "Item was updated successfully",
-          status: "success",
-          duration: 4000,
-          isClosable: true,
-        });
-      })
-      .catch((err) => {
-        setIsLoading(false);
-        toast({
-          description:
-            err.response.data.msg ||
-            "An error occured, please try again later...",
-          status: "error",
-          duration: 4000,
-          isClosable: true,
-        });
-      });
+    // setIsLoading(true);
+    // await API.post("/item", {
+    //   image: itemImage,
+    //   name: itemName,
+    //   url: itemVideo,
+    //   type: itemType,
+    //   moneyMakerHere,
+    //   robotomHere,
+    //   action: "update",
+    //   itemId: actualProject?.id,
+    //   userPassword,
+    // })
+    //   .then((response) => {
+    //     setIsLoading(false);
+    //     fetchAllItem();
+    //     setEditMode(false);
+    //     setItemImage("");
+    //     setItemName("");
+    //     setItemVideo("");
+    //     setItemType("podcast");
+    //     setRobotomHere(false);
+    //     setMoneyMakerHere(false);
+    //     toast({
+    //       description: response.data.msg || "Item was updated successfully",
+    //       status: "success",
+    //       duration: 4000,
+    //       isClosable: true,
+    //     });
+    //   })
+    //   .catch((err) => {
+    //     setIsLoading(false);
+    //     toast({
+    //       description:
+    //         err.response.data.msg ||
+    //         "An error occured, please try again later...",
+    //       status: "error",
+    //       duration: 4000,
+    //       isClosable: true,
+    //     });
+    //   });
   };
 
   const createItem = async () => {
     setIsLoading(true);
-    await API.post("/item", {
-      itemImage,
-      itemName,
-      itemVideo,
-      itemType,
-      moneyMakerHere,
-      robotomHere,
-      action: "add",
-      userPassword,
-    })
-      .then((response) => {
+
+    addContent(itemName, itemImage, itemVideo, platform, itemType, speaker)
+      .then((res) => {
+        console.log(res);
         setIsLoading(false);
-        fetchAllItem();
         setEditMode(false);
         setItemImage("");
         setItemName("");
         setItemVideo("");
-        setItemType("");
-        setRobotomHere(false);
-        setMoneyMakerHere(false);
+        setItemType("podcast");
         toast({
-          description: response.data.msg || "Item was created successfully",
+          description: "Item was created successfully",
           status: "success",
-          duration: 4000,
+          duration: 1000,
           isClosable: true,
         });
       })
       .catch((err) => {
-        setIsLoading(false);
-        toast({
-          description:
-            err.response.data.msg ||
-            "An error occured, please try again later...",
-          status: "error",
-          duration: 4000,
-          isClosable: true,
-        });
+        console.clear();
+        console.log(err);
       });
+    // await API.post("/item", {
+    //   itemImage,
+    //   itemName,
+    //   itemVideo,
+    //   itemType,
+    //   moneyMakerHere,
+    //   robotomHere,
+    //   action: "add",
+    //   userPassword,
+    // })
+    //   .then((response) => {
+    //     setIsLoading(false);
+    //     fetchAllItem();
+    //     setEditMode(false);
+    //     setItemImage("");
+    //     setItemName("");
+    //     setItemVideo("");
+    //     setItemType("");
+    //     setRobotomHere(false);
+    //     setMoneyMakerHere(false);
+    //     toast({
+    //       description: response.data.msg || "Item was created successfully",
+    //       status: "success",
+    //       duration: 4000,
+    //       isClosable: true,
+    //     });
+    //   })
+    //   .catch((err) => {
+    //     setIsLoading(false);
+    //     toast({
+    //       description:
+    //         err.response.data.msg ||
+    //         "An error occured, please try again later...",
+    //       status: "error",
+    //       duration: 4000,
+    //       isClosable: true,
+    //     });
+    //   });
   };
 
   const handleSubmit = (e: { preventDefault: () => void }) => {
@@ -202,7 +234,7 @@ const AdminContent = ({ videoListData, fetchAllItem, userPassword }: any) => {
                 setItemImage("");
                 setItemName("");
                 setItemVideo("");
-                setItemType("");
+                setItemType("podcast");
                 setRobotomHere(false);
                 setMoneyMakerHere(false);
                 setEditMode(false);
@@ -268,21 +300,29 @@ const AdminContent = ({ videoListData, fetchAllItem, userPassword }: any) => {
                   mt="md"
                   bg="customGray.500"
                   className="select-container"
-                  value={
-                    itemType !== ""
-                      ? itemType
-                      : actualProject
-                      ? actualProject.type === "AMA"
-                        ? "AMA"
-                        : actualProject.type === "Podcast"
-                        ? "Podcast"
-                        : actualProject.type === "Value"
-                        ? "Value"
-                        : itemType
-                      : itemType
-                  }
+                  value={platform}
                   onChange={(e) => {
-                    setItemType(e.target.value);
+                    console.log(e.target.value);
+                    setPlatform(e.target.value);
+                  }}
+                  required
+                >
+                  {platforms.map((e, i) => (
+                    <option key={i} value={e}>
+                      {e}
+                    </option>
+                  ))}
+                </Select>
+                <Select
+                  fontSize={15}
+                  letterSpacing={2}
+                  fontWeight={600}
+                  mt="md"
+                  bg="customGray.500"
+                  className="select-container"
+                  value={itemType}
+                  onChange={(e) => {
+                    setItemType(e.target.value as any);
                   }}
                   required
                 >
@@ -292,15 +332,28 @@ const AdminContent = ({ videoListData, fetchAllItem, userPassword }: any) => {
                     </option>
                   ))}
                 </Select>
-                <Text textAlign="left" w="100%" my="md">
-                  Speakers :
+                <Text textAlign="center" w="100%" my="md">
+                  <div>Speakers :</div>
+                  <em>Comma seperated</em>
                 </Text>
                 <Stack
                   spacing={5}
                   direction="column"
                   className="checkbox-container"
                 >
-                  {speakersList.map((actualProjectData, i) => {
+                  <Input
+                    value={speaker}
+                    type="text"
+                    onChange={(e) => setSpeaker(e.target.value)}
+                    placeholder="Speakers (comma seperated)"
+                    fontSize={15}
+                    letterSpacing={2}
+                    fontWeight={600}
+                    w="100%"
+                    mt="md"
+                    required
+                  />
+                  {/* {speakersList.map((actualProjectData, i) => {
                     return (
                       <Checkbox
                         required
@@ -319,7 +372,7 @@ const AdminContent = ({ videoListData, fetchAllItem, userPassword }: any) => {
                           : speakersList[1]}
                       </Checkbox>
                     );
-                  })}
+                  })} */}
                 </Stack>
                 <Button
                   colorScheme="customGray"
@@ -344,7 +397,7 @@ const AdminContent = ({ videoListData, fetchAllItem, userPassword }: any) => {
             >
               <Button
                 colorScheme="customGray"
-                onClick={() => router.push("/")}
+                onClick={() => router.push("/content")}
                 fontSize={15}
                 fontWeight={300}
                 mr={[0, 0, "sm", "sm"]}

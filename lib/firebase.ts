@@ -8,8 +8,9 @@ import {
   setDoc,
   updateDoc,
 } from "firebase/firestore";
-import { db, storage } from "./firebase.config";
+import { auth, db, storage } from "./firebase.config";
 import { uuidv4 } from "@firebase/util";
+import { signInWithEmailAndPassword } from "firebase/auth";
 
 export const uploadProfilePic = async (file: any, userId: any) => {
   const fileRef = ref(storage, `profile/${userId}.png`);
@@ -85,4 +86,45 @@ export const setSubmissionStatus = async (
   updateDoc(docRef, {
     status: status,
   });
+};
+
+export const checkAdmin = async (email: string, password: string) => {
+  return signInWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+      const user = userCredential.user;
+      return userCredential;
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      throw new Error(error);
+    });
+};
+
+export const addContent = async (
+  name: string,
+  imageUrl: string,
+  videoUrl: string,
+  videoPlatform: string,
+  category: "podcast" | "ama" | "value",
+  speaker: string
+) => {
+  const collectionRef = collection(db, `Content`);
+
+  return addDoc(collectionRef, {
+    name: name,
+    image: imageUrl,
+    video: videoUrl,
+    platform: videoPlatform,
+    category: category,
+    speakers: speaker,
+  });
+};
+
+export const fetchContent = async () => {
+  const collectionRef = collection(db, `Content`);
+
+  const snapshot = await getDocs(collectionRef);
+
+  return snapshot;
 };

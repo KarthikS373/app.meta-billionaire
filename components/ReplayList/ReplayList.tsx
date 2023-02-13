@@ -13,6 +13,7 @@ import {
 import Intervenant from "../Intervenant/Intervenant";
 import VideoModal from "../VideoModal/VideoModal";
 import API from "../../lib/api";
+import { fetchContent } from "../../lib/firebase";
 
 const ReplayList = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -20,6 +21,7 @@ const ReplayList = () => {
   const [videoListData, setVideoListData] = useState<Array<any> | null>(null);
   const [speakerList, setSpeakerList] = useState<Array<any> | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [video, setVideo] = useState<any>();
   const toast = useToast();
 
   const showVideo = (video: any) => {
@@ -28,35 +30,38 @@ const ReplayList = () => {
   };
 
   const getAllSpeakers = async () => {
-    await API.get("/speakers")
-      .then((response) => {
-        setSpeakerList(response.data.msg);
-        setIsLoading(false);
-      })
-      .catch((err) => {
-        setIsLoading(false);
-        toast({
-          description: err.response.data.msg || "Error fetching speaker details",
-          status: "error",
-          duration: 2000,
-          isClosable: true,
-        });
-      });
+    // await API.get("/speakers")
+    //   .then((response) => {
+    //     setSpeakerList(response.data.msg);
+    //     setIsLoading(false);
+    //   })
+    //   .catch((err) => {
+    //     setIsLoading(false);
+    //     toast({
+    //       description: err.response.data.msg || "Error fetching speaker details",
+    //       status: "error",
+    //       duration: 2000,
+    //       isClosable: true,
+    //     });
+    //   });
   };
 
   const fetchAllItem = async () => {
     setIsLoading(true);
-    await API.get("/item")
-      .then((response) => {
-        setVideoListData(response.data.msg);
+    fetchContent()
+      .then((snapshot) => {
+        const list = [];
+        for (let docs of snapshot.docs) {
+          if (docs.exists()) list.push(docs.data());
+        }
+
+        setVideoListData(list);
         setIsLoading(false);
       })
       .catch((err) => {
         setIsLoading(false);
         toast({
-          description:
-            err.response.data.msg ||
-            "Error fetching Video list",
+          description: err.response.data.msg || "Error fetching Video list",
           status: "error",
           duration: 2000,
           isClosable: true,
@@ -76,6 +81,7 @@ const ReplayList = () => {
         onClose={onClose}
         selectVideo={selectVideo}
         speakerList={speakerList}
+        name={video ? video.name : ""}
       />
       <Flex
         align="flex-start"
@@ -103,7 +109,7 @@ const ReplayList = () => {
               videoListData.length > 0 ? (
                 videoListData.map((e, i) => {
                   const videoCount = videoListData.filter(
-                    (video) => video.type === "Podcast"
+                    (video) => video.category === "podcast"
                   );
                   if (videoCount.length === 0 && i === videoListData.length - 1)
                     return (
@@ -117,7 +123,7 @@ const ReplayList = () => {
                         List is empty
                       </Text>
                     );
-                  if (e.type !== "Podcast") return;
+                  if (e.category !== "podcast") return;
 
                   return (
                     <Flex
@@ -126,10 +132,13 @@ const ReplayList = () => {
                       key={i}
                       mb="xs"
                       boxShadow="md"
-                      bgColor="#1d1d1d"
+                      bgColor="#eee"
                       borderRadius={5}
                       cursor="pointer"
-                      onClick={() => showVideo(e)}
+                      onClick={() => {
+                        showVideo(e);
+                        setVideo(e);
+                      }}
                       _hover={{
                         transform: "scale(1.02)",
                       }}
@@ -170,7 +179,7 @@ const ReplayList = () => {
             )}
           </Flex>
           <Spacer />
-          <Flex
+          {/* <Flex
             w={["100%", "100%", "30%", "30%"]}
             flexDir="column"
             mt={["sm", "sm", 0, 0]}
@@ -205,7 +214,7 @@ const ReplayList = () => {
             ) : (
               <Spinner color="customGray" m="0 auto" mt="md" />
             )}
-          </Flex>
+          </Flex> */}
         </Flex>
         <Text
           my="sm"
@@ -221,7 +230,7 @@ const ReplayList = () => {
             videoListData.length > 0 ? (
               videoListData.map((e, i) => {
                 const videoCount = videoListData.filter(
-                  (video) => video.type === "AMA"
+                  (video) => video.category === "ama"
                 );
                 if (videoCount.length === 0 && i === videoListData.length - 1)
                   return (
@@ -236,7 +245,7 @@ const ReplayList = () => {
                       List is empty
                     </Text>
                   );
-                if (e.type !== "AMA") return;
+                if (e.category !== "ama") return;
 
                 return (
                   <Flex
@@ -245,7 +254,7 @@ const ReplayList = () => {
                     key={i}
                     mb="xs"
                     boxShadow="md"
-                    bgColor="#1d1d1d"
+                    bgColor="#eee"
                     borderRadius={5}
                     cursor="pointer"
                     onClick={() => showVideo(e)}
@@ -302,7 +311,7 @@ const ReplayList = () => {
             videoListData.length > 0 ? (
               videoListData.map((e, i) => {
                 const videoCount = videoListData.filter(
-                  (video) => video.type === "Value"
+                  (video) => video.category === "value"
                 );
                 if (videoCount.length === 0 && i === videoListData.length - 1)
                   return (
@@ -316,7 +325,7 @@ const ReplayList = () => {
                       List is empty
                     </Text>
                   );
-                if (e.type !== "Value") return;
+                if (e.type !== "value") return;
 
                 return (
                   <Flex
