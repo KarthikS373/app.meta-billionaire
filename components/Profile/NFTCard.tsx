@@ -7,10 +7,13 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 import { memo } from "react";
 import { IoEllipsisHorizontalSharp } from "react-icons/io5";
+import { MdEdit } from "react-icons/md";
 
 const NFTCard = ({ nftImage = "", nftName = "#" }) => {
+  const router = useRouter()
   let boxBg = useColorModeValue("white !important", "#111c44 !important");
   let secondaryBg = useColorModeValue("gray.50", "whiteAlpha.100");
   let mainText = useColorModeValue("gray.800", "white");
@@ -60,19 +63,10 @@ const NFTCard = ({ nftImage = "", nftName = "#" }) => {
             bg={iconBox}
             onClick={(e) => {
               e.preventDefault();
-              window.open(
-                `https://opensea.io/assets/ethereum/0xc6c817cd60e17fed0af2a759624e02dd6c812e64/${
-                  nftName.split("#")[1]
-                }`
-              );
+              router.push(`/profile/modify/${nftName.substring(1)}`)
             }}
           >
-            <Icon
-              w="24px"
-              h="24px"
-              as={IoEllipsisHorizontalSharp}
-              color={iconColor}
-            />
+            <Icon w="24px" h="24px" as={MdEdit} color={iconColor} />
           </Button>
         </Flex>
       </Box>

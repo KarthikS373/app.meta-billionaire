@@ -94,60 +94,60 @@ const ContentPage = () => {
     );
   }, []);
 
-  if (address === null) {
-    return (
-      <Layout>
-        <Flex align="center" justify="center">
-          <Text fontSize={25} color="customBlue.500">
-            Connect your wallet
-            <br /> to access this page
-          </Text>
-        </Flex>
-      </Layout>
-    );
-  }
+  // if (address === null) {
+  //   return (
+  //     <Layout>
+  //       <Flex align="center" justify="center">
+  //         <Text fontSize={25} color="customBlue.500">
+  //           Connect your wallet
+  //           <br /> to access this page
+  //         </Text>
+  //       </Flex>
+  //     </Layout>
+  //   );
+  // }
 
-  if (checking) {
-    return (
-      <Layout>
-        <Flex align="center" justify="center">
-          <Text fontSize={25} color="customBlue.500">
-            Checking...
-          </Text>
-        </Flex>
-      </Layout>
-    );
-  }
+  // if (checking) {
+  //   return (
+  //     <Layout>
+  //       <Flex align="center" justify="center">
+  //         <Text fontSize={25} color="customBlue.500">
+  //           Checking...
+  //         </Text>
+  //       </Flex>
+  //     </Layout>
+  //   );
+  // }
 
-  if (!isNFT && !isStakedNFT) {
-    return (
-      <Layout>
-        <Flex align="center" justify="center">
-          <Flex direction={"column"} align="center" justify="center">
-            <Text fontSize={25} color="customBlue.500">
-              No MB Found
-            </Text>
-            <a
-              href={"https://opensea.io/collection/metabillionaire"}
-              target="_blank"
-              rel="noreferrer"
-              className="link"
-            >
-              View Collection
-            </a>
-            <Text
-              as={"em"}
-              fontWeight={"hairline"}
-              mt={10}
-              textAlign={"center"}
-            >
-              Note: Buy or Stake MB to view Content Page
-            </Text>
-          </Flex>
-        </Flex>
-      </Layout>
-    );
-  }
+  // if (!isNFT && !isStakedNFT) {
+  //   return (
+  //     <Layout>
+  //       <Flex align="center" justify="center">
+  //         <Flex direction={"column"} align="center" justify="center">
+  //           <Text fontSize={25} color="customBlue.500">
+  //             No MB Found
+  //           </Text>
+  //           <a
+  //             href={"https://opensea.io/collection/metabillionaire"}
+  //             target="_blank"
+  //             rel="noreferrer"
+  //             className="link"
+  //           >
+  //             View Collection
+  //           </a>
+  //           <Text
+  //             as={"em"}
+  //             fontWeight={"hairline"}
+  //             mt={10}
+  //             textAlign={"center"}
+  //           >  
+  //             Note: Buy or Stake MB to view Content Page
+  //           </Text>
+  //         </Flex>
+  //       </Flex>
+  //     </Layout>
+  //   );
+  // }
 
   return (
     <Layout>
@@ -174,7 +174,7 @@ const ContentPage = () => {
               letterSpacing={2}
               fontWeight={600}
               color={"black"}
-              mt={["sm", "sm", 10, 12]}
+              mt={["sm", "sm", 16, 20]}
             >
               MEMBER AREA
             </Text>

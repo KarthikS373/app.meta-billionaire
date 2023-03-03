@@ -107,6 +107,8 @@ const Post = () => {
             `https://app.metabillionaire.com/api/fetchNickname?address=${router.query.address}`
           )
           .then((res) => {
+            console.clear()
+            console.log(res)
             if (res && res.data && res.data.data && res.data.data[0]) {
               if (res.data.data[0].mbucBalance) {
                 setHoldings(
@@ -156,7 +158,7 @@ const Post = () => {
       setProvider(
         // @ts-ignore
         new ethers.providers.JsonRpcProvider(
-          process.env.NEXT_PUBLIC_INFURA_MAIN_NET
+          process.env.NEXT_PUBLIC_INFURA_MAIN_API
         )
       );
     }
