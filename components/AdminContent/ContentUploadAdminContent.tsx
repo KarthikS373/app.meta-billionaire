@@ -513,7 +513,7 @@ const AdminContent = ({}: any) => {
   const [state, setState] = useState<"podcast" | "AMA" | "courses" | null>(
     null
   );
-  const [edit, setEdit] = useState<boolean>(false);
+  const [edit, setEdit] = useState<boolean>(true);
 
   const renderButton = (
     title: string,
@@ -537,7 +537,7 @@ const AdminContent = ({}: any) => {
     <>
       <Flex align="center" justify="center" my="sm" w="100%" flexDir="column">
         <Text textTransform="uppercase" fontSize={22} fontWeight={500} mb="md">
-          {state ? state : "Admin"}
+          {state ? (edit ? `Edit - ${state}` : state) : "Admin"}
         </Text>
         {/* Admin Main */}
         <Box w={["90%", "25%"]} className="space-y-8">
@@ -561,7 +561,7 @@ const AdminContent = ({}: any) => {
             </>
           )}
 
-          {state !== null && (
+          {state !== null && edit === false && (
             <>
               {renderButton("Return to Main menu", () => {
                 setState(null);
@@ -577,7 +577,7 @@ const AdminContent = ({}: any) => {
                 {"Content"}
               </Text>
               {/* Podcasts */}
-              {state === "podcast" && edit === false && (
+              {state === "podcast" && (
                 <>
                   <Box w="full">
                     {[1, 2, 3, 4, 5, 6, 7].map((item, index) => (
@@ -586,13 +586,13 @@ const AdminContent = ({}: any) => {
                   </Box>
                 </>
               )}
+            </>
+          )}
 
-              {/* Editmode */}
-              {state && edit && (
-                <>
-                  <EditContent />
-                </>
-              )}
+          {/* Editmode */}
+          {state && edit && (
+            <>
+              <EditContent />
             </>
           )}
         </Box>
