@@ -78,3 +78,27 @@ model ClaimReward {
   owner        User   @relation(fields: [userId], references: [wallet])
   userId       String
 }
+
+model ContentUpload {
+  id          Int     @id @default(autoincrement())
+  title       String  @default("")
+  video       String  @default("")
+  thumbnail   String  @default("")
+  active      Boolean @default(true)
+  speaker     String?
+  platform    String  @default("youtube") 
+  category    String  @default("")
+  description String  @default("")
+}
+
+model Courses {
+  id          Int     @id @default(autoincrement())
+  title       String  @default("")
+  video       String  @default("")
+  thumbnail   String  @default("")
+  active      Boolean @default(true)
+  speaker     String?
+  platform    String  @default("youtube")
+  category    String  @default("")
+  description String  @default("")
+}

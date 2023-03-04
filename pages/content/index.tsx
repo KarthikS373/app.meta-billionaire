@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import Link from "next/link";
-import Layout from "../../components/Layout/Layout";
 import { ethers, providers } from "ethers";
-import { Text, Flex, useToast, Icon, Spinner } from "@chakra-ui/react";
-import { IoLogoDiscord, IoLogoTwitter } from "react-icons/io5";
+import { Flex, useToast, Spinner } from "@chakra-ui/react";
+
+import Layout from "../../components/Layout/Layout";
 
 import FooterLink from "../../components/Footer/FooterLink";
 import useEthersProvider from "../../hooks/useEthersProvider";
 
 import StakingContract from "../../utils/ABIs/Staking";
 import ERC721Contract from "../../utils/ABIs/ERC721";
-import ReplayList from "../../components/ReplayList/ReplayList";
+import ContentMain from "../../components/Content/ContentMain";
 
 const ContentPage = () => {
   const router = useRouter();
@@ -140,7 +139,7 @@ const ContentPage = () => {
   //             fontWeight={"hairline"}
   //             mt={10}
   //             textAlign={"center"}
-  //           >  
+  //           >
   //             Note: Buy or Stake MB to view Content Page
   //           </Text>
   //         </Flex>
@@ -152,35 +151,12 @@ const ContentPage = () => {
   return (
     <Layout>
       <Flex
-        align="center"
-        justify="center"
         w="100%"
         minH="90vh"
-        alignItems={"center"}
+        alignItems={isLoading ? "center" : "flex-start"}
         flex={1}
       >
-        {isLoading ? (
-          <Spinner color="customGray" mt="lg" />
-        ) : (
-          <Flex
-            align="center"
-            justify="flex-start"
-            flexDir="column"
-            width="100%"
-            flex={1}
-          >
-            <Text
-              fontSize={[25, 25, 30, 30]}
-              letterSpacing={2}
-              fontWeight={600}
-              color={"black"}
-              mt={["sm", "sm", 16, 20]}
-            >
-              MEMBER AREA
-            </Text>
-            <ReplayList />
-          </Flex>
-        )}
+        {isLoading ? <Spinner color="customGray" mt="lg" /> : <ContentMain />}
       </Flex>
 
       <FooterLink />
