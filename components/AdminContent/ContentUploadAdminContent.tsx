@@ -567,7 +567,10 @@ const AdminContent = ({}: any) => {
                 setState(null);
                 router.push("#");
               })}
-              {renderButton(`Add new ${state}`, () => {})}
+              {renderButton(`Add new ${state}`, () => {
+                setEdit(true);
+                router.push(`#`)
+              })}
               <Text
                 textTransform="uppercase"
                 fontSize={16}
@@ -592,7 +595,7 @@ const AdminContent = ({}: any) => {
           {/* Editmode */}
           {state && edit && (
             <>
-              <EditContent back={() => setEdit(false)} />
+              <EditContent mode={state} back={() => setEdit(false)} />
             </>
           )}
         </Box>
