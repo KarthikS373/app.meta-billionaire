@@ -1,0 +1,39 @@
+{
+  "categories": [
+    {
+      "id": 0,
+      "name": "E-Commerce",
+      "duration": 10,
+      "banner": "https://images.unsplash.com/photo-1572177812156-58036aae439c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NXx8cHJvamVjdHxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60",
+      "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Porro, dolorem."
+    },
+    {
+      "id": 1,
+      "name": "Forex",
+      "duration": 10,
+      "banner": "https://images.unsplash.com/photo-1572177812156-58036aae439c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NXx8cHJvamVjdHxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60",
+      "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Porro, dolorem."
+    },
+    {
+      "id": 2,
+      "name": "SaaS",
+      "duration": 10,
+      "banner": "https://images.unsplash.com/photo-1572177812156-58036aae439c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NXx8cHJvamVjdHxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60",
+      "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Porro, dolorem."
+    },
+    {
+      "id": 3,
+      "name": "Car Rental",
+      "duration": 10,
+      "banner": "https://images.unsplash.com/photo-1572177812156-58036aae439c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NXx8cHJvamVjdHxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60",
+      "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Porro, dolorem."
+    },
+    {
+      "id": 4,
+      "name": "Airbnb Rental",
+      "duration": 10,
+      "banner": "https://images.unsplash.com/photo-1572177812156-58036aae439c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NXx8cHJvamVjdHxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60",
+      "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Porro, dolorem."
+    }
+  ]
+}
