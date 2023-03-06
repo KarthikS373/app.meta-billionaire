@@ -80,25 +80,26 @@ model ClaimReward {
 }
 
 model ContentUpload {
-  id          Int     @id @default(autoincrement())
-  title       String  @default("")
-  video       String  @default("")
-  thumbnail   String  @default("")
-  active      Boolean @default(true)
-  speaker     String?
-  platform    String  @default("youtube") 
-  category    String  @default("")
-  description String  @default("")
+  id               Int     @id @default(autoincrement())
+  order            Int     @default(autoincrement())
+  title            String  @default("")
+  video            String  @default("")
+  mobileThumnail   String  @default("")
+  desktopThumbnail String  @default("")
+  active           Boolean @default(true)
+  speaker          String?
+  category         String  @default("podcast")
+  description      String  @default("")
+  duration         String  @default("")
 }
 
 model Courses {
   id          Int     @id @default(autoincrement())
+  order       Int     @default(autoincrement())
   title       String  @default("")
   video       String  @default("")
-  thumbnail   String  @default("")
   active      Boolean @default(true)
-  speaker     String?
-  platform    String  @default("youtube")
+  type        String  @default("video")
   category    String  @default("")
   description String  @default("")
 }

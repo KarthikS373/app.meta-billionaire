@@ -21,7 +21,7 @@ const podcast = [
 const ContentMain = () => {
   return (
     <>
-      <Box w={"full"} className="pt-4">
+      <Box w={"full"} className="pt-12">
         <Row data={courses.categories} popupText="Number of lessons" title={"Courses"} />
         <Row data={podcast} title={"Podcast"} />
         {/* <Row data={temp} title={"AMA"} /> */}

@@ -33,7 +33,7 @@ const Row = ({ title, data, popupText = "Duration" }: Props) => {
   };
 
   return (
-    <Box className="space-y-1 ml-0 mt-1 md:mt-2 translate-x-2 md:translate-x-8">
+    <Box className="space-y-2 ml-0 mt-1 md:mt-2 translate-x-2 mb-6 md:translate-x-8">
       <Heading
         fontSize={[20, 20, 26, 36]}
         className="cursor-pointer w-min text-sm font-semibold text-black/50 transition-colors duration-200 hover:text-black md:text-2xl uppercase whitespace-nowrap"
@@ -65,7 +65,7 @@ const Row = ({ title, data, popupText = "Duration" }: Props) => {
           {data.map((outline) => (
             <Box
               key={outline.id}
-              className="group relative rounded-lg md:rounded min-w-[200px] cursor-pointer overflow-hidden transition-transform duration-200 ease-out md:h-52 md:min-w-[365px] md:hover:scale-105"
+              className="group relative rounded-lg md:rounded min-w-[200px] max-w-[260px] md:max-w-[1000px] cursor-pointer overflow-hidden transition-transform duration-200 ease-out md:h-52 md:min-w-[365px] md:hover:scale-105"
             >
               <Image
                 src={outline.banner}

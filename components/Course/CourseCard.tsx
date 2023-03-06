@@ -44,7 +44,7 @@ const Card = ({
       overflow="hidden"
       border="1px solid #08090a1a"
     >
-      {banner ? (
+      {/* {banner ? (
         <Image
           alt="header image"
           src={banner}
@@ -52,7 +52,7 @@ const Card = ({
         />
       ) : (
         ""
-      )}
+      )} */}
 
       <Grid
         templateColumns={{ base: "1fr", sm: "max-content 1fr" }}
@@ -82,15 +82,11 @@ const Card = ({
               d={{ base: "none", sm: "flex" }}
             >
               <Text
-                className="font-sans"
-                color="#4d5760"
                 fontSize="14px"
-                fontWeight="500"
+                className="text-black flex items-center gap-1 font-sans font-medium"
               >
-                {speaker}
-              </Text>
-              <Text className="font-sans" color="#4d5760" fontSize="12px">
-                {publishedDate}
+                <FaClock className="inline" />
+                {duration} min{" "}
               </Text>
               <Heading fontSize={{ base: "xl", sm: "3xl" }} mt="3">
                 <Link
@@ -103,24 +99,19 @@ const Card = ({
               </Heading>
             </VStack>
             <Spacer />
-            <Text
-              fontSize="14px"
-              className="text-black flex items-center gap-1 font-sans font-medium"
-            >
-              <FaClock className="inline" />
-              {duration} min{" "}
-            </Text>
+
             {type.toLowerCase() === "pdf" && (
               <Button
-                bg={"gray.300"}
+                bg={"black"}
                 _hover={{
-                  bg: "gray.200",
+                  bg: "blackAlpha.700",
                 }}
                 height="auto"
                 fontWeight="normal"
                 fontSize="14px"
                 rounded="md"
-                className="px-6 py-3 rounded shadow-sm"
+                w={32}
+                className="px-6 py-3 rounded shadow-sm  text-white w-36"
               >
                 Download
               </Button>
@@ -135,7 +126,8 @@ const Card = ({
                 fontWeight="normal"
                 fontSize="14px"
                 rounded="md"
-                className="px-6 py-3 rounded shadow-sm  text-white"
+                w={32}
+                className="px-6 py-3 rounded shadow-sm  text-white w-36"
               >
                 Watch
               </Button>
