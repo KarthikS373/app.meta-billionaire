@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
-import { Box, Flex, Heading, Image } from "@chakra-ui/react";
+import { Box, Flex, Heading, Image, Text } from "@chakra-ui/react";
 
 interface Props {
   data: Data[] | any[];
@@ -32,17 +32,22 @@ const Row = ({ title, data }: Props) => {
   };
 
   return (
-    <Box className="h-40 space-y-0.5 md:space-y-2">
-      <Heading className="w-56 cursor-pointer text-sm font-semibold text-[#e5e5e5] transition-colors duration-200 hover:text-white md:text-2xl">
+    <Box className="h-40 space-y-0.5 md:space-y-2 ml-0 mt-2 md:mt-8 translate-x-4 md:translate-x-8">
+      <Heading className="cursor-pointer w-min text-sm font-semibold text-[#294BF5]/50 transition-colors duration-200 hover:text-[#294BF5] md:text-2xl uppercase whitespace-nowrap">
         {title}
       </Heading>
-      <Box className="group relative md:-ml-2">
-        <BsChevronLeft
-          className={`absolute top-0 bottom-0 left-2 z-40 m-auto h-9 w-9 cursor-pointer opacity-0 transition hover:text-white hover:bg-black/30 hover:scale-125 group-hover:opacity-100 ${
-            !isMoved && "hidden"
-          }`}
-          onClick={() => handleClick("left")}
-        />
+      <Box className="relative">
+        <Box
+          h="full"
+          className="group z-50 hover:bg-black/30 absolute top-0 bottom-0 left-2 center m-auto"
+        >
+          <BsChevronLeft
+            className={`m-auto h-9 w-9 cursor-pointer opacity-0 transition group-hover:text-white hover:scale-125 group-hover:opacity-100 ${
+              !isMoved && "hidden"
+            }`}
+            onClick={() => handleClick("left")}
+          />
+        </Box>
 
         <Flex
           ref={rowRef}
@@ -51,26 +56,44 @@ const Row = ({ title, data }: Props) => {
               width: "0",
             },
           }}
-          className="flex items-center scrollbar-hide space-x-0.5 overflow-x-scroll md:space-x-2.5 md:p-2"
+          className="flex items-end justify-center scrollbar-hide space-x-0.5 overflow-x-scroll md:space-x-2.5 md:p-2"
         >
           {data.map((outline) => (
             <Box
               key={outline.id}
-              className="relative h-28 min-w-[180px] cursor-pointer transition-transform duration-200 ease-out md:h-56 md:min-w-[320px] md:hover:scale-105"
+              className="group relative rounded-sm md:rounded h-28 min-w-[180px] cursor-pointer overflow-hidden transition-transform duration-200 ease-out md:h-52 md:min-w-[320px] md:hover:scale-105"
             >
               <Image
                 src={outline.banner}
                 className="rounded-sm object-cover w-full md:rounded"
                 alt={outline.title}
               />
+              <Box className="absolute flex-col top-96 opacity-0 group-hover:opacity-100 group-hover:top-0 transition-all duration-300 center h-full w-full bg-black/75 text-white">
+                <Heading
+                  fontSize={[16, 16, 20, 32]}
+                  className="text-xl text-white/75"
+                >
+                  Courses
+                </Heading>
+                <Text
+                  as="p"
+                  fontSize={[12, 12, 14, 14]}
+                  className="text-white/75"
+                >
+                  Duration: 54 hrs
+                </Text>
+              </Box>
             </Box>
           ))}
         </Flex>
 
-        <BsChevronRight
-          className="absolute top-0 bottom-0 right-2 z-40 m-auto h-9 w-9 cursor-pointer opacity-0 transition hover:text-white hover:bg-black/30 hover:scale-125 group-hover:opacity-100"
+        <Box
+          h="full"
+          className="group z-50 hover:bg-black/30 absolute top-0 bottom-3 right-10 center m-auto cursor-pointer "
           onClick={() => handleClick("right")}
-        />
+        >
+          <BsChevronRight className=" h-9 w-9 opacity-0 transition group-hover:text-white hover:scale-125 group-hover:opacity-100" />
+        </Box>
       </Box>
     </Box>
   );
