@@ -1,7 +1,7 @@
 import { Button, Container, Flex, Input, Text } from "@chakra-ui/react";
 import React, { useState } from "react";
 
-const EditContent = ({ handleSubmit: submit }: any) => {
+const EditContent = ({ handleSubmit: submit, back }: any) => {
   const [field, setField] = useState("");
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -60,6 +60,7 @@ const EditContent = ({ handleSubmit: submit }: any) => {
                 letterSpacing={1.2}
                 type="reset"
                 minW={36}
+                onClick={back}
               >
                 Back
               </Button>

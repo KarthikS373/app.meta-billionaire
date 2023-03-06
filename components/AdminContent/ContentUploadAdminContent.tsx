@@ -592,7 +592,7 @@ const AdminContent = ({}: any) => {
           {/* Editmode */}
           {state && edit && (
             <>
-              <EditContent />
+              <EditContent back={() => setEdit(false)} />
             </>
           )}
         </Box>
