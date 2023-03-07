@@ -97,9 +97,10 @@ model Courses {
   id          Int     @id @default(autoincrement())
   order       Int     @default(autoincrement())
   title       String  @default("")
-  video       String  @default("")
+  link        String  @default("")
   active      Boolean @default(true)
-  type        String  @default("video")
+  type        String  @default("video") // "video" | "pdf" | "doc"
   category    String  @default("")
   description String  @default("")
+  duration    String  @default("")
 }

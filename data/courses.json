@@ -35,5 +35,10 @@
       "banner": "https://images.unsplash.com/photo-1572177812156-58036aae439c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NXx8cHJvamVjdHxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60",
       "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Porro, dolorem."
     }
+  ],
+  "types": [
+    { "id": 0, "type": "video" },
+    { "id": 1, "type": "pdf" },
+    { "id": 2, "type": "doc" }
   ]
 }

@@ -569,7 +569,7 @@ const AdminContent = ({}: any) => {
               })}
               {renderButton(`Add new ${state}`, () => {
                 setEdit(true);
-                router.push(`#`)
+                router.push(`#`);
               })}
               <Text
                 textTransform="uppercase"
@@ -595,7 +595,10 @@ const AdminContent = ({}: any) => {
           {/* Editmode */}
           {state && edit && (
             <>
-              <EditContent mode={state} back={() => setEdit(false)} />
+              <EditContent
+                mode={state === "courses" ? "courses" : "content"}
+                back={() => setEdit(false)}
+              />
             </>
           )}
         </Box>

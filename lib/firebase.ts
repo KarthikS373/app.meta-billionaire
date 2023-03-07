@@ -145,3 +145,18 @@ export const uploadThumbNail = async (
   const url = await getDownloadURL(fileRef);
   return url;
 };
+
+export const uploadCourseMaterial = async (
+  file: File,
+  name: string,
+  ext: string,
+  category: string,
+) => {
+  const fileRef = ref(storage, `course/${category}/${name}.${ext}`);
+
+  const snapshot = await uploadBytes(fileRef, file);
+  console.log(snapshot);
+
+  const url = await getDownloadURL(fileRef);
+  return url;
+};
