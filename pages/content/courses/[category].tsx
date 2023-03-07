@@ -16,7 +16,7 @@ const CourseCategory = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:3000/api/getAllCourses?category=${category}`)
+      .get(`https://app.metabillionaire.com/api/getAllCourses?category=${category}`)
       .then((res) => {
         console.clear();
         console.log("Fetch", res);
