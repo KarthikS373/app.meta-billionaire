@@ -6,6 +6,7 @@ import {
   Input,
   Select,
   Text,
+  Image,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 
@@ -26,6 +27,17 @@ const PodcastEdit = ({ podcast, back }: any) => {
   const [category, setCategory] = useState("podcast");
   const [description, setDescription] = useState("");
   const [duration, setDuration] = useState("");
+
+  const [preview, setPreview] = useState({
+    mobile: {
+      src: "",
+      text: "",
+    },
+    desktop: {
+      src: "",
+      text: "",
+    },
+  });
 
   useEffect(() => {
     if (podcast) {
@@ -70,6 +82,23 @@ const PodcastEdit = ({ podcast, back }: any) => {
     e.preventDefault();
   };
 
+  const createPreview = (file: File, mode: "mobile" | "desktop") => {
+    console.log("creating preview", file);
+    const FR = new FileReader();
+
+    FR.addEventListener("load", (evt) => {
+      setPreview((prev) => ({
+        ...prev,
+        [mode]: {
+          src: evt.target?.result,
+          text: evt.target?.result,
+        },
+      }));
+    });
+
+    FR.readAsDataURL(file);
+  };
+
   return (
     <>
       <form onSubmit={handleSubmit} className="w-full">
@@ -95,48 +124,90 @@ const PodcastEdit = ({ podcast, back }: any) => {
           {renderInput(description, setDescription, "Description")}
           {renderInput(duration, setDuration, "Duration")}
           <Flex
-            direction={"row"}
+            direction={"column"}
             alignItems={"center"}
             justifyContent={"center"}
-            gap={2}
+            gap={6}
+            mt={4}
+            w={"full"}
+            wrap={["wrap", "wrap", "nowrap", "nowrap"]}
           >
-            <Text whiteSpace={"nowrap"} fontSize={12}>
-              Mobile Thumbnail
-            </Text>
-            <Input
-              disabled={!active}
-              onChange={(e) => setMobileThumbnail(e.target?.files?.[0] || null)}
-              type={"file"}
-              placeholder={"Upload mobile thumbnail"}
-              fontSize={15}
-              letterSpacing={2}
-              fontWeight={600}
-              w="100%"
-              mt="sm"
-              required
-            />
+            {preview.mobile.src.length > 0 && (
+              <Flex direction={"column-reverse"} gap={1}>
+                <Text whiteSpace={"nowrap"} fontSize={12}>
+                  Mobile Preview
+                </Text>
+                <Image src={preview.mobile.src} alt={preview.mobile.text} />
+              </Flex>
+            )}
+            {preview.desktop.src.length > 0 && (
+              <Flex direction={"column-reverse"}>
+                <Text whiteSpace={"nowrap"} fontSize={12}>
+                  Desktop Preview
+                </Text>
+                <Image src={preview.desktop.src} alt={preview.desktop.text} />
+              </Flex>
+            )}
           </Flex>
           <Flex
             direction={"row"}
-            alignItems={"center"}
+            alignItems={"stretch"}
             justifyContent={"center"}
-            gap={2}
+            gap={4}
+            wrap={["wrap", "wrap", "nowrap", "nowrap"]}
           >
-            <Text whiteSpace={"nowrap"} fontSize={12}>
-              Desktop Thumbnail
-            </Text>
-            <Input
-              disabled={!active}
-              onChange={(e) => setDesktopThumbnail(e.target?.files?.[0] || null)}
-              type={"file"}
-              placeholder={"Upload Desktop thumbnail"}
-              fontSize={15}
-              letterSpacing={2}
-              fontWeight={600}
-              w="100%"
-              mt="sm"
-              required
-            />
+            <div className="flex w-full mt-4 items-center justify-center bg-grey-lighter">
+              <label className="w-60 flex flex-col items-center px-4 py-6 bg-white text-blue rounded-lg shadow-md tracking-wide uppercase border border-blue cursor-pointer hover:bg-blue hover:text-blue-600">
+                <svg
+                  className="w-8 h-8"
+                  fill="currentColor"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                >
+                  <path d="M16.88 9.1A4 4 0 0 1 16 17H5a5 5 0 0 1-1-9.9V7a3 3 0 0 1 4.52-2.59A4.98 4.98 0 0 1 17 8c0 .38-.04.74-.12 1.1zM11 11h3l-4-4-4 4h3v3h2v-3z" />
+                </svg>
+                <span className="mt-2 text-base leading-normal">
+                  Mobile
+                  <br /> Thumbnail
+                </span>
+                <input
+                  type="file"
+                  className="hidden"
+                  onChange={(e) => {
+                    setMobileThumbnail(e.target.files?.[0] || null);
+                    if (e.target.files?.[0]) {
+                      createPreview(e.target.files?.[0], "mobile");
+                    }
+                  }}
+                />
+              </label>
+            </div>
+            <div className="flex w-full mt-4 items-center justify-center bg-grey-lighter">
+              <label className="w-64 flex flex-col items-center px-4 py-6 bg-white text-blue rounded-lg shadow-md tracking-wide uppercase border border-blue cursor-pointer hover:bg-blue hover:text-blue-600">
+                <svg
+                  className="w-8 h-8"
+                  fill="currentColor"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                >
+                  <path d="M16.88 9.1A4 4 0 0 1 16 17H5a5 5 0 0 1-1-9.9V7a3 3 0 0 1 4.52-2.59A4.98 4.98 0 0 1 17 8c0 .38-.04.74-.12 1.1zM11 11h3l-4-4-4 4h3v3h2v-3z" />
+                </svg>
+                <span className="mt-2 text-base leading-normal">
+                  Desktop
+                  <br /> Thumbnail
+                </span>
+                <input
+                  type="file"
+                  className="hidden"
+                  onChange={(e) => {
+                    setDesktopThumbnail(e.target.files?.[0] || null);
+                    if (e.target.files?.[0]) {
+                      createPreview(e.target.files?.[0], "desktop");
+                    }
+                  }}
+                />
+              </label>
+            </div>
           </Flex>
           <Button
             colorScheme={active ? "red" : "green"}
