@@ -44,18 +44,18 @@ model User {
   name        String
   mbucBalance String        @default("")
   isApproval  Boolean       @default(false)
-  inventory   Product[]
   claimReward ClaimReward[]
+  inventory   Product[]
 }
 
 model Product {
   id           Int     @id @default(autoincrement())
   productId    String
   alreadyClaim Boolean
-  owner        User    @relation(fields: [authorId], references: [wallet])
   authorId     String
   quantity     Int     @default(1)
   oldContract  Boolean @default(false)
+  owner        User    @relation(fields: [authorId], references: [wallet])
 }
 
 model RaffleWinner {
@@ -75,8 +75,21 @@ model ClaimReward {
   country      String @default("")
   clothingSize String @default("")
   email        String @default("")
-  owner        User   @relation(fields: [userId], references: [wallet])
   userId       String
+  owner        User   @relation(fields: [userId], references: [wallet])
+}
+
+model strapi_database_schema {
+  id     Int       @id @default(autoincrement())
+  schema Json?     @db.Json
+  time   DateTime? @db.Timestamp(6)
+  hash   String?   @db.VarChar(255)
+}
+
+model strapi_migrations {
+  id   Int       @id @default(autoincrement())
+  name String?   @db.VarChar(255)
+  time DateTime? @db.Timestamp(6)
 }
 
 model ContentUpload {
