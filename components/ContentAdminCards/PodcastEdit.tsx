@@ -28,6 +28,8 @@ const PodcastEdit = ({ podcast, back }: any) => {
   const [description, setDescription] = useState("");
   const [duration, setDuration] = useState("");
 
+  const [uploadState, setUploadState] = useState(false);
+
   const [preview, setPreview] = useState({
     mobile: {
       src: "",
@@ -251,7 +253,7 @@ const PodcastEdit = ({ podcast, back }: any) => {
               type="submit"
               minW={36}
             >
-              Create
+              {uploadState ? "Create" : "Upload"}
             </Button>
           </Flex>
         </Flex>

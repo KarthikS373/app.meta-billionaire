@@ -128,3 +128,20 @@ export const fetchContent = async () => {
 
   return snapshot;
 };
+
+/* Course */
+export const uploadThumbNail = async (
+  file: File,
+  name: string,
+  ext: string,
+  mode: string = "podcast",
+  version: "mobile" | "desktop" = "desktop"
+) => {
+  const fileRef = ref(storage, `${mode}/${version}/${name}.${ext}`);
+
+  const snapshot = await uploadBytes(fileRef, file);
+  console.log(snapshot);
+
+  const url = await getDownloadURL(fileRef);
+  return url;
+};
