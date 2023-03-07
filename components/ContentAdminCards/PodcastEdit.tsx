@@ -17,6 +17,7 @@ const PodcastEdit = ({ podcast, back }: any) => {
   const [mobileThumbnail, setMobileThumbnail] = useState<File | null>(null);
   const [desktopThumbnail, setDesktopThumbnail] = useState<File | null>(null);
 
+  const [id, setId] = useState<string | null>(null);
   const [title, setTitle] = useState("");
   const [video, setVideo] = useState("");
   const [thumbNail, setThumbNail] = useState({
@@ -52,6 +53,7 @@ const PodcastEdit = ({ podcast, back }: any) => {
     if (podcast) {
       setMode("edit");
 
+      setId(podcast.id);
       setTitle(podcast.title);
       setVideo(podcast.video);
       setThumbNail({
@@ -103,7 +105,23 @@ const PodcastEdit = ({ podcast, back }: any) => {
           )
             .then((url) => {
               console.log(url);
-              setThumbnailURL((prev)  => ({ ...prev, mobile: url }));
+              setThumbnailURL((prev) => ({ ...prev, mobile: url }));
+            })
+            .catch((err) => console.warn(err));
+        }
+      } catch (e) {}
+      try {
+        if (desktopThumbnail) {
+          uploadThumbNail(
+            desktopThumbnail,
+            title.toLowerCase(),
+            desktopThumbnail.type.replace(/(.*)\//g, ""),
+            category,
+            "desktop"
+          )
+            .then((url) => {
+              console.log(url);
+              setThumbnailURL((prev) => ({ ...prev, desktop: url }));
             })
             .catch((err) => console.warn(err));
         }
