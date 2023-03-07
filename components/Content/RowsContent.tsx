@@ -1,20 +1,44 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
-import { Box, Flex, Heading, Image, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  Heading,
+  Image,
+  Text,
+  useMediaQuery,
+} from "@chakra-ui/react";
 
 interface Props {
-  data: Data[] | any[];
   title: string;
   popupText?: string;
+  category: string;
+  data: Data[];
+  setPlayer: (name: string, src: string) => void;
 }
 
 interface Data {
   id: number;
+  order: number;
   title: string;
-  banner: string;
+  video: string;
+  mobileThumnail: string;
+  desktopThumbnail: string;
+  active: boolean;
+  speaker: string | null;
+  category: string;
+  description: string;
+  duration: string;
 }
 
-const Row = ({ title, data, popupText = "Duration" }: Props) => {
+const RowContent = ({
+  title,
+  data,
+  setPlayer,
+  popupText = "Duration",
+}: Props) => {
+  const [isLargerThan800] = useMediaQuery("(min-width: 800px)");
+
   const rowRef = useRef<HTMLDivElement>(null);
   const [isMoved, setIsMoved] = useState(false);
 
@@ -65,23 +89,30 @@ const Row = ({ title, data, popupText = "Duration" }: Props) => {
           {data.map((outline) => (
             <Box
               key={outline.id}
+              onClick={() => setPlayer(outline.title, outline.video)}
               className="group relative rounded-lg md:rounded min-w-[200px] max-w-[260px] md:max-w-[1000px] cursor-pointer overflow-hidden transition-transform duration-200 ease-out md:h-52 md:min-w-[365px] md:hover:scale-105"
             >
               <Image
-                src={outline.banner}
+                src={
+                  isLargerThan800
+                    ? outline.desktopThumbnail
+                    : outline.mobileThumnail
+                }
                 h={[64, 64, "auto", "auto"]}
-                className="rounded-sm object-cover w-full md:rounded"
+                className="rounded-sm object-cover w-full md:rounded object-center"
                 alt={outline.title}
               />
               <Box className="absolute flex-col top-96 opacity-0 group-hover:opacity-100 group-hover:top-0 transition-all duration-300 center h-full w-full bg-black/75 text-white">
                 <Heading
                   fontSize={[16, 16, 20, 32]}
+                  textAlign={"center"}
                   className="text-xl text-white/75"
                 >
-                  {outline.name}
+                  {outline.title}
                 </Heading>
                 <Text
                   as="p"
+                  textAlign={"center"}
                   fontSize={[12, 12, 14, 14]}
                   className="text-white/75"
                 >
@@ -104,4 +135,4 @@ const Row = ({ title, data, popupText = "Duration" }: Props) => {
   );
 };
 
-export default Row;
+export default RowContent;

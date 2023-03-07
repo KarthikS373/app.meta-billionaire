@@ -1,30 +1,70 @@
-import React from "react";
-import { Badge, Box, Flex, Slider, Text } from "@chakra-ui/react";
+import React, { useEffect, useState } from "react";
+import {
+  Badge,
+  Box,
+  Flex,
+  Slider,
+  Text,
+  useDisclosure,
+} from "@chakra-ui/react";
 import Image from "next/image";
+import axios from "axios";
 
 import courses from "../../data/courses.json";
 
-import Row from "./Rows";
-
-const podcast = [
-  {
-    id: 0,
-    name: "Podcast name",
-    duration: "2.45hr",
-    banner:
-      "https://images.unsplash.com/photo-1572177812156-58036aae439c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NXx8cHJvamVjdHxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60",
-    description:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Porro, dolorem.",
-  },
-];
+import RowsCourse from "./RowsCourse";
+import RowContent from "./RowsContent";
+import VideoModal from "../VideoModal/VideoModal";
 
 const ContentMain = () => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const [video, setVideo] = useState({
+    src: "",
+    name: "",
+  });
+
+  const [podcast, setPodcast] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get(`api/getAllContent`)
+      .then((res) => {
+        console.log(res);
+        setPodcast(res.data.data);
+      })
+      .catch((e) => console.log(e));
+  }, []);
+
+  const setPlayer = (name: string, src: string) => {
+    console.log(name, src);
+    setVideo({
+      src: src,
+      name: name,
+    });
+    onOpen();
+  };
+
   return (
     <>
+      <VideoModal
+        isOpen={isOpen}
+        onClose={onClose}
+        selectVideo={video.src}
+        name={video ? video.name : ""}
+      />
       <Box w={"full"} className="pt-12">
-        <Row data={courses.categories} popupText="Number of lessons" title={"Courses"} />
-        <Row data={podcast} title={"Podcast"} />
-        {/* <Row data={temp} title={"AMA"} /> */}
+        <RowsCourse
+          data={courses.categories}
+          popupText="Number of lessons"
+          title={"Courses"}
+        />
+        <RowContent
+          setPlayer={setPlayer}
+          data={podcast}
+          title={"podcast"}
+          category={"podcast"}
+        />
       </Box>
     </>
   );

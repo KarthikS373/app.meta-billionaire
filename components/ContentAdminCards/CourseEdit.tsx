@@ -25,7 +25,7 @@ const CourseEdit = ({ course, back }: any) => {
   const [link, setLink] = useState("");
 
   const [active, setActive] = useState(true);
-  const [category, setCategory] = useState("podcast");
+  const [category, setCategory] = useState("");
   const [type, setType] = useState("");
   const [description, setDescription] = useState("");
   const [duration, setDuration] = useState("");
@@ -163,7 +163,7 @@ const CourseEdit = ({ course, back }: any) => {
           >
             {courseCategories.categories.map((c, i) => {
               return (
-                <option value={c.name.toLowerCase()} key={c.id}>
+                <option value={c.slug} key={c.id}>
                   {c.name}
                 </option>
               );

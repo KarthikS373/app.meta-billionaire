@@ -17,7 +17,6 @@ const VideoModal = ({
   isOpen,
   onClose,
   selectVideo,
-  speakerList,
   name,
 }: any) => {
   return (
@@ -38,55 +37,10 @@ const VideoModal = ({
               <ReactPlayer
                 width="100%"
                 height={300}
-                url={selectVideo.video}
+                url={selectVideo}
                 controls
                 autoPlay
               />
-              {!selectVideo.isRobotom && !selectVideo.isMoneyMaker ? (
-                <></>
-              ) : (
-                <>
-                  <Text
-                    textTransform="uppercase"
-                    mt="sm"
-                    fontSize={22}
-                    fontWeight={600}
-                  >
-                    Speakers
-                  </Text>
-
-                  <SimpleGrid
-                    columns={
-                      selectVideo.isRobotom && selectVideo.isMoneyMaker ? 2 : 1
-                    }
-                    w="100%"
-                  >
-                    {selectVideo.isRobotom && (
-                      <Intervenant
-                        name={speakerList[1].name}
-                        image={speakerList[1].image}
-                        job={speakerList[1].job}
-                        speakersCount={
-                          selectVideo.isRobotom && selectVideo.isMoneyMaker
-                            ? 2
-                            : 1
-                        }
-                        isModal
-                      />
-                    )}
-
-                    {selectVideo.isMoneyMaker && (
-                      <Intervenant
-                        name={speakerList[0].name}
-                        image={speakerList[0].image}
-                        job={speakerList[0].job}
-                        speakersCount={speakerList}
-                        isModal
-                      />
-                    )}
-                  </SimpleGrid>
-                </>
-              )}
             </ModalBody>
           </>
         ) : (
