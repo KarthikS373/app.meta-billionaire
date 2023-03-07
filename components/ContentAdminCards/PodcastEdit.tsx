@@ -7,11 +7,14 @@ import {
   Select,
   Text,
   Image,
+  useToast,
 } from "@chakra-ui/react";
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { uploadThumbNail } from "../../lib/firebase";
 
 const PodcastEdit = ({ podcast, back }: any) => {
+  const toast = useToast();
   const [mode, setMode] = useState<"edit" | "create">("create");
 
   const [mobileThumbnail, setMobileThumbnail] = useState<File | null>(null);
@@ -89,43 +92,89 @@ const PodcastEdit = ({ podcast, back }: any) => {
     />
   );
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
 
+    let errors = null;
+
     if (!uploadState) {
+      console.log("-- starting upload --");
       try {
         if (mobileThumbnail) {
-          uploadThumbNail(
+          const data = await uploadThumbNail(
             mobileThumbnail,
             title.toLowerCase(),
             mobileThumbnail.type.replace(/(.*)\//g, ""),
             category,
             "mobile"
-          )
-            .then((url) => {
-              console.log(url);
-              setThumbnailURL((prev) => ({ ...prev, mobile: url }));
-            })
-            .catch((err) => console.warn(err));
+          );
+          console.log(data);
+          setThumbnailURL((prev) => ({ ...prev, mobile: data }));
+          toast({
+            title: `Uploaded Mobile Thumbnail`,
+            status: "success",
+            duration: 1500,
+            isClosable: true,
+          });
         }
-      } catch (e) {}
+      } catch (e) {
+        errors = e;
+      }
       try {
         if (desktopThumbnail) {
-          uploadThumbNail(
+          const data = await uploadThumbNail(
             desktopThumbnail,
             title.toLowerCase(),
             desktopThumbnail.type.replace(/(.*)\//g, ""),
             category,
             "desktop"
-          )
-            .then((url) => {
-              console.log(url);
-              setThumbnailURL((prev) => ({ ...prev, desktop: url }));
-            })
-            .catch((err) => console.warn(err));
+          );
+          console.log(data);
+          setThumbnailURL((prev) => ({ ...prev, desktop: data }));
+          toast({
+            title: `Uploaded Desktop Thumbnail`,
+            status: "success",
+            duration: 1500,
+            isClosable: true,
+          });
         }
-      } catch (e) {}
+      } catch (e) {
+        errors = e;
+      }
+
+      console.log("-- uploaded --");
+      console.log(errors);
+
+      if (!errors) setUploadState(true);
+    }
+
+    if (uploadState) {
+      axios
+        .post(`/api/addContent`, {
+          active: active,
+          category: category,
+          description: description,
+          desktopThumbnail: thumbnailURL.desktop,
+          mobileThumnail: thumbnailURL.mobile,
+          duration: duration,
+          speaker: "tester, tester",
+          title: title,
+          video: video,
+        })
+        .then((res) => {
+          toast({
+            title: `${category} created.`,
+            description: `Created your a new ${category}`,
+            status: "success",
+            duration: 3000,
+            isClosable: true,
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+          console.log(err.message);
+        });
     }
 
     setIsLoading(false);
