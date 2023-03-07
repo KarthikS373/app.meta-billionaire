@@ -9,6 +9,7 @@ import {
   Image,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
+import { uploadThumbNail } from "../../lib/firebase";
 
 const PodcastEdit = ({ podcast, back }: any) => {
   const [mode, setMode] = useState<"edit" | "create">("create");
@@ -29,6 +30,12 @@ const PodcastEdit = ({ podcast, back }: any) => {
   const [duration, setDuration] = useState("");
 
   const [uploadState, setUploadState] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [thumbnailURL, setThumbnailURL] = useState({
+    mobile: "",
+    desktop: "",
+  });
 
   const [preview, setPreview] = useState({
     mobile: {
@@ -82,6 +89,28 @@ const PodcastEdit = ({ podcast, back }: any) => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsLoading(true);
+
+    if (!uploadState) {
+      try {
+        if (mobileThumbnail) {
+          uploadThumbNail(
+            mobileThumbnail,
+            title.toLowerCase(),
+            mobileThumbnail.type.replace(/(.*)\//g, ""),
+            category,
+            "mobile"
+          )
+            .then((url) => {
+              console.log(url);
+              setThumbnailURL((prev)  => ({ ...prev, mobile: url }));
+            })
+            .catch((err) => console.warn(err));
+        }
+      } catch (e) {}
+    }
+
+    setIsLoading(false);
   };
 
   const createPreview = (file: File, mode: "mobile" | "desktop") => {
