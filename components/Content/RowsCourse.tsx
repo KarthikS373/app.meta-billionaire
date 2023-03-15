@@ -65,7 +65,7 @@ const Row = ({ title, data, popupText = "Duration" }: Props) => {
         >
           {data.map((outline) => (
             <Link key={outline.id} href={`content/courses/${outline.slug}`} passHref>
-              <Box className="group relative rounded-lg md:rounded min-w-[200px] max-w-[260px] md:max-w-[1000px] cursor-pointer overflow-hidden transition-transform duration-200 ease-out md:h-52 md:min-w-[365px] md:hover:scale-105">
+              <Box className="group relative rounded-lg md:rounded min-w-[200px] max-w-[260px] md:max-w-[373px] cursor-pointer overflow-hidden transition-transform duration-200 ease-out md:h-52 md:min-w-[365px] md:hover:scale-105">
                 <Image
                   src={outline.banner}
                   h={[64, 64, "auto", "auto"]}

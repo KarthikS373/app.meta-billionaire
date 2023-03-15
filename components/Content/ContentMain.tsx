@@ -10,7 +10,7 @@ import {
 import Image from "next/image";
 import axios from "axios";
 
-import courses from "../../data/courses.json";
+import courses from "../../data/courses.data";
 
 import RowsCourse from "./RowsCourse";
 import RowContent from "./RowsContent";

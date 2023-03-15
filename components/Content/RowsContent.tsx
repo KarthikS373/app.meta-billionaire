@@ -90,7 +90,7 @@ const RowContent = ({
             <Box
               key={outline.id}
               onClick={() => setPlayer(outline.title, outline.video)}
-              className="group relative rounded-lg md:rounded min-w-[200px] max-w-[260px] md:max-w-[1000px] cursor-pointer overflow-hidden transition-transform duration-200 ease-out md:h-52 md:min-w-[365px] md:hover:scale-105"
+              className="group relative rounded-lg md:rounded min-w-[200px] max-w-[260px] cursor-pointer overflow-hidden transition-transform duration-200 ease-out md:h-52 md:min-w-[345px] md:max-w-[370px] md:hover:scale-105"
             >
               <Image
                 src={

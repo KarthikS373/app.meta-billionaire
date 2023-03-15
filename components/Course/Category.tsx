@@ -12,7 +12,7 @@ import {
 import { useRouter } from "next/router";
 import { PropsWithChildren } from "react";
 
-const Category = ({ title, description, banner }: any) => {
+const Category = ({ title, description, banner, btnClick, btnText }: any) => {
   const router = useRouter();
 
   return (
@@ -60,9 +60,15 @@ const Category = ({ title, description, banner }: any) => {
           >
             Back to Courses
           </CustomButton>
-          {/* <CustomButton colorScheme="blue" variant="solid">
-            Option 2
-          </CustomButton> */}
+          {btnClick && (
+            <CustomButton
+              colorScheme="blue"
+              variant="solid"
+              onClick={(e) => btnClick(e, router)}
+            >
+              {btnText}
+            </CustomButton>
+          )}
         </Stack>
       </Box>
     </Box>

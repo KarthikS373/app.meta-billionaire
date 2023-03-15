@@ -12,7 +12,7 @@ import {
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { uploadCourseMaterial, uploadThumbNail } from "../../lib/firebase";
-import courseCategories from "../../data/courses.json";
+import courseCategories from "../../data/courses.data.ts";
 
 const CourseEdit = ({ course, back }: any) => {
   const toast = useToast();

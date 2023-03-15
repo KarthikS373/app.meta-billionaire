@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import { Box, Flex, Grid, GridItem } from "@chakra-ui/react";
+import { Box, Flex, Grid, GridItem, Heading, Text } from "@chakra-ui/react";
 
 import Layout from "../../../components/Layout/Layout";
 import layers from "../../../public/assets/layers";
@@ -8,7 +8,7 @@ import layers from "../../../public/assets/layers";
 const CustomizeNFT = () => {
   return (
     <Layout>
-      <Flex justifyContent={"center"} my={20} alignItems={"center"} h={"full"}>
+      {/* <Flex justifyContent={"center"} my={20} alignItems={"center"} h={"full"}>
         <Box
           m={"auto"}
           border={"0.25px solid gray"}
@@ -53,6 +53,15 @@ const CustomizeNFT = () => {
             );
           })}
         </Box>
+      </Flex> */}
+      <Flex
+        justifyContent={"center"}
+        alignItems={"center"}
+        flexDirection="column"
+        gap={2}
+      >
+        <Heading>Coming soon</Heading>
+        <Text>Trait Shop</Text>
       </Flex>
     </Layout>
   );

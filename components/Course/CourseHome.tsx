@@ -12,15 +12,25 @@ import Card from "./CourseCard";
 import Category from "./Category";
 import VideoModal from "../VideoModal/VideoModal";
 
-import courses from "../../data/courses.json";
+import courses from "../../data/courses.data";
+
+interface Category {
+  title: string;
+  desc: string;
+  banner: string;
+  btnText: string;
+  onClick: (...args: any) => void | null;
+}
 
 const CourseHome = ({ category, data }: any) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const [categoryBanner, setCategoryBanner] = useState({
+  const [categoryBanner, setCategoryBanner] = useState<Category>({
     title: "",
     desc: "",
     banner: "",
+    btnText: "",
+    onClick: () => {},
   });
 
   const [video, setVideo] = useState({
@@ -30,11 +40,14 @@ const CourseHome = ({ category, data }: any) => {
 
   useEffect(() => {
     const d = courses.categories.filter((item) => item.slug === category);
-    setCategoryBanner({
-      banner: d[0].banner,
-      desc: d[0].description,
-      title: d[0].name,
-    });
+    if (d[0])
+      setCategoryBanner({
+        banner: d[0].banner,
+        desc: d[0].description,
+        title: d[0].name,
+        btnText: d[0].btnText,
+        onClick: d[0].onClick,
+      });
   }, []);
 
   const setPlayer = (name: string, src: string) => {
@@ -61,6 +74,8 @@ const CourseHome = ({ category, data }: any) => {
               title={categoryBanner.title}
               description={categoryBanner.desc}
               banner={categoryBanner.banner}
+              btnText={categoryBanner.btnText}
+              btnClick={categoryBanner.onClick || null}
             />
           </Box>
           <Box
