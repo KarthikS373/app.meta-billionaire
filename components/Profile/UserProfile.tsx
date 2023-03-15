@@ -172,6 +172,7 @@ const UserProfile = ({
                 {products.map((nft: any) => {
                   return (
                     <NFTCard
+                      visitor={visitor}
                       key={nft.dna}
                       nftName={`#${nft.name}`}
                       nftImage={nft.image}
@@ -216,6 +217,7 @@ const UserProfile = ({
                 {stakedNfts.map((nft: any) => {
                   return (
                     <NFTCard
+                      visitor={visitor}
                       key={nft.dna}
                       nftName={nft.name}
                       nftImage={nft.image}

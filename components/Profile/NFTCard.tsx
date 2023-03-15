@@ -9,11 +9,10 @@ import {
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { memo } from "react";
-import { IoEllipsisHorizontalSharp } from "react-icons/io5";
 import { MdEdit } from "react-icons/md";
 
-const NFTCard = ({ nftImage = "", nftName = "#" }) => {
-  const router = useRouter()
+const NFTCard = ({ nftImage = "", nftName = "#", visitor = false }) => {
+  const router = useRouter();
   let boxBg = useColorModeValue("white !important", "#111c44 !important");
   let secondaryBg = useColorModeValue("gray.50", "whiteAlpha.100");
   let mainText = useColorModeValue("gray.800", "white");
@@ -55,19 +54,21 @@ const NFTCard = ({ nftImage = "", nftName = "#" }) => {
           >
             {nftName}
           </Text>
-          <Button
-            w="38px"
-            h="38px"
-            borderRadius="12px"
-            me="12px"
-            bg={iconBox}
-            onClick={(e) => {
-              e.preventDefault();
-              router.push(`/profile/modify/${nftName.substring(1)}`)
-            }}
-          >
-            <Icon w="24px" h="24px" as={MdEdit} color={iconColor} />
-          </Button>
+          {!visitor && (
+            <Button
+              w="38px"
+              h="38px"
+              borderRadius="12px"
+              me="12px"
+              bg={iconBox}
+              onClick={(e) => {
+                e.preventDefault();
+                router.push(`/profile/modify/${nftName.substring(1)}`);
+              }}
+            >
+              <Icon w="24px" h="24px" as={MdEdit} color={iconColor} />
+            </Button>
+          )}
         </Flex>
       </Box>
       <Flex
