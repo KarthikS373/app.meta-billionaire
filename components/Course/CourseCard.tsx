@@ -65,7 +65,7 @@ const Card = ({ title, handleClick, duration, link, type }: CardProps) => {
               className="text-black flex items-center gap-1 font-sans font-medium"
             >
               <FaClock className="inline" />
-              {duration} min{" "}
+              {duration}
             </Text>
             <Heading fontSize={{ base: "xl", sm: "3xl" }} mt="3">
               <Button

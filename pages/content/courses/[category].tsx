@@ -12,8 +12,6 @@ const CourseCategory = () => {
 
   const { category } = router.query;
 
-  console.log(category);
-
   useEffect(() => {
     axios
       .get(`https://app.metabillionaire.com/api/getAllCourses?category=${category}`)

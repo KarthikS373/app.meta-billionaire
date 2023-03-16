@@ -10,7 +10,7 @@ const data = {
       banner: "/course-category/forex.jpeg ",
       duration: 4,
       description:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Porro, dolorem.",
+        "Forex course offered by Swiper FX",
       btnText: "Full course here",
       onClick: (e: React.MouseEvent<HTMLButtonElement>, router: NextRouter) => {
         window.open(

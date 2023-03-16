@@ -48,7 +48,7 @@ const CourseHome = ({ category, data }: any) => {
         btnText: d[0].btnText,
         onClick: d[0].onClick,
       });
-  }, []);
+  }, [category]);
 
   const setPlayer = (name: string, src: string) => {
     console.log(name, src);

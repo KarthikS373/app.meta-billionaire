@@ -26,127 +26,127 @@ const ContentPage = () => {
   const [isNFT, setisNFT] = useState(false);
   const [isStakedNFT, setIsStakedNFT] = useState(false);
 
-  useEffect(() => {
-    if (provider) {
-      if (address) {
-        const checkNFT = async () => {
-          setChecking(true);
+  // useEffect(() => {
+  //   if (provider) {
+  //     if (address) {
+  //       const checkNFT = async () => {
+  //         setChecking(true);
 
-          const ERC721 = new ethers.Contract(
-            ERC721Contract.address,
-            ERC721Contract.abi,
-            provider
-          );
+  //         const ERC721 = new ethers.Contract(
+  //           ERC721Contract.address,
+  //           ERC721Contract.abi,
+  //           provider
+  //         );
 
-          // console.log(await ERC721.balanceOf(address));
+  //         // console.log(await ERC721.balanceOf(address));
 
-          try {
-            let balance = (await ERC721.balanceOf(address)).toString();
-            // console.clear();
-            console.log("Balance : ", balance);
+  //         try {
+  //           let balance = (await ERC721.balanceOf(address)).toString();
+  //           // console.clear();
+  //           console.log("Balance : ", balance);
 
-            setisNFT(balance !== "0");
+  //           setisNFT(balance !== "0");
 
-            if (balance === "0") {
-              checkStakedNFT();
-            }
-          } catch (e) {
-            console.warn(e);
-          } finally {
-            setChecking(false);
-          }
-        };
+  //           if (balance === "0") {
+  //             checkStakedNFT();
+  //           }
+  //         } catch (e) {
+  //           console.warn(e);
+  //         } finally {
+  //           setChecking(false);
+  //         }
+  //       };
 
-        const checkStakedNFT = async () => {
-          setChecking(true);
+  //       const checkStakedNFT = async () => {
+  //         setChecking(true);
 
-          const stakingContract = new ethers.Contract(
-            StakingContract.address,
-            StakingContract.abi,
-            provider
-          );
+  //         const stakingContract = new ethers.Contract(
+  //           StakingContract.address,
+  //           StakingContract.abi,
+  //           provider
+  //         );
 
-          try {
-            let balance = (
-              await stakingContract.depositedTokenAmounts(address)
-            ).toString();
-            console.log("Staked :", balance);
+  //         try {
+  //           let balance = (
+  //             await stakingContract.depositedTokenAmounts(address)
+  //           ).toString();
+  //           console.log("Staked :", balance);
 
-            setIsStakedNFT(balance !== "0");
-          } catch (e) {
-            console.warn(e);
-          } finally {
-            setChecking(false);
-          }
-        };
+  //           setIsStakedNFT(balance !== "0");
+  //         } catch (e) {
+  //           console.warn(e);
+  //         } finally {
+  //           setChecking(false);
+  //         }
+  //       };
 
-        checkNFT();
-      }
-    }
-  }, [address, provider]);
+  //       checkNFT();
+  //     }
+  //   }
+  // }, [address, provider]);
 
-  useEffect(() => {
-    setProvider(
-      new ethers.providers.JsonRpcProvider(
-        process.env.NEXT_PUBLIC_INFURA_MAIN_API
-      )
-    );
-  }, []);
+  // useEffect(() => {
+  //   setProvider(
+  //     new ethers.providers.JsonRpcProvider(
+  //       process.env.NEXT_PUBLIC_INFURA_MAIN_API
+  //     )
+  //   );
+  // }, []);
 
-  if (address === null) {
-    return (
-      <Layout>
-        <Flex align="center" justify="center">
-          <Text fontSize={25} color="customBlue.500">
-            Connect your wallet
-            <br /> to access this page
-          </Text>
-        </Flex>
-      </Layout>
-    );
-  }
+  // if (address === null) {
+  //   return (
+  //     <Layout>
+  //       <Flex align="center" justify="center">
+  //         <Text fontSize={25} color="customBlue.500">
+  //           Connect your wallet
+  //           <br /> to access this page
+  //         </Text>
+  //       </Flex>
+  //     </Layout>
+  //   );
+  // }
 
-  if (checking) {
-    return (
-      <Layout>
-        <Flex align="center" justify="center">
-          <Text fontSize={25} color="customBlue.500">
-            Checking...
-          </Text>
-        </Flex>
-      </Layout>
-    );
-  }
+  // if (checking) {
+  //   return (
+  //     <Layout>
+  //       <Flex align="center" justify="center">
+  //         <Text fontSize={25} color="customBlue.500">
+  //           Checking...
+  //         </Text>
+  //       </Flex>
+  //     </Layout>
+  //   );
+  // }
 
-  if (!isNFT && !isStakedNFT) {
-    return (
-      <Layout>
-        <Flex align="center" justify="center">
-          <Flex direction={"column"} align="center" justify="center">
-            <Text fontSize={25} color="customBlue.500">
-              No MB Found
-            </Text>
-            <a
-              href={"https://opensea.io/collection/metabillionaire"}
-              target="_blank"
-              rel="noreferrer"
-              className="link"
-            >
-              View Collection
-            </a>
-            <Text
-              as={"em"}
-              fontWeight={"hairline"}
-              mt={10}
-              textAlign={"center"}
-            >
-              Note: Buy or Stake MB to view Content Page
-            </Text>
-          </Flex>
-        </Flex>
-      </Layout>
-    );
-  }
+  // if (!isNFT && !isStakedNFT) {
+  //   return (
+  //     <Layout>
+  //       <Flex align="center" justify="center">
+  //         <Flex direction={"column"} align="center" justify="center">
+  //           <Text fontSize={25} color="customBlue.500">
+  //             No MB Found
+  //           </Text>
+  //           <a
+  //             href={"https://opensea.io/collection/metabillionaire"}
+  //             target="_blank"
+  //             rel="noreferrer"
+  //             className="link"
+  //           >
+  //             View Collection
+  //           </a>
+  //           <Text
+  //             as={"em"}
+  //             fontWeight={"hairline"}
+  //             mt={10}
+  //             textAlign={"center"}
+  //           >
+  //             Note: Buy or Stake MB to view Content Page
+  //           </Text>
+  //         </Flex>
+  //       </Flex>
+  //     </Layout>
+  //   );
+  // }
 
   return (
     <Layout>
