@@ -5,6 +5,8 @@ import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
 import "../styles/globals.scss";
 import "../fonts/font.css";
 
+import "@fontsource/poppins";
+
 const theme = extendTheme(customTheme);
 
 function MyApp({ Component, pageProps }: any) {

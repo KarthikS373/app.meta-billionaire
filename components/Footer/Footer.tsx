@@ -18,10 +18,11 @@ const Footer = () => {
         color="customBlue.500"
       >
         Copyright © {new Date().getFullYear()}, All rights reserved -
-        METABILLIONAIRE - made by{" "}
-        <Link isExternal href="https://instagram.com/misterjuiice">
+        METABILLIONAIRE 
+        {/* - made by{" "} */}
+        {/* <Link isExternal href="https://instagram.com/misterjuiice">
           @misterjuiice
-        </Link>
+        </Link> */}
       </Text>
     </Flex>
   );

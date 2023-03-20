@@ -9,6 +9,11 @@ import {
   Text,
   Button,
   Heading,
+  Accordion,
+  AccordionItem,
+  AccordionButton,
+  AccordionIcon,
+  AccordionPanel,
 } from "@chakra-ui/react";
 
 import Layout from "../../../components/Layout/Layout";
@@ -20,18 +25,31 @@ const CustomizeNFT = () => {
   return (
     <Layout>
       <Box
-        mx={[2, 2, 12, 20]}
         height={"full"}
-        px={[0, 1, 2, 2]}
+        px={[2, 8, 12, 16]}
         py={[2, 2, 8, 16]}
         w={["full", "full"]}
       >
-        <Grid templateColumns={["repeat(1, 1fr)", "repeat(3, 1fr)"]} gap={6} w={"full"}>
-          <GridItem>
-            <Flex gap={2} flexDirection={"column"} alignItems={"start"}>
+        <Grid
+          templateColumns={["repeat(1, 1fr)", "repeat(3, 1fr)"]}
+          gap={6}
+          w={"full"}
+        >
+          <GridItem
+            position={"sticky"}
+            className={"md:top-32 left-0 self-start"}
+          >
+            <Flex
+              gap={2}
+              flexDirection={"column"}
+              alignItems={"start"}
+              w={"full"}
+              px={4}
+            >
               <Image
                 rounded={20}
                 maxHeight={600}
+                w={"full"}
                 src={
                   "https://ipfs.io/ipfs/QmaAUVnbzVtksdRv36XFAiqRwLbnPNrmP6Rhpi4oyGXkdG/166.png"
                 }
@@ -44,9 +62,30 @@ const CustomizeNFT = () => {
                 px={2}
                 py={4}
               >
-                <Heading fontSize={[12, 12, 20, 32]}>MB # 166</Heading>
+                <Heading
+                  fontSize={[12, 12, 20, 30]}
+                  px={4}
+                  _hover={{ color: "customBlue.500", cursor: "pointer" }}
+                >
+                  MB # 166
+                </Heading>
                 <hr />
-                <Text mt={2}>Attributes</Text>
+                <Flex
+                  justifyContent={"space-between"}
+                  w={"full"}
+                  mt={1}
+                  alignItems={"center"}
+                >
+                  <Text
+                    mt={2}
+                    fontFamily={"poppins"}
+                    fontWeight={600}
+                    lineHeight={"24px"}
+                    fontSize={[16, 16, 20, 20]}
+                  >
+                    Attributes
+                  </Text>
+                </Flex>
                 <Grid templateColumns="repeat(3, 1fr)" gap={3}>
                   {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(
                     (attribute, index) => (
@@ -77,12 +116,97 @@ const CustomizeNFT = () => {
               </Box>
             </Flex>
           </GridItem>
-          <GridItem colSpan={2}>
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nam a
-            culpa dolores, voluptatibus sapiente aperiam nesciunt suscipit!
-            Autem quos tempora, dolorum eligendi soluta, adipisci alias
-            voluptatibus laborum dolor quia esse veniam ex neque, vel
-            temporibus.
+          <GridItem colSpan={[1, 2]} fontFamily={"poppins"} h={"fit-content"}>
+            <Flex
+              flexDirection={"column"}
+              gap={4}
+              justifyContent={"flex-start"}
+              alignItems={"flex-start"}
+              h={"full"}
+              py={[1, 2, 4, 4]}
+              px={[2, 2, 4, 8]}
+              className={"border rounded-3xl"}
+            >
+              <Text
+                mt={2}
+                fontFamily={"poppins"}
+                fontWeight={400}
+                lineHeight={"24px"}
+                fontSize={[18, 18, 24, 24]}
+              >
+                Trait shop
+              </Text>
+              <Accordion w={"full"} allowToggle>
+                <Flex flexDirection={"column"} w={"full"}>
+                  {Object.keys(layers).map((key, index) => {
+                    return (
+                      <AccordionItem key={key} w={"full"}>
+                        <AccordionButton>
+                          <Flex
+                            justifyContent={"space-between"}
+                            w={"full"}
+                            alignItems={"center"}
+                          >
+                            <h1>{key}</h1>
+                            <AccordionIcon />
+                          </Flex>
+                        </AccordionButton>
+                        <AccordionPanel>
+                          <Grid templateColumns="repeat(4, 1fr)" gap={6} my={2}>
+                            {layers[key].map((layer, i) => {
+                              return (
+                                <GridItem key={layer} w="100%">
+                                  <Box
+                                    w={"full"}
+                                    overflow="hidden"
+                                    cursor={"pointer"}
+                                    // _hover={{
+                                    //   bg: "rgb(41, 75, 245, 0.25)",
+                                    // }}
+                                    className={
+                                      "group relative rounded-3xl border shadow bg-black/10"
+                                    }
+                                  >
+                                    <Image
+                                      loading="eager"
+                                      src={`/assets/layers/${key}/${layer}`}
+                                      alt={layer}
+                                      width={1920}
+                                      height={1080}
+                                      className="!h-64"
+                                      style={{
+                                        objectFit: "cover",
+                                        objectPosition: "center",
+                                      }}
+                                    />
+                                    <Box className="absolute flex-col top-96 opacity-0 group-hover:opacity-100 group-hover:top-0 transition-all duration-300 center h-full w-full bg-black/75 text-white">
+                                      <Heading
+                                        fontSize={[12, 16, 18, 20]}
+                                        px={1}
+                                        className="text-xl text-white/75 text-center"
+                                      >
+                                        {layer.replace(".png", "")}
+                                      </Heading>
+                                      <Text
+                                        as="p"
+                                        fontSize={[12, 12, 14, 14]}
+                                        className="text-white/75"
+                                      >
+                                        500 MBUC
+                                      </Text>
+                                    </Box>
+                                  </Box>
+                                </GridItem>
+                              );
+                            })}
+                          </Grid>
+                        </AccordionPanel>
+                      </AccordionItem>
+                    );
+                  })}
+                </Flex>
+              </Accordion>
+            </Flex>
           </GridItem>
         </Grid>
       </Box>
