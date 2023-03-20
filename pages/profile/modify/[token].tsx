@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import NextImage from "next/image";
 import {
   Box,
@@ -22,6 +22,47 @@ import layers from "../../../public/assets/layers";
 // https://ipfs.io/ipfs/QmaAUVnbzVtksdRv36XFAiqRwLbnPNrmP6Rhpi4oyGXkdG/166.png
 
 const CustomizeNFT = () => {
+  const [checked, setChecked] = useState<
+    Array<{ key: string; layer: string; cost: string }>
+  >([]);
+  const [current, setCurrent] = useState<string | null>(null);
+  const [highlight, setHighlight] = useState<{
+    key: string;
+    layer: string;
+  } | null>(null);
+
+  useEffect(() => {
+    if (current) {
+      const check = checked.filter((item) => item.key === current)[0];
+      if (check) {
+        setHighlight({
+          key: check.key,
+          layer: check.layer,
+        });
+      } else {
+        setHighlight(null);
+      }
+    } else {
+      setHighlight(null);
+    }
+  }, [current, checked]);
+
+  const toggleItem = (key: string, layer: string, cost: string) => {
+    const ifExist = checked.findIndex((item) => item.key === key);
+
+    if (ifExist !== -1) {
+      const temp = checked;
+      temp[ifExist] = {
+        key: key,
+        layer: layer,
+        cost: cost,
+      };
+      setChecked(temp);
+    } else {
+      setChecked((prev) => [...prev, { key, layer, cost }]);
+    }
+  };
+
   return (
     <Layout>
       <Box
@@ -141,10 +182,19 @@ const CustomizeNFT = () => {
                   {Object.keys(layers).map((key, index) => {
                     return (
                       <AccordionItem key={key} w={"full"}>
-                        <AccordionButton>
+                        <AccordionButton
+                          onClick={(e) => {
+                            if (current !== null && current === key) {
+                              setCurrent(null);
+                            } else {
+                              setCurrent(key);
+                            }
+                          }}
+                        >
                           <Flex
                             justifyContent={"space-between"}
                             w={"full"}
+                            h={[10, 10, 12, 16]}
                             alignItems={"center"}
                           >
                             <h1>{key}</h1>
@@ -155,7 +205,13 @@ const CustomizeNFT = () => {
                           <Grid templateColumns="repeat(4, 1fr)" gap={6} my={2}>
                             {layers[key].map((layer, i) => {
                               return (
-                                <GridItem key={layer} w="100%">
+                                <GridItem
+                                  key={layer}
+                                  w="100%"
+                                  onClick={() => {
+                                    toggleItem(key, layer, "500");
+                                  }}
+                                >
                                   <Box
                                     w={"full"}
                                     overflow="hidden"
@@ -164,7 +220,11 @@ const CustomizeNFT = () => {
                                     //   bg: "rgb(41, 75, 245, 0.25)",
                                     // }}
                                     className={
-                                      "group relative rounded-3xl border shadow bg-black/10"
+                                      "group relative rounded-3xl border shadow " +
+                                      (highlight?.key === key &&
+                                      highlight?.layer === layer
+                                        ? "bg-[#294BF5]/25 border border-[#294BF5]"
+                                        : "bg-black/10")
                                     }
                                   >
                                     <Image
@@ -185,7 +245,10 @@ const CustomizeNFT = () => {
                                         px={1}
                                         className="text-xl text-white/75 text-center"
                                       >
-                                        {layer.replace(".png", "")}
+                                        {layer
+                                          .replace(".png", "")
+                                          .replace(".jpg", "")
+                                          .replace(".jpeg", "")}
                                       </Heading>
                                       <Text
                                         as="p"
