@@ -30,6 +30,7 @@ const CustomizeNFT = () => {
     key: string;
     layer: string;
   } | null>(null);
+  const [requireStateUpdate, setRequireStateUpdate] = useState<boolean>(false);
 
   useEffect(() => {
     if (current) {
@@ -45,7 +46,7 @@ const CustomizeNFT = () => {
     } else {
       setHighlight(null);
     }
-  }, [current, checked]);
+  }, [current, checked, requireStateUpdate]);
 
   const toggleItem = (key: string, layer: string, cost: string) => {
     const ifExist = checked.findIndex((item) => item.key === key);
@@ -58,8 +59,10 @@ const CustomizeNFT = () => {
         cost: cost,
       };
       setChecked(temp);
+      setRequireStateUpdate((prev: boolean) => !prev);
     } else {
       setChecked((prev) => [...prev, { key, layer, cost }]);
+      setRequireStateUpdate((prev: boolean) => !prev);
     }
   };
 
@@ -67,7 +70,7 @@ const CustomizeNFT = () => {
     <Layout>
       <Box
         height={"full"}
-        px={[2, 8, 12, 16]}
+        px={[0, 8, 12, 16]}
         py={[2, 2, 8, 16]}
         w={["full", "full"]}
       >
@@ -88,7 +91,7 @@ const CustomizeNFT = () => {
               px={4}
             >
               <Image
-                rounded={20}
+                rounded={[5, 20]}
                 maxHeight={600}
                 w={"full"}
                 src={
@@ -97,14 +100,14 @@ const CustomizeNFT = () => {
                 alt={"NFT"}
               />
               <Box
+                rounded={[5, 20]}
                 className="shadow border border-gray-500/25"
                 w={"full"}
-                rounded={20}
                 px={2}
                 py={4}
               >
                 <Heading
-                  fontSize={[12, 12, 20, 30]}
+                  fontSize={[20, 20, 20, 30]}
                   px={4}
                   _hover={{ color: "customBlue.500", cursor: "pointer" }}
                 >
@@ -114,7 +117,7 @@ const CustomizeNFT = () => {
                 <Flex
                   justifyContent={"space-between"}
                   w={"full"}
-                  mt={1}
+                  my={1}
                   alignItems={"center"}
                 >
                   <Text
@@ -127,12 +130,15 @@ const CustomizeNFT = () => {
                     Attributes
                   </Text>
                 </Flex>
-                <Grid templateColumns="repeat(3, 1fr)" gap={3}>
+                <Grid
+                  templateColumns={["repeat(1, 1fr)", "repeat(3, 1fr)"]}
+                  gap={3}
+                >
                   {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(
                     (attribute, index) => (
                       <GridItem
                         key={attribute}
-                        className="center flex-col px-4 py-6 text-center border-2 border-blue-700/75 rounded-md shadow-md"
+                        className="center flex-col px-4 py-6 text-center border-2 border-blue-700/75 rounded md:rounded-md shadow-md"
                       >
                         <Text
                           fontFamily={"sans-serif"}
@@ -166,7 +172,7 @@ const CustomizeNFT = () => {
               h={"full"}
               py={[1, 2, 4, 4]}
               px={[2, 2, 4, 8]}
-              className={"border rounded-3xl"}
+              className={"border rounded-sm md:rounded-3xl"}
             >
               <Text
                 mt={2}
@@ -202,7 +208,14 @@ const CustomizeNFT = () => {
                           </Flex>
                         </AccordionButton>
                         <AccordionPanel>
-                          <Grid templateColumns="repeat(4, 1fr)" gap={6} my={2}>
+                          <Grid
+                            templateColumns={[
+                              "repeat(2, 1fr)",
+                              "repeat(4, 1fr)",
+                            ]}
+                            gap={6}
+                            my={2}
+                          >
                             {layers[key].map((layer, i) => {
                               return (
                                 <GridItem
@@ -216,9 +229,6 @@ const CustomizeNFT = () => {
                                     w={"full"}
                                     overflow="hidden"
                                     cursor={"pointer"}
-                                    // _hover={{
-                                    //   bg: "rgb(41, 75, 245, 0.25)",
-                                    // }}
                                     className={
                                       "group relative rounded-3xl border shadow " +
                                       (highlight?.key === key &&
@@ -233,7 +243,7 @@ const CustomizeNFT = () => {
                                       alt={layer}
                                       width={1920}
                                       height={1080}
-                                      className="!h-64"
+                                      className="!h-32 md:!h-64"
                                       style={{
                                         objectFit: "cover",
                                         objectPosition: "center",
