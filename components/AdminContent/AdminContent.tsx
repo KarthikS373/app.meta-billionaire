@@ -15,6 +15,7 @@ import CreateNewProduct from "../CreateNewProduct/CreateNewProduct";
 import AdminStoreList from "../AdminStoreList/AdminStoreList";
 import { Table, Thead, Tbody, Tr, Th, Td } from "../../components/CustomTable";
 import UserSubmissionTable from "../AdminStoreItem/UserSubmissionTable";
+import AdminTraitRequest from "../Trait/AdminTraitRequest";
 
 const AdminContent = ({ products, raffleWinner }: any) => {
   const [isLessThan600, setIsLessThan600] = useState(false);
@@ -327,6 +328,7 @@ const AdminContent = ({ products, raffleWinner }: any) => {
         </TableContainer>
       </Flex>
       <UserSubmissionTable />
+      <AdminTraitRequest />
     </Flex>
   );
 };
