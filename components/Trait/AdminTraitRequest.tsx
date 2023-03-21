@@ -30,6 +30,7 @@ import {
   AccordionPanel,
   Grid,
   GridItem,
+  Textarea,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { Trait, TraitShop } from "@prisma/client";
@@ -164,6 +165,10 @@ const AdminTraitRequest = () => {
                       </GridItem>
                     ))}
                   </Grid>
+                  <Textarea
+                    placeholder="Admin note"
+                    className="font-sans text-sm"
+                  />
                   <ButtonGroup mt={5} display={"flex"}>
                     <Button
                       fontFamily={"sans-serif"}
