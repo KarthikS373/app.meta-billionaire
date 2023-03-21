@@ -104,3 +104,22 @@ model Courses {
   description String  @default("")
   duration    String  @default("")
 }
+
+model Trait {
+  id          Int        @id @default(autoincrement())
+  key         String
+  layer       String
+  cost        Float
+  TraitShop   TraitShop? @relation(fields: [traitShopId], references: [id])
+  traitShopId Int?
+}
+
+model TraitShop {
+  id          Int     @id @default(autoincrement())
+  address     String
+  request     Trait[]
+  description String?
+  adminNote   String?
+  total       Float   @default(0.00)
+  isApproved  Boolean @default(false)
+}
