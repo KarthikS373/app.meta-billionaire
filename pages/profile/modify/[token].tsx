@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import NextImage from "next/image";
+import { useRouter } from "next/router";
 import {
   Box,
   Flex,
@@ -7,13 +7,13 @@ import {
   GridItem,
   Image,
   Text,
-  Button,
   Heading,
   Accordion,
   AccordionItem,
   AccordionButton,
   AccordionIcon,
   AccordionPanel,
+  Button,
 } from "@chakra-ui/react";
 
 import Layout from "../../../components/Layout/Layout";
@@ -23,7 +23,7 @@ import layers from "../../../public/assets/layers";
 
 const CustomizeNFT = () => {
   const [checked, setChecked] = useState<
-    Array<{ key: string; layer: string; cost: string }>
+    Array<{ key: string; layer: string; cost: number }>
   >([]);
   const [current, setCurrent] = useState<string | null>(null);
   const [highlight, setHighlight] = useState<{
@@ -31,6 +31,10 @@ const CustomizeNFT = () => {
     layer: string;
   } | null>(null);
   const [requireStateUpdate, setRequireStateUpdate] = useState<boolean>(false);
+
+  const router = useRouter();
+
+  const { token } = router.query;
 
   useEffect(() => {
     if (current) {
@@ -48,7 +52,7 @@ const CustomizeNFT = () => {
     }
   }, [current, checked, requireStateUpdate]);
 
-  const toggleItem = (key: string, layer: string, cost: string) => {
+  const toggleItem = (key: string, layer: string, cost: number) => {
     const ifExist = checked.findIndex((item) => item.key === key);
 
     if (ifExist !== -1) {
@@ -174,15 +178,48 @@ const CustomizeNFT = () => {
               px={[2, 2, 4, 8]}
               className={"border rounded-sm md:rounded-3xl"}
             >
-              <Text
-                mt={2}
-                fontFamily={"poppins"}
-                fontWeight={400}
-                lineHeight={"24px"}
-                fontSize={[18, 18, 24, 24]}
+              <Flex
+                flexDirection={["column", "row"]}
+                gap={4}
+                w="full"
+                justifyContent={"space-between"}
               >
-                Trait shop
-              </Text>
+                <Text
+                  mt={2}
+                  fontFamily={"poppins"}
+                  fontWeight={400}
+                  lineHeight={"24px"}
+                  fontSize={[20, 22, 26, 28]}
+                >
+                  Trait shop
+                </Text>
+                <Button
+                  fontSize={[12, 12, 15, 15]}
+                  px="md"
+                  colorScheme="customBlue"
+                  shadow="md"
+                  textTransform="uppercase"
+                  fontFamily="METAB"
+                  disabled={checked.length === 0}
+                  onClick={() => {
+                    if (checked.length === 0) return;
+
+                    router.push(
+                      {
+                        pathname: `/profile/modify/checkout`,
+                        query: {
+                          data: JSON.stringify(checked),
+                          length: checked.length,
+                          token: token,
+                        },
+                      },
+                      "/profile/modify/checkout"
+                    );
+                  }}
+                >
+                  Continue
+                </Button>
+              </Flex>
               <Accordion w={"full"} allowToggle>
                 <Flex flexDirection={"column"} w={"full"}>
                   {Object.keys(layers).map((key, index) => {
@@ -216,13 +253,13 @@ const CustomizeNFT = () => {
                             gap={6}
                             my={2}
                           >
-                            {layers[key].map((layer, i) => {
+                            {Object.keys(layers[key]).map((layer, i) => {
                               return (
                                 <GridItem
                                   key={layer}
                                   w="100%"
                                   onClick={() => {
-                                    toggleItem(key, layer, "500");
+                                    toggleItem(key, layer, layers[key][layer]);
                                   }}
                                 >
                                   <Box
@@ -258,14 +295,16 @@ const CustomizeNFT = () => {
                                         {layer
                                           .replace(".png", "")
                                           .replace(".jpg", "")
-                                          .replace(".jpeg", "")}
+                                          .replace(".jpeg", "")
+                                          .replace("-", "")
+                                          .replace(/[0-9]/g, "")}
                                       </Heading>
                                       <Text
                                         as="p"
                                         fontSize={[12, 12, 14, 14]}
                                         className="text-white/75"
                                       >
-                                        500 MBUC
+                                        {layers[key][layer]} MBUC
                                       </Text>
                                     </Box>
                                   </Box>
@@ -283,52 +322,6 @@ const CustomizeNFT = () => {
           </GridItem>
         </Grid>
       </Box>
-      {/* <Flex justifyContent={"center"} my={20} alignItems={"center"} h={"full"}>
-        <Box
-          m={"auto"}
-          border={"0.25px solid gray"}
-          rounded={"2xl"}
-          w={["full", "full", "80%", "80%"]}
-          px={20}
-          py={12}
-        >
-          {Object.keys(layers).map((key, index) => {
-            return (
-              <Box key={key} my={10}>
-                <h1>{key}</h1>
-                <Grid templateColumns="repeat(4, 1fr)" gap={6} my={2}>
-                  {layers[key].map((layer, i) => {
-                    return (
-                      <GridItem
-                        cursor={"pointer"}
-                        _hover={{
-                          bg: "rgba(0, 0, 0, 0.5)",
-                        }}
-                        key={layer}
-                        w="100%"
-                        bg="transparent"
-                        border={"0.25px solid gray"}
-                        rounded={20}
-                      >
-                        <Image
-                          src={`/assets/layers/${key}/${layer}`}
-                          alt={layer}
-                          width={1920}
-                          height={1080}
-                          style={{
-                            objectFit: "cover",
-                            objectPosition: "center",
-                          }}
-                        />
-                      </GridItem>
-                    );
-                  })}
-                </Grid>
-              </Box>
-            );
-          })}
-        </Box>
-      </Flex> */}
     </Layout>
   );
 };
