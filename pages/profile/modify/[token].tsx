@@ -31,7 +31,7 @@ const CustomizeNFT: NextPage<
   InferGetServerSidePropsType<GetServerSideProps>
 > = ({ data }) => {
   const [checked, setChecked] = useState<
-    Array<{ key: string; layer: string; cost: number }>
+    Array<{ id: string; key: string; layer: string; cost: number }>
   >([]);
   const [current, setCurrent] = useState<string | null>(null);
   const [highlight, setHighlight] = useState<{
@@ -60,12 +60,13 @@ const CustomizeNFT: NextPage<
     }
   }, [current, checked, requireStateUpdate]);
 
-  const toggleItem = (key: string, layer: string, cost: number) => {
+  const toggleItem = (id: string, key: string, layer: string, cost: number) => {
     const ifExist = checked.findIndex((item) => item.key === key);
 
     if (ifExist !== -1) {
       const temp = checked;
       temp[ifExist] = {
+        id: id,
         key: key,
         layer: layer,
         cost: cost,
@@ -73,7 +74,7 @@ const CustomizeNFT: NextPage<
       setChecked(temp);
       setRequireStateUpdate((prev: boolean) => !prev);
     } else {
-      setChecked((prev) => [...prev, { key, layer, cost }]);
+      setChecked((prev) => [...prev, { id, key, layer, cost }]);
       setRequireStateUpdate((prev: boolean) => !prev);
     }
   };
@@ -278,7 +279,7 @@ const CustomizeNFT: NextPage<
                                 )
                                 .map(
                                   (layer: {
-                                    id: number;
+                                    id: string;
                                     category: string;
                                     asset: string;
                                     cost: number;
@@ -291,6 +292,7 @@ const CustomizeNFT: NextPage<
                                         w="100%"
                                         onClick={() => {
                                           toggleItem(
+                                            layer.id,
                                             key.title,
                                             layer.imagePath,
                                             layer.cost

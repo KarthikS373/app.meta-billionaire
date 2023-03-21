@@ -28,6 +28,7 @@ import {
 
 import Layout from "../../../components/Layout/Layout";
 import useEthersProvider from "../../../hooks/useEthersProvider";
+import axios from "axios";
 
 const CheckoutPage = () => {
   const { address, balance } = useEthersProvider();
@@ -39,7 +40,7 @@ const CheckoutPage = () => {
 
   const [description, setDescription] = useState<string>("");
   const [data, setData] = useState<
-    Array<{ key: string; layer: string; cost: number }>
+    Array<{ id: string; key: string; layer: string; cost: number }>
   >([]);
   const [cost, setCost] = useState<number>(0.0);
 
@@ -72,6 +73,21 @@ const CheckoutPage = () => {
       setCost(temp);
     }
   }, [data]);
+
+  const submitRequest = () => {
+    const request = data.map((item) => item.id);
+    axios
+      .post(`http://localhost:3000/api/requestTrait`, {
+        address,
+        description,
+        total: cost,
+        request: request,
+      })
+      .then((res) => {
+        console.log(res.data.data);
+      })
+      .catch((err) => console.log(err));
+  };
 
   if (!token) {
     return (
@@ -117,6 +133,7 @@ const CheckoutPage = () => {
               colorScheme="blue"
               variant="outline"
               fontSize={[12, 12, 16, 20]}
+              onClick={submitRequest}
             >
               confirm
             </Button>
@@ -241,15 +258,15 @@ const CheckoutPage = () => {
                     fontFamily="METAB"
                     disabled={Number(length) === 0}
                     onClick={() => {
-                      if (Number(balance) >= cost) {
-                        onOpen();
-                      } else {
-                        toast({
-                          title: "No enough balance",
-                          status: "warning",
-                          variant: "top-accent",
-                        });
-                      }
+                      // if (Number(balance) >= cost) {
+                      onOpen();
+                      // } else {
+                      //   toast({
+                      //     title: "No enough balance",
+                      //     status: "warning",
+                      //     variant: "top-accent",
+                      //   });
+                      // }
                     }}
                   >
                     Continue
