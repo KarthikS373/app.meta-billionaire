@@ -123,5 +123,5 @@ model TraitShop {
   description String?
   adminNote   String?
   total       Float    @default(0.00)
-  isApproved  Boolean  @default(false)
+  isApproved  Boolean?  @default(false)
 }

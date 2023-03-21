@@ -1,7 +1,7 @@
 import prisma from "../../lib/prisma";
 
 const handler = async (req: any, res: any) => {
-  const { category } = req.query;
+  const { category, id } = req.query;
 
   try {
     let data;
@@ -12,6 +12,20 @@ const handler = async (req: any, res: any) => {
           shopQuantity: {
             gt: 0,
           },
+        },
+        select: {
+          id: true,
+          category: true,
+          cost: true,
+          shopQuantity: true,
+          asset: true,
+          imagePath: true,
+        },
+      });
+    } else if (id) {
+      data = await prisma.trait.findUnique({
+        where: {
+          id: id,
         },
         select: {
           id: true,
@@ -40,9 +54,7 @@ const handler = async (req: any, res: any) => {
       });
     }
 
-    res
-      .status(200)
-      .json({ message: "Fetch successful", count: data.length, data: data });
+    res.status(200).json({ message: "Fetch successful", data: data });
   } catch (e) {
     res.status(500).json({ message: "An error occurred" });
   }
