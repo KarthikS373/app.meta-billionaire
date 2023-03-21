@@ -106,20 +106,22 @@ model Courses {
 }
 
 model Trait {
-  id          Int        @id @default(autoincrement())
-  key         String
-  layer       String
-  cost        Float
-  TraitShop   TraitShop? @relation(fields: [traitShopId], references: [id])
-  traitShopId Int?
+  id                String @id @unique
+  category          String // back-accessories | background | clothes | ears-wear | eyes | face-accessories | hair | rare | skin
+  asset             String
+  originalSupply    Int  
+  cost              Float
+  totalShopQuantity Int    @default(0)
+  shopQuantity      Int    @default(0)
+  imagePath         String
 }
 
 model TraitShop {
-  id          Int     @id @default(autoincrement())
+  order       String   @id @unique
   address     String
-  request     Trait[]
+  request     String[]
   description String?
   adminNote   String?
-  total       Float   @default(0.00)
-  isApproved  Boolean @default(false)
+  total       Float    @default(0.00)
+  isApproved  Boolean  @default(false)
 }

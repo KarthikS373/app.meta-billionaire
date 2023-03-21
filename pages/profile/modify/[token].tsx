@@ -1,4 +1,9 @@
 import React, { useEffect, useState } from "react";
+import {
+  GetServerSideProps,
+  InferGetServerSidePropsType,
+  NextPage,
+} from "next";
 import { useRouter } from "next/router";
 import {
   Box,
@@ -15,13 +20,16 @@ import {
   AccordionPanel,
   Button,
 } from "@chakra-ui/react";
+import axios from "axios";
 
 import Layout from "../../../components/Layout/Layout";
 import layers from "../../../public/assets/layers";
 
 // https://ipfs.io/ipfs/QmaAUVnbzVtksdRv36XFAiqRwLbnPNrmP6Rhpi4oyGXkdG/166.png
 
-const CustomizeNFT = () => {
+const CustomizeNFT: NextPage<
+  InferGetServerSidePropsType<GetServerSideProps>
+> = ({ data }) => {
   const [checked, setChecked] = useState<
     Array<{ key: string; layer: string; cost: number }>
   >([]);
@@ -222,7 +230,126 @@ const CustomizeNFT = () => {
               </Flex>
               <Accordion w={"full"} allowToggle>
                 <Flex flexDirection={"column"} w={"full"}>
-                  {Object.keys(layers).map((key, index) => {
+                  {layers?.map(
+                    (
+                      key: { id: number; title: string; slug: string },
+                      index: number
+                    ) => {
+                      return (
+                        <AccordionItem w={"full"} key={key.id}>
+                          <AccordionButton
+                            onClick={(e) => {
+                              if (current !== null && current === key.title) {
+                                setCurrent(null);
+                              } else {
+                                setCurrent(key.title);
+                              }
+                            }}
+                          >
+                            <Flex
+                              justifyContent={"space-between"}
+                              w={"full"}
+                              h={[10, 10, 12, 16]}
+                              alignItems={"center"}
+                            >
+                              <h1>{key.title}</h1>
+                              <AccordionIcon />
+                            </Flex>
+                          </AccordionButton>
+                          <AccordionPanel>
+                            <Grid
+                              templateColumns={[
+                                "repeat(2, 1fr)",
+                                "repeat(4, 1fr)",
+                              ]}
+                              gap={6}
+                              my={2}
+                            >
+                              {data?.data
+                                ?.filter(
+                                  (item: {
+                                    id: number;
+                                    category: string;
+                                    asset: string;
+                                    cost: number;
+                                    shopQuantity: number;
+                                    imagePath: string;
+                                  }) => item.category === key.slug
+                                )
+                                .map(
+                                  (layer: {
+                                    id: number;
+                                    category: string;
+                                    asset: string;
+                                    cost: number;
+                                    shopQuantity: number;
+                                    imagePath: string;
+                                  }) => {
+                                    return (
+                                      <GridItem
+                                        key={layer.id}
+                                        w="100%"
+                                        onClick={() => {
+                                          toggleItem(
+                                            key.title,
+                                            layer.imagePath,
+                                            layer.cost
+                                          );
+                                        }}
+                                      >
+                                        <Box
+                                          w={"full"}
+                                          overflow="hidden"
+                                          cursor={"pointer"}
+                                          className={
+                                            "group relative rounded-3xl border shadow " +
+                                            (highlight?.key === key.title &&
+                                            highlight?.layer === layer.imagePath
+                                              ? "bg-[#294BF5]/25 border border-[#294BF5]"
+                                              : "bg-black/10")
+                                          }
+                                        >
+                                          <Image
+                                            loading="eager"
+                                            src={`/assets/layers/${key.title}/${layer.imagePath}`}
+                                            alt={layer.asset}
+                                            width={1920}
+                                            height={1080}
+                                            className="!h-32 md:!h-64"
+                                            style={{
+                                              objectFit: "cover",
+                                              objectPosition: "center",
+                                            }}
+                                          />
+                                          <Box className="absolute flex-col top-96 opacity-0 group-hover:opacity-100 group-hover:top-0 transition-all duration-300 center h-full w-full bg-black/75 text-white">
+                                            <Heading
+                                              fontSize={[12, 16, 18, 20]}
+                                              px={1}
+                                              className="text-xl text-white/75 text-center"
+                                            >
+                                              {layer.asset}
+                                            </Heading>
+                                            <Text
+                                              as="p"
+                                              fontSize={[12, 12, 14, 14]}
+                                              className="text-white/75"
+                                            >
+                                              {layer.cost} MBUC
+                                            </Text>
+                                          </Box>
+                                        </Box>
+                                      </GridItem>
+                                    );
+                                    // <Box key={layer.id}>{layer.asset}</Box>;
+                                  }
+                                )}
+                            </Grid>
+                          </AccordionPanel>
+                        </AccordionItem>
+                      );
+                    }
+                  )}
+                  {/* {Object.keys(layers).map((key, index) => {
                     return (
                       <AccordionItem key={key} w={"full"}>
                         <AccordionButton
@@ -315,7 +442,7 @@ const CustomizeNFT = () => {
                         </AccordionPanel>
                       </AccordionItem>
                     );
-                  })}
+                  })} */}
                 </Flex>
               </Accordion>
             </Flex>
@@ -327,3 +454,31 @@ const CustomizeNFT = () => {
 };
 
 export default CustomizeNFT;
+
+export const getServerSideProps: GetServerSideProps = async ({ query }) => {
+  const { token } = query;
+
+  try {
+    const data = await axios.get(`http://localhost:3000/api/getTraits`);
+
+    return {
+      props: {
+        data: data.data,
+      },
+    };
+  } catch (e) {
+    return {
+      props: {
+        data: null,
+      },
+      redirect: "/",
+    };
+  }
+
+  return {
+    props: {
+      data: null,
+    },
+    redirect: "",
+  };
+};
