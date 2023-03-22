@@ -78,6 +78,7 @@ const CheckoutPage = () => {
     const request = data.map((item) => item.id);
     axios
       .post(`http://localhost:3000/api/requestTrait`, {
+        token,
         address,
         description,
         total: cost,

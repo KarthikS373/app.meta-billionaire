@@ -4,10 +4,10 @@ import prisma from "../../lib/prisma";
 
 const handler = async (req: any, res: any) => {
   return new Promise((resolve: any) => {
-    const { address, request, description, total } = req.body;
+    const { address, token, request, description, total } = req.body;
 
     const fetchData = async () => {
-      if (!address || !request || !total || !description) {
+      if (!address || !request || !total || !token) {
         res.status(400).json({ message: "Incorrect metadata" });
         resolve();
         return;
@@ -20,10 +20,11 @@ const handler = async (req: any, res: any) => {
           data: {
             order: uuid,
             address: address,
+            token: parseInt(token),
             request: request,
             description: description,
             total: parseFloat(total),
-            isApproved: false,
+            isApproved: null,
           },
         });
 
@@ -34,6 +35,7 @@ const handler = async (req: any, res: any) => {
         });
         resolve();
       } catch (e) {
+        console.log(e);
         res.status(500).json({ message: "An error occurred" });
       }
     };

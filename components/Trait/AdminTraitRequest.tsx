@@ -41,18 +41,19 @@ const AdminTraitRequest = () => {
 
   const [traits, setTraits] = useState<TraitShop[]>([]);
   const [collection, setCollection] = useState<Trait[]>([]);
+  const [current, setCurrent] = useState<number>(-1);
 
   useEffect(() => {
     axios.get("http://localhost:3000/api/getTraitRequests").then((res) => {
       console.log(res.data);
       setTraits(res.data.data);
     });
-  }, []);
+  }, [current]);
 
   useEffect(() => {
     const temp: Trait[] = [];
-    traits.map((trait) => {
-      trait.request.map((request) => {
+    if (current !== -1) {
+      traits[current].request.map((request) => {
         axios
           .get(`http://localhost:3000/api/getTraits?id=${request}`)
           .then((res) => {
@@ -61,8 +62,8 @@ const AdminTraitRequest = () => {
             setCollection(temp);
           });
       });
-    });
-  }, [traits]);
+    }
+  }, [traits, current]);
 
   return (
     <Flex w="100%" align="center" mt="md" justify="center" flexDir="column">
@@ -81,6 +82,9 @@ const AdminTraitRequest = () => {
           w={"full"}
           allowToggle
           mt={4}
+          onChange={(e) => {
+            setCurrent(e as number);
+          }}
         >
           {traits.map((trait, index) => {
             return (
@@ -107,6 +111,10 @@ const AdminTraitRequest = () => {
                       <strong>Address: </strong>
                       {trait.address}
                     </Text>
+                    <Text fontSize={16} fontFamily={"sans-serif"}>
+                      <strong>Total: </strong>
+                      {trait.total}
+                    </Text>
                     {trait.description && (
                       <>
                         <Text fontSize={16} fontFamily={"sans-serif"}>
@@ -115,10 +123,6 @@ const AdminTraitRequest = () => {
                         </Text>
                       </>
                     )}
-                    <Text fontSize={16} fontFamily={"sans-serif"}>
-                      <strong>Total: </strong>
-                      {trait.total}
-                    </Text>
                   </Flex>
                   <Grid
                     templateColumns={[
@@ -154,7 +158,7 @@ const AdminTraitRequest = () => {
                             alt={item.asset}
                             width={1920}
                             height={1080}
-                            className="!w-full !h-full mb-2"
+                            className="!w-full !h-full mb-2 rounded-md"
                             style={{
                               objectFit: "cover",
                               objectPosition: "center",
