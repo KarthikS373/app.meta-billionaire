@@ -5,6 +5,8 @@ import { CgWebsite } from "react-icons/cg";
 import { BiEdit } from "react-icons/bi";
 
 import NextImage from "next/image";
+import { Trait } from "@prisma/client";
+import { ethers } from "ethers";
 import {
   Heading,
   Avatar,
@@ -43,7 +45,7 @@ import backdrop from "../../assets/backdrop.jpeg";
 import { fetchFirestoreData } from "../../lib/firebase";
 import axios from "../../lib/api";
 import useEthersProvider from "../../hooks/useEthersProvider";
-import { Trait } from "@prisma/client";
+import contractABI from "../../contracts/mbuc/MbucABI.json";
 
 const UserProfile = ({
   username = "cyberpunk373",
@@ -57,7 +59,7 @@ const UserProfile = ({
   haveStaked = true,
   visitor = false,
 }) => {
-  const { address } = useEthersProvider();
+  const { address, provider, chainId } = useEthersProvider();
 
   const [profileImage, setProfileImage] = useState("");
   const [user, setUser] = useState({
@@ -76,7 +78,7 @@ const UserProfile = ({
     const temp: Trait[] = [];
     if (traitRequests)
       if (current !== -1) {
-        traitRequests[current].request.map((request: any) => {
+        traitRequests[current]?.request?.map((request: any) => {
           axios
             .get(`http://localhost:3000/api/getTraits?id=${request}`)
             .then((res) => {
@@ -196,6 +198,33 @@ const UserProfile = ({
     }
   };
 
+  const transact = async (amount: string) => {
+    if (address) {
+      if (chainId === 137) {
+        toast({
+          description: "Successfully payed " + amount ,
+          status: "success",
+          duration: 1500,
+          isClosable: true,
+        });
+      } else {
+        toast({
+          description: "Please switch to Polygon network",
+          status: "error",
+          duration: 1500,
+          isClosable: true,
+        });
+      }
+    } else {
+      toast({
+        description: "Please connect your wallet",
+        status: "error",
+        duration: 1500,
+        isClosable: true,
+      });
+    }
+  };
+
   const TABS = [
     {
       id: 1,
@@ -290,111 +319,120 @@ const UserProfile = ({
     {
       id: 3,
       title: "Trait shop",
-      content: traitRequests ? (
-        <Box w={"100%"} minH={["10vh", null, "40vh"]}>
-          <Accordion
-            w={"full"}
-            h={"full"}
-            allowToggle
-            mt={4}
-            onChange={(e) => {
-              setCurrent(e as number);
-            }}
-          >
-            {traitRequests.map((trait, index) => {
-              return (
-                <AccordionItem
-                  h={"full"}
-                  key={trait.order}
-                  className="border-0 outline-none"
-                >
-                  <h2>
-                    <AccordionButton className="min-h-16 center w-full whitespace-pre-wrap justify-between border-0 outline-none">
-                      <Box flex="1" textAlign="left">
-                        Trait change request: #{trait.token} :{" "}
-                        <>
-                          {trait.isApproved === null ? (
-                            <Text color="yellow.300"> Under Review</Text>
-                          ) : trait.isApproved ? (
-                            <Text color="green.500" className="md:inline-block">
-                              Approved
-                            </Text>
-                          ) : (
-                            <Text color="red.500" className="md:inline-block">
-                              Rejected
-                            </Text>
-                          )}
-                        </>
-                      </Box>
-                      <AccordionIcon />
-                    </AccordionButton>
-                  </h2>
-                  <AccordionPanel pb={4}>
-                    <Grid
-                      templateColumns={[
-                        "repeat(1, 1fr)",
-                        "repeat(2, 1fr)",
-                        "repeat(4, 1fr)",
-                        "repeat(6, 1fr)",
-                      ]}
-                      my={4}
-                      justifyContent={"flex-start"}
-                      alignItems={"flex-end"}
-                      flexDirection={"row"}
-                      gap={4}
-                    >
-                      {collection.map((item, index) => (
-                        <GridItem
-                          key={item.asset}
-                          w={"full"}
-                          h={"full"}
-                          className={
-                            "group relative rounded border shadow md:!h-64 sm:!w-32 md:!w-64 !w-full"
-                          }
-                        >
-                          <Box h={"full"} w={"full"}>
-                            <Image
-                              src={`/assets/layers/${item.category
-                                .split("-")
-                                .join(" ")
-                                .replace(
-                                  /(^\w{1})|(\s+\w{1})/g,
-                                  (letter: string) => letter.toUpperCase()
-                                )}/${item.imagePath}`}
-                              alt={item.asset}
-                              className={"h-full object-cover object-center"}
-                            />
-                          </Box>
-                        </GridItem>
-                      ))}
-                    </Grid>
-                    <Flex w={"full"} justifyContent={"flex-end"}>
-                      <Button
-                        colorScheme="blue"
-                        variant="solid"
-                        fontFamily={"sans-serif"}
-                        onClick={() => {}}
+      content:
+        traitRequests && traitRequests?.length > 0 ? (
+          <Box w={"100%"} minH={["10vh", null, "40vh"]}>
+            <Accordion
+              w={"full"}
+              h={"full"}
+              allowToggle
+              mt={4}
+              onChange={(e) => {
+                setCurrent(e as number);
+              }}
+            >
+              {traitRequests?.map((trait, index) => {
+                return (
+                  <AccordionItem
+                    h={"full"}
+                    key={trait.order}
+                    className="border-0 outline-none"
+                  >
+                    <h2>
+                      <AccordionButton className="min-h-16 center w-full whitespace-pre-wrap justify-between border-0 outline-none">
+                        <Box flex="1" textAlign="left">
+                          Trait change request: #{trait.token} :{" "}
+                          <>
+                            {trait.isApproved === null ? (
+                              <Text color="yellow.300"> Under Review</Text>
+                            ) : trait.isApproved ? (
+                              <Text
+                                color="green.500"
+                                className="md:inline-block"
+                              >
+                                Approved
+                              </Text>
+                            ) : (
+                              <Text color="red.500" className="md:inline-block">
+                                Rejected
+                              </Text>
+                            )}
+                          </>
+                        </Box>
+                        <AccordionIcon />
+                      </AccordionButton>
+                    </h2>
+                    <AccordionPanel pb={4}>
+                      <Grid
+                        templateColumns={[
+                          "repeat(1, 1fr)",
+                          "repeat(2, 1fr)",
+                          "repeat(4, 1fr)",
+                          "repeat(6, 1fr)",
+                        ]}
+                        my={4}
+                        justifyContent={"flex-start"}
+                        alignItems={"flex-end"}
+                        flexDirection={"row"}
+                        gap={4}
                       >
-                        Pay {trait.total} MB
-                      </Button>
-                    </Flex>
-                  </AccordionPanel>
-                </AccordionItem>
-              );
-            })}
-          </Accordion>
-        </Box>
-      ) : (
-        <Box
-          w={"100%"}
-          h={["10vh", null, "40vh"]}
-          display={"flex"}
-          justifyContent={"center"}
-          alignItems={"center"}
-        >
-          You currently have no active orders
-        </Box>
-      ),
+                        {collection.map((item, index) => (
+                          <GridItem
+                            key={item.asset}
+                            w={"full"}
+                            h={"full"}
+                            className={
+                              "group relative rounded border shadow md:!h-64 sm:!w-32 md:!w-64 !w-full"
+                            }
+                          >
+                            <Box h={"full"} w={"full"}>
+                              <Image
+                                src={`/assets/layers/${item.category
+                                  .split("-")
+                                  .join(" ")
+                                  .replace(
+                                    /(^\w{1})|(\s+\w{1})/g,
+                                    (letter: string) => letter.toUpperCase()
+                                  )}/${item.imagePath}`}
+                                alt={item.asset}
+                                className={"h-full object-cover object-center"}
+                              />
+                            </Box>
+                          </GridItem>
+                        ))}
+                      </Grid>
+                      <Flex w={"full"} justifyContent={"flex-end"}>
+                        <Button
+                          colorScheme="blue"
+                          variant="solid"
+                          fontFamily={"sans-serif"}
+                          disabled={!trait.isApproved}
+                          onClick={() => {
+                            transact(trait.total);
+                          }}
+                        >
+                          Pay {trait.total} MB
+                        </Button>
+                      </Flex>
+                    </AccordionPanel>
+                  </AccordionItem>
+                );
+              })}
+            </Accordion>
+          </Box>
+        ) : (
+          <Box
+            w={"100%"}
+            h={["10vh", null, "40vh"]}
+            display={"flex"}
+            justifyContent={"center"}
+            alignItems={"center"}
+            color={"black"}
+            textAlign={"center"}
+          >
+            You currently have no active requests
+          </Box>
+        ),
     },
   ];
 
