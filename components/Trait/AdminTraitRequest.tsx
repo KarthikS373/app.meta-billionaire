@@ -42,6 +42,7 @@ const AdminTraitRequest = () => {
   const [traits, setTraits] = useState<TraitShop[]>([]);
   const [collection, setCollection] = useState<Trait[]>([]);
   const [current, setCurrent] = useState<number>(-1);
+  const [note, setNote] = useState<string | null>(null);
 
   useEffect(() => {
     axios.get("http://localhost:3000/api/getTraitRequests").then((res) => {
@@ -65,6 +66,19 @@ const AdminTraitRequest = () => {
     }
   }, [traits, current]);
 
+  const handleTraitApproval = (order: string, isApproved: boolean) => {
+    axios
+      .post("http://localhost:3000/api/getTraitRequests", {
+        order: order,
+        note: note,
+        isApproved: isApproved,
+      })
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((err) => console.log(err));
+  };
+
   return (
     <Flex w="100%" align="center" mt="md" justify="center" flexDir="column">
       <Text
@@ -83,6 +97,7 @@ const AdminTraitRequest = () => {
           allowToggle
           mt={4}
           onChange={(e) => {
+            setNote(null);
             setCurrent(e as number);
           }}
         >
@@ -95,7 +110,12 @@ const AdminTraitRequest = () => {
                 <h2>
                   <AccordionButton className="h-16 center w-full justify-between border-0 outline-none">
                     <Box flex="1" textAlign="left">
-                      {trait.order}
+                      {trait.order} -{" "}
+                      {trait.isApproved === null
+                        ? "pending"
+                        : trait.isApproved
+                        ? "Approved"
+                        : "Rejected"}
                     </Box>
                     <AccordionIcon />
                   </AccordionButton>
@@ -170,29 +190,43 @@ const AdminTraitRequest = () => {
                     ))}
                   </Grid>
                   <Textarea
+                    onChange={(e) => {
+                      if (e.target.value.length > 0) setNote(e.target.value);
+                      else setNote(null);
+                    }}
                     placeholder="Admin note"
                     className="font-sans text-sm"
                   />
-                  <ButtonGroup mt={5} display={"flex"}>
-                    <Button
-                      fontFamily={"sans-serif"}
-                      fontSize={16}
-                      bgColor={"customBlue.500"}
-                      color={"white"}
-                      onClick={() => {}}
-                    >
-                      Approve
-                    </Button>
-                    <Button
-                      fontFamily={"sans-serif"}
-                      fontSize={16}
-                      colorScheme={"red"}
-                      color={"white"}
-                      onClick={() => {}}
-                    >
-                      Reject
-                    </Button>
-                  </ButtonGroup>
+                  {trait.isApproved === null ? (
+                    <ButtonGroup mt={5} display={"flex"}>
+                      <Button
+                        fontFamily={"sans-serif"}
+                        fontSize={16}
+                        bgColor={"customBlue.500"}
+                        color={"white"}
+                        onClick={() => {
+                          handleTraitApproval(trait.order, true);
+                        }}
+                      >
+                        Approve
+                      </Button>
+                      <Button
+                        fontFamily={"sans-serif"}
+                        fontSize={16}
+                        colorScheme={"red"}
+                        color={"white"}
+                        onClick={() => {
+                          handleTraitApproval(trait.order, false);
+                        }}
+                      >
+                        Reject
+                      </Button>
+                    </ButtonGroup>
+                  ) : (
+                    <Box mt={4}>
+                      Status: {trait.isApproved ? "Approved" : "Rejected"}
+                    </Box>
+                  )}
                 </AccordionPanel>
               </AccordionItem>
             );
