@@ -117,12 +117,13 @@ model Trait {
 }
 
 model TraitShop {
-  order       String   @id @unique
-  address     String
-  request     String[]
-  description String?
-  adminNote   String?
-  total       Float    @default(0.00)
-  isApproved  Boolean?
-  token       Int      @default(0)
+  order         String   @id @unique
+  address       String
+  request       String[]
+  description   String?
+  adminNote     String?
+  total         Float    @default(0.00)
+  isApproved    Boolean?
+  token         Int      @default(0)
+  paymentStatus String   @default("pending") // pending | paid | failed
 }

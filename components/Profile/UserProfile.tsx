@@ -198,15 +198,53 @@ const UserProfile = ({
     }
   };
 
-  const transact = async (amount: string) => {
+  const transact = async (order: string, amount: string) => {
     if (address) {
       if (chainId === 137) {
-        toast({
-          description: "Successfully payed " + amount ,
-          status: "success",
-          duration: 1500,
-          isClosable: true,
-        });
+        try {
+          const signer = provider.getSigner();
+          const wei = ethers.utils.parseEther(amount.toString());
+          console.log("WEI: ", wei);
+
+          const tx = {
+            //TODO: Address to transfer
+            to: "",
+            value: wei.toString(),
+          };
+
+          const receipt = await signer.sendTransaction(tx);
+          await receipt.wait(2);
+
+          console.log(receipt);
+
+          await axios.post("http://localhost:3000/api/setTraitPaymentStats", {
+            order: order,
+            address: address,
+            paymentStatus: "paid",
+          });
+
+          toast({
+            description: "Successfully payed " + amount,
+            status: "success",
+            duration: 1500,
+            isClosable: true,
+          });
+        } catch (e) {
+          console.log(e);
+
+          await axios.post("http://localhost:3000/api/setTraitPaymentStats", {
+            order: order,
+            address: address,
+            paymentStatus: "failed",
+          });
+
+          toast({
+            description: "Something went wrong",
+            status: "error",
+            duration: 1500,
+            isClosable: true,
+          });
+        }
       } else {
         toast({
           description: "Please switch to Polygon network",
@@ -408,7 +446,7 @@ const UserProfile = ({
                           fontFamily={"sans-serif"}
                           disabled={!trait.isApproved}
                           onClick={() => {
-                            transact(trait.total);
+                            transact(trait.order, trait.total);
                           }}
                         >
                           Pay {trait.total} MB
