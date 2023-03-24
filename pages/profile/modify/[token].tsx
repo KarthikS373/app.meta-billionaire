@@ -51,7 +51,7 @@ const CustomizeNFT: NextPage<
 
   const router = useRouter();
 
-  const { token, image } = router.query;
+  const { token, image, address } = router.query;
 
   const fetchMetadata = async (token: string) => {
     const provider = new ethers.providers.JsonRpcProvider(
@@ -88,7 +88,7 @@ const CustomizeNFT: NextPage<
         const data = JSON.parse(text);
         console.log(data);
         let img;
-        if (data.image.startsWith("ipfs://")) {
+        if (!image && data.image.startsWith("ipfs://")) {
           img = `https://ipfs.io/ipfs/${data.image.split("ipfs://")[1]}`;
         }
         setNft({
@@ -144,6 +144,19 @@ const CustomizeNFT: NextPage<
       }
     }
   };
+
+  if (!address) {
+    return (
+      <Layout>
+        <Flex align="center" justify="center">
+          <Text fontSize={25} color="customBlue.500">
+            Connect your wallet
+            <br /> to access this page
+          </Text>
+        </Flex>
+      </Layout>
+    );
+  }
 
   return (
     <Layout>

@@ -11,7 +11,12 @@ import { useRouter } from "next/router";
 import { memo } from "react";
 import { MdEdit } from "react-icons/md";
 
-const NFTCard = ({ nftImage = "", nftName = "#", visitor = false }) => {
+const NFTCard = ({
+  nftImage = "",
+  nftName = "#",
+  visitor = false,
+  address = "",
+}) => {
   const router = useRouter();
   let boxBg = useColorModeValue("white !important", "#111c44 !important");
   let secondaryBg = useColorModeValue("gray.50", "whiteAlpha.100");
@@ -54,29 +59,30 @@ const NFTCard = ({ nftImage = "", nftName = "#", visitor = false }) => {
           >
             {nftName}
           </Text>
-          {/* {!visitor && ( */}
-          <Button
-            w="38px"
-            h="38px"
-            borderRadius="12px"
-            me="12px"
-            bg={iconBox}
-            onClick={(e) => {
-              e.preventDefault();
-              router.push(
-                {
-                  pathname: `/profile/modify/${nftName.substring(1)}`,
-                  query: {
-                    image: nftImage,
+          {!visitor && (
+            <Button
+              w="38px"
+              h="38px"
+              borderRadius="12px"
+              me="12px"
+              bg={iconBox}
+              onClick={(e) => {
+                e.preventDefault();
+                router.push(
+                  {
+                    pathname: `/profile/modify/${nftName.substring(1)}`,
+                    query: {
+                      image: nftImage,
+                      address: address,
+                    },
                   },
-                },
-                `/profile/modify/${nftName.substring(1)}`
-              );
-            }}
-          >
-            <Icon w="24px" h="24px" as={MdEdit} color={iconColor} />
-          </Button>
-          {/* )} */}
+                  `/profile/modify/${nftName.substring(1)}`
+                );
+              }}
+            >
+              <Icon w="24px" h="24px" as={MdEdit} color={iconColor} />
+            </Button>
+          )}
         </Flex>
       </Box>
       <Flex
