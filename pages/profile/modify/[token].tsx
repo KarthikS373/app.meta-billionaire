@@ -63,19 +63,27 @@ const CustomizeNFT: NextPage<
   const toggleItem = (id: string, key: string, layer: string, cost: number) => {
     const ifExist = checked.findIndex((item) => item.key === key);
 
-    if (ifExist !== -1) {
+    if (highlight !== null && checked[ifExist]?.layer === highlight?.layer) {
       const temp = checked;
-      temp[ifExist] = {
-        id: id,
-        key: key,
-        layer: layer,
-        cost: cost,
-      };
+      temp.splice(ifExist, 1);
       setChecked(temp);
+      setHighlight(null);
       setRequireStateUpdate((prev: boolean) => !prev);
     } else {
-      setChecked((prev) => [...prev, { id, key, layer, cost }]);
-      setRequireStateUpdate((prev: boolean) => !prev);
+      if (ifExist !== -1) {
+        const temp = checked;
+        temp[ifExist] = {
+          id: id,
+          key: key,
+          layer: layer,
+          cost: cost,
+        };
+        setChecked(temp);
+        setRequireStateUpdate((prev: boolean) => !prev);
+      } else {
+        setChecked((prev) => [...prev, { id, key, layer, cost }]);
+        setRequireStateUpdate((prev: boolean) => !prev);
+      }
     }
   };
 
@@ -291,12 +299,14 @@ const CustomizeNFT: NextPage<
                                         key={layer.id}
                                         w="100%"
                                         onClick={() => {
-                                          toggleItem(
-                                            layer.id,
-                                            key.title,
-                                            layer.imagePath,
-                                            layer.cost
-                                          );
+                                          if (layer.shopQuantity > 0) {
+                                            toggleItem(
+                                              layer.id,
+                                              key.title,
+                                              layer.imagePath,
+                                              layer.cost
+                                            );
+                                          }
                                         }}
                                       >
                                         <Box
@@ -338,11 +348,17 @@ const CustomizeNFT: NextPage<
                                             >
                                               {layer.cost} MBUC
                                             </Text>
+                                            <Text
+                                              as="p"
+                                              fontSize={[12, 12, 14, 14]}
+                                              className="text-white/75"
+                                            >
+                                              {layer.shopQuantity} Items left
+                                            </Text>
                                           </Box>
                                         </Box>
                                       </GridItem>
                                     );
-                                    // <Box key={layer.id}>{layer.asset}</Box>;
                                   }
                                 )}
                             </Grid>
@@ -351,100 +367,6 @@ const CustomizeNFT: NextPage<
                       );
                     }
                   )}
-                  {/* {Object.keys(layers).map((key, index) => {
-                    return (
-                      <AccordionItem key={key} w={"full"}>
-                        <AccordionButton
-                          onClick={(e) => {
-                            if (current !== null && current === key) {
-                              setCurrent(null);
-                            } else {
-                              setCurrent(key);
-                            }
-                          }}
-                        >
-                          <Flex
-                            justifyContent={"space-between"}
-                            w={"full"}
-                            h={[10, 10, 12, 16]}
-                            alignItems={"center"}
-                          >
-                            <h1>{key}</h1>
-                            <AccordionIcon />
-                          </Flex>
-                        </AccordionButton>
-                        <AccordionPanel>
-                          <Grid
-                            templateColumns={[
-                              "repeat(2, 1fr)",
-                              "repeat(4, 1fr)",
-                            ]}
-                            gap={6}
-                            my={2}
-                          >
-                            {Object.keys(layers[key]).map((layer, i) => {
-                              return (
-                                <GridItem
-                                  key={layer}
-                                  w="100%"
-                                  onClick={() => {
-                                    toggleItem(key, layer, layers[key][layer]);
-                                  }}
-                                >
-                                  <Box
-                                    w={"full"}
-                                    overflow="hidden"
-                                    cursor={"pointer"}
-                                    className={
-                                      "group relative rounded-3xl border shadow " +
-                                      (highlight?.key === key &&
-                                      highlight?.layer === layer
-                                        ? "bg-[#294BF5]/25 border border-[#294BF5]"
-                                        : "bg-black/10")
-                                    }
-                                  >
-                                    <Image
-                                      loading="eager"
-                                      src={`/assets/layers/${key}/${layer}`}
-                                      alt={layer}
-                                      width={1920}
-                                      height={1080}
-                                      className="!h-32 md:!h-64"
-                                      style={{
-                                        objectFit: "cover",
-                                        objectPosition: "center",
-                                      }}
-                                    />
-                                    <Box className="absolute flex-col top-96 opacity-0 group-hover:opacity-100 group-hover:top-0 transition-all duration-300 center h-full w-full bg-black/75 text-white">
-                                      <Heading
-                                        fontSize={[12, 16, 18, 20]}
-                                        px={1}
-                                        className="text-xl text-white/75 text-center"
-                                      >
-                                        {layer
-                                          .replace(".png", "")
-                                          .replace(".jpg", "")
-                                          .replace(".jpeg", "")
-                                          .replace("-", "")
-                                          .replace(/[0-9]/g, "")}
-                                      </Heading>
-                                      <Text
-                                        as="p"
-                                        fontSize={[12, 12, 14, 14]}
-                                        className="text-white/75"
-                                      >
-                                        {layers[key][layer]} MBUC
-                                      </Text>
-                                    </Box>
-                                  </Box>
-                                </GridItem>
-                              );
-                            })}
-                          </Grid>
-                        </AccordionPanel>
-                      </AccordionItem>
-                    );
-                  })} */}
                 </Flex>
               </Accordion>
             </Flex>
