@@ -86,8 +86,22 @@ const CheckoutPage = () => {
       })
       .then((res) => {
         console.log(res.data.data);
+        toast({
+          description: "Order placed successfully",
+          variant: "solid",
+          duration: 1500,
+          status: "success",
+        });
+        router.replace(`/`);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        toast({
+          description: "Something went wrong",
+          variant: "solid",
+          duration: 1500,
+          status: "error",
+        });
+      });
   };
 
   if (!token) {
@@ -259,15 +273,15 @@ const CheckoutPage = () => {
                     fontFamily="METAB"
                     disabled={Number(length) === 0}
                     onClick={() => {
-                      // if (Number(balance) >= cost) {
-                      onOpen();
-                      // } else {
-                      //   toast({
-                      //     title: "No enough balance",
-                      //     status: "warning",
-                      //     variant: "top-accent",
-                      //   });
-                      // }
+                      if (Number(balance) >= cost) {
+                        onOpen();
+                      } else {
+                        toast({
+                          title: "No enough balance",
+                          status: "warning",
+                          variant: "top-accent",
+                        });
+                      }
                     }}
                   >
                     Continue

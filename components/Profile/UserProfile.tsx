@@ -394,7 +394,13 @@ const UserProfile = ({
                           Trait change request: #{trait.token} :{" "}
                           <>
                             {trait.isApproved === null ? (
-                              <Text color="yellow.300"> Under Review</Text>
+                              <Text
+                                color="yellow.300"
+                                className="md:inline-block"
+                              >
+                                {" "}
+                                Under review
+                              </Text>
                             ) : trait.isApproved ? (
                               <Text
                                 color="green.500"
@@ -413,9 +419,11 @@ const UserProfile = ({
                       </AccordionButton>
                     </h2>
                     <AccordionPanel pb={4}>
-                      <Text fontSize={16} fontFamily={"sans-serif"}>
-                        Admin remarks: {trait.adminNote}
-                      </Text>
+                      {trait.adminNote && (
+                        <Text fontSize={16} fontFamily={"sans-serif"}>
+                          Admin remarks: {trait.adminNote}
+                        </Text>
+                      )}{" "}
                       <Grid
                         templateColumns={[
                           "repeat(1, 1fr)",

@@ -63,7 +63,15 @@ const NFTCard = ({ nftImage = "", nftName = "#", visitor = false }) => {
             bg={iconBox}
             onClick={(e) => {
               e.preventDefault();
-              router.push(`/profile/modify/${nftName.substring(1)}`);
+              router.push(
+                {
+                  pathname: `/profile/modify/${nftName.substring(1)}`,
+                  query: {
+                    image: nftImage,
+                  },
+                },
+                `/profile/modify/${nftName.substring(1)}`
+              );
             }}
           >
             <Icon w="24px" h="24px" as={MdEdit} color={iconColor} />

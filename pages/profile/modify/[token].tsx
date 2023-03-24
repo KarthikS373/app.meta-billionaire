@@ -4,6 +4,8 @@ import {
   InferGetServerSidePropsType,
   NextPage,
 } from "next";
+import axios from "axios";
+import { ethers } from "ethers";
 import { useRouter } from "next/router";
 import {
   Box,
@@ -20,8 +22,8 @@ import {
   AccordionPanel,
   Button,
 } from "@chakra-ui/react";
-import axios from "axios";
 
+import ERC721Contract from "../../../utils/ABIs/ERC721";
 import Layout from "../../../components/Layout/Layout";
 import layers from "../../../public/assets/layers";
 
@@ -39,10 +41,66 @@ const CustomizeNFT: NextPage<
     layer: string;
   } | null>(null);
   const [requireStateUpdate, setRequireStateUpdate] = useState<boolean>(false);
+  const [nft, setNft] = useState<{
+    attributes: { trait_type: string; value: string }[];
+    image: string;
+    name: string;
+    description: string;
+    dna: string;
+  } | null>(null);
 
   const router = useRouter();
 
-  const { token } = router.query;
+  const { token, image } = router.query;
+
+  const fetchMetadata = async (token: string) => {
+    const provider = new ethers.providers.JsonRpcProvider(
+      process.env.NEXT_PUBLIC_INFURA_MAIN_API
+    );
+    console.log(provider);
+    if (provider && token) {
+      try {
+        const ERC721 = new ethers.Contract(
+          ERC721Contract.address,
+          ERC721Contract.abi,
+          provider
+        );
+        const ipfs = await ERC721.tokenURI(token);
+        console.log(`https://ipfs.io/ipfs/${ipfs.split("ipfs://")[1]}`);
+        const meta = await fetch(
+          `https://ipfs.io/ipfs/${ipfs.split("ipfs://")[1]}`
+        );
+        return meta;
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  };
+
+  useEffect(() => {
+    console.clear();
+    console.log(token);
+
+    fetchMetadata(token as string).then(async (res) => {
+      const text = await (await res?.blob())?.text();
+      console.log(text);
+      if (text) {
+        const data = JSON.parse(text);
+        console.log(data);
+        let img;
+        if (data.image.startsWith("ipfs://")) {
+          img = `https://ipfs.io/ipfs/${data.image.split("ipfs://")[1]}`;
+        }
+        setNft({
+          image: (image as string) || (img as string),
+          attributes: data.attributes,
+          name: data.name,
+          description: data.description,
+          dna: "179d040de4be3fcb4c0c8653728e07671b24f292",
+        });
+      }
+    });
+  }, [token]);
 
   useEffect(() => {
     if (current) {
@@ -111,13 +169,18 @@ const CustomizeNFT: NextPage<
               w={"full"}
               px={4}
             >
+              <Heading
+                fontSize={[20, 20, 20, 30]}
+                px={4}
+                _hover={{ color: "customBlue.500", cursor: "pointer" }}
+              >
+                MB # 166
+              </Heading>
               <Image
                 rounded={[5, 20]}
                 maxHeight={600}
                 w={"full"}
-                src={
-                  "https://ipfs.io/ipfs/QmaAUVnbzVtksdRv36XFAiqRwLbnPNrmP6Rhpi4oyGXkdG/166.png"
-                }
+                src={nft?.image || (image as string)}
                 alt={"NFT"}
               />
               <Box
@@ -127,14 +190,6 @@ const CustomizeNFT: NextPage<
                 px={2}
                 py={4}
               >
-                <Heading
-                  fontSize={[20, 20, 20, 30]}
-                  px={4}
-                  _hover={{ color: "customBlue.500", cursor: "pointer" }}
-                >
-                  MB # 166
-                </Heading>
-                <hr />
                 <Flex
                   justifyContent={"space-between"}
                   w={"full"}
@@ -155,31 +210,19 @@ const CustomizeNFT: NextPage<
                   templateColumns={["repeat(1, 1fr)", "repeat(3, 1fr)"]}
                   gap={3}
                 >
-                  {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(
-                    (attribute, index) => (
-                      <GridItem
-                        key={attribute}
-                        className="center flex-col px-4 py-6 text-center border-2 border-blue-700/75 rounded md:rounded-md shadow-md"
-                      >
-                        <Text
-                          fontFamily={"sans-serif"}
-                          className="text-blue-600"
-                        >
-                          {"Feature"}
-                        </Text>
-                        <Box mt={1}>
-                          <Text className="">{"Feature"}</Text>
-                          <Text
-                            as={"p"}
-                            fontFamily={"sans-serif"}
-                            className="font-light text-gray-500 text-xs"
-                          >
-                            lorem ipsum,lorem ipsum
-                          </Text>
-                        </Box>
-                      </GridItem>
-                    )
-                  )}
+                  {nft?.attributes.map((attribute, index) => (
+                    <GridItem
+                      key={attribute.trait_type}
+                      className="center flex-col px-4 py-6 text-center border-2 border-blue-700/75 rounded md:rounded-md shadow-md"
+                    >
+                      <Text fontFamily={"sans-serif"} className="text-blue-600">
+                        {attribute.trait_type}
+                      </Text>
+                      <Box mt={1}>
+                        <Text className="">{attribute.value}</Text>
+                      </Box>
+                    </GridItem>
+                  ))}
                 </Grid>
               </Box>
             </Flex>
