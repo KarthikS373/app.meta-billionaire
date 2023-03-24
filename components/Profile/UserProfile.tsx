@@ -80,7 +80,7 @@ const UserProfile = ({
       if (current !== -1) {
         traitRequests[current]?.request?.map((request: any) => {
           axios
-            .get(`http://localhost:3000/api/getTraits?id=${request}`)
+            .get(`https://app.metabillionaire.com/api/getTraits?id=${request}`)
             .then((res) => {
               console.log(res.data);
               temp.push(res.data.data);
@@ -162,7 +162,7 @@ const UserProfile = ({
     if (userId) {
       console.clear();
       axios
-        .get(`http://localhost:3000/api/getTraitRequests?address=${userId}`)
+        .get(`https://app.metabillionaire.com/api/getTraitRequests?address=${userId}`)
         .then((res) => {
           console.log(res.data);
           setTraitRequests(res.data.data);
@@ -217,7 +217,7 @@ const UserProfile = ({
 
           console.log(receipt);
 
-          await axios.post("http://localhost:3000/api/setTraitPaymentStats", {
+          await axios.post("https://app.metabillionaire.com/api/setTraitPaymentStats", {
             order: order,
             address: address,
             paymentStatus: "paid",
@@ -248,7 +248,7 @@ const UserProfile = ({
           }
 
           await axios
-            .post("http://localhost:3000/api/setTraitPaymentStats", {
+            .post("https://app.metabillionaire.com/api/setTraitPaymentStats", {
               order: order,
               address: address,
               paymentStatus: "failed",

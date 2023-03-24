@@ -45,7 +45,7 @@ const AdminTraitRequest = () => {
   const [note, setNote] = useState<string | null>(null);
 
   useEffect(() => {
-    axios.get("http://localhost:3000/api/getTraitRequests").then((res) => {
+    axios.get("https://app.metabillionaire.com/api/getTraitRequests").then((res) => {
       console.log(res.data);
       setTraits(res.data.data);
     });
@@ -56,7 +56,7 @@ const AdminTraitRequest = () => {
     if (current !== -1) {
       traits[current].request.map((request) => {
         axios
-          .get(`http://localhost:3000/api/getTraits?id=${request}`)
+          .get(`https://app.metabillionaire.com/api/getTraits?id=${request}`)
           .then((res) => {
             console.log(res.data);
             temp.push(res.data.data);
@@ -68,7 +68,7 @@ const AdminTraitRequest = () => {
 
   const handleTraitApproval = (order: string, isApproved: boolean) => {
     axios
-      .post("http://localhost:3000/api/getTraitRequests", {
+      .post("https://app.metabillionaire.com/api/getTraitRequests", {
         order: order,
         note: note,
         isApproved: isApproved,

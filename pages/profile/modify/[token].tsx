@@ -439,7 +439,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const { token } = query;
 
   try {
-    const data = await axios.get(`http://localhost:3000/api/getTraits`);
+    const data = await axios.get(`https://app.metabillionaire.com/api/getTraits`);
 
     return {
       props: {
