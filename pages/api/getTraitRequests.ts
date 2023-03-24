@@ -61,7 +61,7 @@ const handler = async (req: any, res: any) => {
           },
           data: {
             adminNote: note || ifExist.adminNote,
-            isApproved: isApproved || ifExist.isApproved,
+            isApproved: isApproved,
           },
         });
         res.status(200).json({

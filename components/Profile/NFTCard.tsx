@@ -54,21 +54,21 @@ const NFTCard = ({ nftImage = "", nftName = "#", visitor = false }) => {
           >
             {nftName}
           </Text>
-          {!visitor && (
-            <Button
-              w="38px"
-              h="38px"
-              borderRadius="12px"
-              me="12px"
-              bg={iconBox}
-              onClick={(e) => {
-                e.preventDefault();
-                router.push(`/profile/modify/${nftName.substring(1)}`);
-              }}
-            >
-              <Icon w="24px" h="24px" as={MdEdit} color={iconColor} />
-            </Button>
-          )}
+          {/* {!visitor && ( */}
+          <Button
+            w="38px"
+            h="38px"
+            borderRadius="12px"
+            me="12px"
+            bg={iconBox}
+            onClick={(e) => {
+              e.preventDefault();
+              router.push(`/profile/modify/${nftName.substring(1)}`);
+            }}
+          >
+            <Icon w="24px" h="24px" as={MdEdit} color={iconColor} />
+          </Button>
+          {/* )} */}
         </Flex>
       </Box>
       <Flex

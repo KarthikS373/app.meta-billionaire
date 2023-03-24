@@ -208,7 +208,7 @@ const UserProfile = ({
 
           const tx = {
             //TODO: Address to transfer
-            to: "",
+            to: "0x08749FFE5CDAe2fa83B0419f3C15AAC9335fd476",
             value: wei.toString(),
           };
 
@@ -229,21 +229,31 @@ const UserProfile = ({
             duration: 1500,
             isClosable: true,
           });
-        } catch (e) {
-          console.log(e);
+        } catch (e: any) {
+          if (e.message.includes("insufficient funds")) {
+            toast({
+              description: "Insufficient Funds",
+              status: "error",
+              duration: 1500,
+              isClosable: true,
+            });
+          } else {
+            toast({
+              description: "Something went wrong",
+              status: "error",
+              duration: 1500,
+              isClosable: true,
+            });
+          }
 
-          await axios.post("http://localhost:3000/api/setTraitPaymentStats", {
-            order: order,
-            address: address,
-            paymentStatus: "failed",
-          });
-
-          toast({
-            description: "Something went wrong",
-            status: "error",
-            duration: 1500,
-            isClosable: true,
-          });
+          await axios
+            .post("http://localhost:3000/api/setTraitPaymentStats", {
+              order: order,
+              address: address,
+              paymentStatus: "failed",
+            })
+            .then((res) => {})
+            .catch((err) => {});
         }
       } else {
         toast({
@@ -401,6 +411,9 @@ const UserProfile = ({
                       </AccordionButton>
                     </h2>
                     <AccordionPanel pb={4}>
+                      <Text fontSize={16} fontFamily={"sans-serif"}>
+                        Admin remarks: {trait.adminNote}
+                      </Text>
                       <Grid
                         templateColumns={[
                           "repeat(1, 1fr)",
