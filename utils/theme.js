@@ -54,6 +54,7 @@ const customTheme = {
     heading: fontFamilyBase,
     body: fontFamilyBase,
     mono: 'METAB, source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace',
+    poppins: 'Poppins, sans'
   },
   fontSizes: {
     xs: "1.2rem",

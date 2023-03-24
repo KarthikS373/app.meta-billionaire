@@ -5,6 +5,8 @@ import { CgWebsite } from "react-icons/cg";
 import { BiEdit } from "react-icons/bi";
 
 import NextImage from "next/image";
+import { Trait } from "@prisma/client";
+import { ethers } from "ethers";
 import {
   Heading,
   Avatar,
@@ -16,6 +18,7 @@ import {
   useColorModeValue,
   Icon,
   VStack,
+  Image,
   useMediaQuery,
   SimpleGrid,
   Tabs,
@@ -31,6 +34,8 @@ import {
   Spinner,
   useToast,
   Input,
+  Grid,
+  GridItem,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
@@ -40,6 +45,7 @@ import backdrop from "../../assets/backdrop.jpeg";
 import { fetchFirestoreData } from "../../lib/firebase";
 import axios from "../../lib/api";
 import useEthersProvider from "../../hooks/useEthersProvider";
+import contractABI from "../../contracts/mbuc/MbucABI.json";
 
 const UserProfile = ({
   username = "cyberpunk373",
@@ -53,7 +59,7 @@ const UserProfile = ({
   haveStaked = true,
   visitor = false,
 }) => {
-  const { address } = useEthersProvider();
+  const { address, provider, chainId } = useEthersProvider();
 
   const [profileImage, setProfileImage] = useState("");
   const [user, setUser] = useState({
@@ -64,6 +70,25 @@ const UserProfile = ({
     twitter: "",
   });
   const [verifToken, setVerifToken] = useState<string | null>(null);
+  const [traitRequests, setTraitRequests] = useState<any[] | null>(null);
+  const [current, setCurrent] = useState<number>(-1);
+  const [collection, setCollection] = useState<Trait[]>([]);
+
+  useEffect(() => {
+    const temp: Trait[] = [];
+    if (traitRequests)
+      if (current !== -1) {
+        traitRequests[current]?.request?.map((request: any) => {
+          axios
+            .get(`http://localhost:3000/api/getTraits?id=${request}`)
+            .then((res) => {
+              console.log(res.data);
+              temp.push(res.data.data);
+              setCollection(temp);
+            });
+        });
+      }
+  }, [traitRequests, current]);
 
   const { executeRecaptcha } = useGoogleReCaptcha();
 
@@ -133,6 +158,19 @@ const UserProfile = ({
     }
   }, [verifToken]);
 
+  useEffect(() => {
+    if (userId) {
+      console.clear();
+      axios
+        .get(`http://localhost:3000/api/getTraitRequests?address=${userId}`)
+        .then((res) => {
+          console.log(res.data);
+          setTraitRequests(res.data.data);
+        })
+        .catch((err) => console.log(err));
+    }
+  }, [userId]);
+
   const updateFinalUser = async () => {
     const { data } = await axios.post(`/updateNickname`, {
       address: address,
@@ -160,6 +198,83 @@ const UserProfile = ({
     }
   };
 
+  const transact = async (order: string, amount: string, items: string[]) => {
+    if (address) {
+      if (chainId === 137) {
+        try {
+          const signer = provider.getSigner();
+          const wei = ethers.utils.parseEther(amount.toString());
+          console.log("WEI: ", wei);
+
+          const tx = {
+            //TODO: Address to transfer
+            to: "0x08749FFE5CDAe2fa83B0419f3C15AAC9335fd476",
+            value: wei.toString(),
+          };
+
+          const receipt = await signer.sendTransaction(tx);
+          await receipt.wait(2);
+
+          console.log(receipt);
+
+          await axios.post("http://localhost:3000/api/setTraitPaymentStats", {
+            order: order,
+            address: address,
+            paymentStatus: "paid",
+            items: items,
+          });
+
+          toast({
+            description: "Successfully payed " + amount,
+            status: "success",
+            duration: 1500,
+            isClosable: true,
+          });
+        } catch (e: any) {
+          if (e.message.includes("insufficient funds")) {
+            toast({
+              description: "Insufficient Funds",
+              status: "error",
+              duration: 1500,
+              isClosable: true,
+            });
+          } else {
+            toast({
+              description: "Something went wrong",
+              status: "error",
+              duration: 1500,
+              isClosable: true,
+            });
+          }
+
+          await axios
+            .post("http://localhost:3000/api/setTraitPaymentStats", {
+              order: order,
+              address: address,
+              paymentStatus: "failed",
+              items: [],
+            })
+            .then((res) => {})
+            .catch((err) => {});
+        }
+      } else {
+        toast({
+          description: "Please switch to Polygon network",
+          status: "error",
+          duration: 1500,
+          isClosable: true,
+        });
+      }
+    } else {
+      toast({
+        description: "Please connect your wallet",
+        status: "error",
+        duration: 1500,
+        isClosable: true,
+      });
+    }
+  };
+
   const TABS = [
     {
       id: 1,
@@ -172,6 +287,8 @@ const UserProfile = ({
                 {products.map((nft: any) => {
                   return (
                     <NFTCard
+                      address={address}
+                      visitor={visitor}
                       key={nft.dna}
                       nftName={`#${nft.name}`}
                       nftImage={nft.image}
@@ -216,6 +333,8 @@ const UserProfile = ({
                 {stakedNfts.map((nft: any) => {
                   return (
                     <NFTCard
+                      address={address}
+                      visitor={visitor}
                       key={nft.dna}
                       nftName={nft.name}
                       nftImage={nft.image}
@@ -249,6 +368,146 @@ const UserProfile = ({
         </>
       ),
     },
+    !visitor
+      ? {
+          id: 3,
+          title: "Trait shop",
+          content:
+            traitRequests && traitRequests?.length > 0 ? (
+              <Box w={"100%"} minH={["10vh", null, "40vh"]}>
+                <Accordion
+                  w={"full"}
+                  h={"full"}
+                  allowToggle
+                  mt={4}
+                  onChange={(e) => {
+                    setCurrent(e as number);
+                  }}
+                >
+                  {traitRequests?.map((trait, index) => {
+                    return (
+                      <AccordionItem
+                        h={"full"}
+                        key={trait.order}
+                        className="border-0 outline-none"
+                      >
+                        <h2>
+                          <AccordionButton className="min-h-16 center w-full whitespace-pre-wrap justify-between border-0 outline-none">
+                            <Box flex="1" textAlign="left">
+                              Trait change request: #{trait.token} :{" "}
+                              <>
+                                {trait.isApproved === null ? (
+                                  <Text
+                                    color="yellow.300"
+                                    className="md:inline-block"
+                                  >
+                                    {" "}
+                                    Under review
+                                  </Text>
+                                ) : trait.isApproved ? (
+                                  <Text
+                                    color="green.500"
+                                    className="md:inline-block"
+                                  >
+                                    Approved
+                                  </Text>
+                                ) : (
+                                  <Text
+                                    color="red.500"
+                                    className="md:inline-block"
+                                  >
+                                    Rejected
+                                  </Text>
+                                )}
+                              </>
+                            </Box>
+                            <AccordionIcon />
+                          </AccordionButton>
+                        </h2>
+                        <AccordionPanel pb={4}>
+                          {trait.adminNote && (
+                            <Text fontSize={16} fontFamily={"sans-serif"}>
+                              Admin remarks: {trait.adminNote}
+                            </Text>
+                          )}{" "}
+                          <Grid
+                            templateColumns={[
+                              "repeat(1, 1fr)",
+                              "repeat(2, 1fr)",
+                              "repeat(4, 1fr)",
+                              "repeat(6, 1fr)",
+                            ]}
+                            my={4}
+                            justifyContent={"flex-start"}
+                            alignItems={"flex-end"}
+                            flexDirection={"row"}
+                            gap={4}
+                          >
+                            {collection.map((item, index) => (
+                              <GridItem
+                                key={item.asset}
+                                w={"full"}
+                                h={"full"}
+                                className={
+                                  "group relative rounded border shadow md:!h-64 sm:!w-32 md:!w-64 !w-full"
+                                }
+                              >
+                                <Box h={"full"} w={"full"}>
+                                  <Image
+                                    src={`/assets/layers/${item.category
+                                      .split("-")
+                                      .join(" ")
+                                      .replace(
+                                        /(^\w{1})|(\s+\w{1})/g,
+                                        (letter: string) => letter.toUpperCase()
+                                      )}/${item.imagePath}`}
+                                    alt={item.asset}
+                                    className={
+                                      "h-full object-cover object-center"
+                                    }
+                                  />
+                                </Box>
+                              </GridItem>
+                            ))}
+                          </Grid>
+                          <Flex w={"full"} justifyContent={"flex-end"}>
+                            <Button
+                              colorScheme="blue"
+                              variant="solid"
+                              fontFamily={"sans-serif"}
+                              disabled={!trait.isApproved}
+                              onClick={() => {
+                                transact(
+                                  trait.order,
+                                  trait.total,
+                                  trait.request
+                                );
+                              }}
+                            >
+                              Pay {trait.total} MB
+                            </Button>
+                          </Flex>
+                        </AccordionPanel>
+                      </AccordionItem>
+                    );
+                  })}
+                </Accordion>
+              </Box>
+            ) : (
+              <Box
+                w={"100%"}
+                h={["10vh", null, "40vh"]}
+                display={"flex"}
+                justifyContent={"center"}
+                alignItems={"center"}
+                color={"black"}
+                textAlign={"center"}
+              >
+                You currently have no active requests
+              </Box>
+            ),
+        }
+      : undefined,
   ];
 
   const statData = visitor
@@ -640,24 +899,25 @@ const UserProfile = ({
         {isLessThan768 ? (
           <Accordion mt={"8"} variant="enclosed" defaultIndex={0}>
             {TABS.map((tab) => {
-              return (
-                <AccordionItem key={tab.id}>
-                  <AccordionButton>
-                    <Box flex="1" textAlign="left">
-                      <Text
-                        fontFamily={"sans-serif"}
-                        fontSize="md"
-                        color={"customBlue.500"}
-                        fontWeight={"hairline"}
-                      >
-                        {tab.title}
-                      </Text>
-                    </Box>
-                    <AccordionIcon />
-                  </AccordionButton>
-                  <AccordionPanel pb={4}>{tab.content}</AccordionPanel>
-                </AccordionItem>
-              );
+              if (tab)
+                return (
+                  <AccordionItem key={tab.id}>
+                    <AccordionButton>
+                      <Box flex="1" textAlign="left">
+                        <Text
+                          fontFamily={"sans-serif"}
+                          fontSize="md"
+                          color={"customBlue.500"}
+                          fontWeight={"hairline"}
+                        >
+                          {tab.title}
+                        </Text>
+                      </Box>
+                      <AccordionIcon />
+                    </AccordionButton>
+                    <AccordionPanel pb={4}>{tab.content}</AccordionPanel>
+                  </AccordionItem>
+                );
             })}
           </Accordion>
         ) : (
@@ -670,22 +930,26 @@ const UserProfile = ({
             w={isLessThan550 ? "95vw" : "70vw"}
           >
             <TabList>
-              {TABS.map((tab) => (
-                <Tab key={tab.id}>
-                  <Text
-                    // fontFamily={""}
-                    fontSize="md"
-                    fontWeight={"semibold"}
-                  >
-                    {tab.title}
-                  </Text>
-                </Tab>
-              ))}
+              {TABS.map((tab) =>
+                tab ? (
+                  <Tab key={tab.id}>
+                    <Text
+                      // fontFamily={""}
+                      fontSize="md"
+                      fontWeight={"semibold"}
+                    >
+                      {tab.title}
+                    </Text>
+                  </Tab>
+                ) : (
+                  <></>
+                )
+              )}
             </TabList>
             <TabPanels>
-              {TABS.map((tab) => (
-                <TabPanel key={tab.id}>{tab.content}</TabPanel>
-              ))}
+              {TABS.map((tab) =>
+                tab ? <TabPanel key={tab.id}>{tab.content}</TabPanel> : <></>
+              )}
             </TabPanels>
           </Tabs>
         )}
