@@ -198,7 +198,7 @@ const UserProfile = ({
     }
   };
 
-  const transact = async (order: string, amount: string) => {
+  const transact = async (order: string, amount: string, items: string[]) => {
     if (address) {
       if (chainId === 137) {
         try {
@@ -221,6 +221,7 @@ const UserProfile = ({
             order: order,
             address: address,
             paymentStatus: "paid",
+            items: items,
           });
 
           toast({
@@ -251,6 +252,7 @@ const UserProfile = ({
               order: order,
               address: address,
               paymentStatus: "failed",
+              items: [],
             })
             .then((res) => {})
             .catch((err) => {});
@@ -459,7 +461,7 @@ const UserProfile = ({
                           fontFamily={"sans-serif"}
                           disabled={!trait.isApproved}
                           onClick={() => {
-                            transact(trait.order, trait.total);
+                            transact(trait.order, trait.total, trait.request);
                           }}
                         >
                           Pay {trait.total} MB

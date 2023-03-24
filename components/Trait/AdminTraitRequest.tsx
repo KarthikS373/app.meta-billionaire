@@ -189,14 +189,20 @@ const AdminTraitRequest = () => {
                       </GridItem>
                     ))}
                   </Grid>
-                  <Textarea
-                    onChange={(e) => {
-                      if (e.target.value.length > 0) setNote(e.target.value);
-                      else setNote(null);
-                    }}
-                    placeholder="Admin note"
-                    className="font-sans text-sm"
-                  />
+                  {trait.isApproved === null ? (
+                    <Textarea
+                      onChange={(e) => {
+                        if (e.target.value.length > 0) setNote(e.target.value);
+                        else setNote(null);
+                      }}
+                      placeholder="Admin note"
+                      className="font-sans text-sm"
+                    />
+                  ) : (
+                    <Text fontSize={18} mt={2} fontFamily={"sans-serif"}>
+                      {trait.adminNote}
+                    </Text>
+                  )}
                   {trait.isApproved === null ? (
                     <ButtonGroup mt={5} display={"flex"}>
                       <Button

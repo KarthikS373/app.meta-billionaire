@@ -1,7 +1,7 @@
 import prisma from "../../lib/prisma";
 
 const handler = async (req: any, res: any) => {
-  const { order, paymentStatus } = req.body;
+  const { order, paymentStatus, items } = req.body;
 
   if (req.method === "POST") {
     try {
@@ -17,6 +17,21 @@ const handler = async (req: any, res: any) => {
       });
 
       if (ifExist) {
+        if (paymentStatus === "paid") {
+          for (let item of items) {
+            const data = await prisma.trait.update({
+              where: {
+                id: item,
+              },
+              data: {
+                shopQuantity: {
+                  decrement: 1,
+                },
+              },
+            });
+          }
+        }
+
         const data = await prisma.traitShop.update({
           where: {
             order: ifExist.order,
@@ -25,6 +40,7 @@ const handler = async (req: any, res: any) => {
             paymentStatus: paymentStatus || "pending",
           },
         });
+
         res.status(200).json({
           data: data,
         });
