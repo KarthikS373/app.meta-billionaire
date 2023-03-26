@@ -187,7 +187,7 @@ const CustomizeNFT: NextPage<
                 px={4}
                 _hover={{ color: "customBlue.500", cursor: "pointer" }}
               >
-                MB # 166
+                MB # {token as string}
               </Heading>
               <Image
                 rounded={[5, 20]}
@@ -439,7 +439,9 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const { token } = query;
 
   try {
-    const data = await axios.get(`https://app.metabillionaire.com/api/getTraits`);
+    const data = await axios.get(
+      `https://app.metabillionaire.com/api/getTraits`
+    );
 
     return {
       props: {

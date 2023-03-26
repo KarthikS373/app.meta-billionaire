@@ -59,30 +59,30 @@ const NFTCard = ({
           >
             {nftName}
           </Text>
-          {!visitor && (
-            <Button
-              w="38px"
-              h="38px"
-              borderRadius="12px"
-              me="12px"
-              bg={iconBox}
-              onClick={(e) => {
-                e.preventDefault();
-                router.push(
-                  {
-                    pathname: `/profile/modify/${nftName.substring(1)}`,
-                    query: {
-                      image: nftImage,
-                      address: address,
-                    },
+          {/* {!visitor && ( */}
+          <Button
+            w="38px"
+            h="38px"
+            borderRadius="12px"
+            me="12px"
+            bg={iconBox}
+            onClick={(e) => {
+              e.preventDefault();
+              router.push(
+                {
+                  pathname: `/profile/modify/${nftName.substring(1)}`,
+                  query: {
+                    image: nftImage,
+                    address: address,
                   },
-                  `/profile/modify/${nftName.substring(1)}`
-                );
-              }}
-            >
-              <Icon w="24px" h="24px" as={MdEdit} color={iconColor} />
-            </Button>
-          )}
+                },
+                `/profile/modify/${nftName.substring(1)}`
+              );
+            }}
+          >
+            <Icon w="24px" h="24px" as={MdEdit} color={iconColor} />
+          </Button>
+          {/* )} */}
         </Flex>
       </Box>
       <Flex

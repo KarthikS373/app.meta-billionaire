@@ -10,7 +10,7 @@
 //     "KATANA BLACK-34.png": 500,
 //     "KATANA RED WHITE-28.png": 500,
 //     "NONE-690.png": 500,
-//   },
+//   }, 
 //   Background: {
 //     "ARC-15.png": 500,
 //     "BEE-11.png": 500,

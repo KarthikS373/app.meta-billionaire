@@ -119,14 +119,15 @@ model Courses {
 }
 
 model Trait {
-  id                String @id @unique
+  id                String  @id @unique
   category          String // back-accessories | background | clothes | ears-wear | eyes | face-accessories | hair | rare | skin
   asset             String
   originalSupply    Int
   cost              Float
-  totalShopQuantity Int    @default(0)
-  shopQuantity      Int    @default(0)
+  totalShopQuantity Int     @default(0)
+  shopQuantity      Int     @default(0)
   imagePath         String
+  active            Boolean @default(false)
 }
 
 model TraitShop {

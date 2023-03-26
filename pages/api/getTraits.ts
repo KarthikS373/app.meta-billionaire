@@ -39,6 +39,7 @@ const handler = async (req: any, res: any) => {
     } else {
       data = await prisma.trait.findMany({
         where: {
+          active: true,
           shopQuantity: {
             gt: 0,
           },
@@ -56,6 +57,7 @@ const handler = async (req: any, res: any) => {
 
     res.status(200).json({ message: "Fetch successful", data: data });
   } catch (e) {
+    console.log(e)
     res.status(500).json({ message: "An error occurred" });
   }
 };
