@@ -52,9 +52,8 @@ const Post = () => {
           isClosable: true,
           status: "error",
         });
-        
-        router.push('/');
 
+        router.push("/");
       }
     }
 
@@ -78,6 +77,9 @@ const Post = () => {
         const holding = (
           await holdingContract.balanceOf(router.query.address)
         ).toString();
+        console.log(holdingContract);
+        console.clear();
+        console.log("Holdings: ", holdings);
         if (holdings == "0") {
           setHoldings("0.00");
           console.log("You dont have any claimable");
@@ -107,16 +109,15 @@ const Post = () => {
             `https://app.metabillionaire.com/api/fetchNickname?address=${router.query.address}`
           )
           .then((res) => {
-            console.clear()
-            console.log(res)
+            console.clear();
+            console.log(res);
             if (res && res.data && res.data.data && res.data.data[0]) {
-              if (res.data.data[0].mbucBalance) {
-                setHoldings(
-                  Number.parseFloat(res.data.data[0].mbucBalance).toFixed(2)
-                );
-              } else {
-                fetchHoldingsData();
-              }
+              // if (res.data.data[0].mbucBalance) {
+              //   setHoldings(
+              //     Number.parseFloat(res.data.data[0].mbucBalance).toFixed(2)
+              //   );
+              // } else {
+              // }
 
               if (res.data.data[0].name) {
                 setNickname(res.data.data[0].name);
@@ -140,7 +141,11 @@ const Post = () => {
             console.log("error fetching user data");
           });
       }
-  }, [router.query.address, renderFlag]);
+  }, [router.query.address, renderFlag, router.query, toast]);
+
+  useEffect(() => {
+    fetchHoldingsData();
+  }, [polygonProvider, router.query.address]);
 
   useEffect(() => {
     let web3;
