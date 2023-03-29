@@ -162,7 +162,9 @@ const UserProfile = ({
     if (userId) {
       console.clear();
       axios
-        .get(`https://app.metabillionaire.com/api/getTraitRequests?address=${userId}`)
+        .get(
+          `https://app.metabillionaire.com/api/getTraitRequests?address=${userId}`
+        )
         .then((res) => {
           console.log(res.data);
           setTraitRequests(res.data.data);
@@ -217,12 +219,15 @@ const UserProfile = ({
 
           console.log(receipt);
 
-          await axios.post("https://app.metabillionaire.com/api/setTraitPaymentStats", {
-            order: order,
-            address: address,
-            paymentStatus: "paid",
-            items: items,
-          });
+          await axios.post(
+            "https://app.metabillionaire.com/api/setTraitPaymentStats",
+            {
+              order: order,
+              address: address,
+              paymentStatus: "paid",
+              items: items,
+            }
+          );
 
           toast({
             description: "Successfully payed " + amount,
@@ -449,7 +454,7 @@ const UserProfile = ({
                                 w={"full"}
                                 h={"full"}
                                 className={
-                                  "group relative rounded border shadow md:!h-64 sm:!w-32 md:!w-64 !w-full"
+                                  "group relative rounded border shadow md:!h-64 sm:!w-32 md:!w-64 !w-full overflow-hidden"
                                 }
                               >
                                 <Box h={"full"} w={"full"}>
@@ -463,7 +468,7 @@ const UserProfile = ({
                                       )}/${item.imagePath}`}
                                     alt={item.asset}
                                     className={
-                                      "h-full object-cover object-center"
+                                      "w-full object-cover object-center"
                                     }
                                   />
                                 </Box>
