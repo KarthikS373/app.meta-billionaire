@@ -28,9 +28,7 @@ import useEthersProvider from "../../../hooks/useEthersProvider";
 import HoldingsContract from "../../../utils/ABIs/Holdings";
 
 const CheckoutPage = () => {
-  // const { address } = useEthersProvider();
-
-  const address = "0xf524CC312A3fC5eE834d11969D2C4c74c1D3D23D"; 
+  const { address } = useEthersProvider();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
