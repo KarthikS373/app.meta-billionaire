@@ -8,11 +8,6 @@ import {
   Image,
   Text,
   Heading,
-  Accordion,
-  AccordionItem,
-  AccordionButton,
-  AccordionIcon,
-  AccordionPanel,
   Button,
   useDisclosure,
   Modal,
@@ -25,13 +20,18 @@ import {
   useToast,
   Textarea,
 } from "@chakra-ui/react";
+import axios from "axios";
+import { ethers } from "ethers";
 
 import Layout from "../../../components/Layout/Layout";
 import useEthersProvider from "../../../hooks/useEthersProvider";
-import axios from "axios";
+import HoldingsContract from "../../../utils/ABIs/Holdings";
 
 const CheckoutPage = () => {
-  const { address, balance } = useEthersProvider();
+  // const { address } = useEthersProvider();
+
+  const address = "0xf524CC312A3fC5eE834d11969D2C4c74c1D3D23D"; 
+
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const toast = useToast();
@@ -43,8 +43,38 @@ const CheckoutPage = () => {
     Array<{ id: string; key: string; layer: string; cost: number }>
   >([]);
   const [cost, setCost] = useState<number>(0.0);
+  const [balance, setBalance] = useState("0.00");
 
   const { token, data: content, length } = router.query;
+
+  useEffect(() => {
+    const fetchHoldingsData = async () => {
+      const provider = new ethers.providers.JsonRpcProvider(
+        process.env.NEXT_PUBLIC_POLYGON_API_KEY
+      );
+
+      if (provider && address) {
+        const holdingContract = new ethers.Contract(
+          HoldingsContract.address,
+          HoldingsContract.abi,
+          provider
+        );
+        try {
+          console.clear();
+          const rholding = await holdingContract.balanceOf(address);
+          console.log(rholding);
+          const holding = rholding.toString();
+          console.log(rholding);
+          setBalance((holding / 10 ** 18).toFixed(2));
+        } catch (e) {
+          console.log(e);
+        } finally {
+        }
+      }
+    };
+
+    fetchHoldingsData();
+  }, [address]);
 
   useEffect(() => {
     if (!token) {
@@ -277,7 +307,7 @@ const CheckoutPage = () => {
                         onOpen();
                       } else {
                         toast({
-                          title: "No enough balance",
+                          title: "Insufficient balance",
                           status: "warning",
                           variant: "top-accent",
                         });

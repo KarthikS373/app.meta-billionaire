@@ -26,12 +26,15 @@ import {
 import ERC721Contract from "../../../utils/ABIs/ERC721";
 import Layout from "../../../components/Layout/Layout";
 import layers from "../../../public/assets/layers";
+import useEthersProvider from "../../../hooks/useEthersProvider";
 
 // https://ipfs.io/ipfs/QmaAUVnbzVtksdRv36XFAiqRwLbnPNrmP6Rhpi4oyGXkdG/166.png
 
 const CustomizeNFT: NextPage<
   InferGetServerSidePropsType<GetServerSideProps>
 > = ({ data }) => {
+  const { address } = useEthersProvider();
+
   const [checked, setChecked] = useState<
     Array<{ id: string; key: string; layer: string; cost: number }>
   >([]);
@@ -51,7 +54,7 @@ const CustomizeNFT: NextPage<
 
   const router = useRouter();
 
-  const { token, image, address } = router.query;
+  const { token, image } = router.query;
 
   const fetchMetadata = async (token: string) => {
     const provider = new ethers.providers.JsonRpcProvider(
