@@ -30,8 +30,8 @@ const Post = () => {
   const [userProducts, setUserProducts] = useState([]);
   const [stakeAmount, setStakeAmount] = useState(0);
   const [stakedNfts, setStakedNfts] = useState([]);
-  const [holdings, setHoldings] = useState("0");
-  const [claims, setClaims] = useState("0");
+  const [holdings, setHoldings] = useState("0.00");
+  const [claims, setClaims] = useState("0.00");
   const [nickname, setNickname] = useState("");
   const [visitor, setVisitor] = useState(false);
 
@@ -66,40 +66,92 @@ const Post = () => {
     }
   }, [connectedAddress, router.query.address]);
 
-  const fetchHoldingsData = async () => {
-    if (router.query.address) {
-      const holdingContract = new ethers.Contract(
-        HoldingsContract.address,
-        HoldingsContract.abi,
-        polygonProvider
-      );
-      try {
-        const holding = (
-          await holdingContract.balanceOf(router.query.address)
-        ).toString();
-        console.log(holdingContract);
-        console.clear();
-        console.log("Holdings: ", holdings);
-        if (holdings == "0") {
-          setHoldings("0.00");
-          console.log("You dont have any claimable");
-          return;
-        }
-        setHoldings((holding / 10 ** 18).toFixed(2));
-      } catch (e) {
-        console.log(e);
-      } finally {
-      }
-    }
-  };
+  useEffect(() => {
+    const pprovider = new ethers.providers.JsonRpcProvider(
+      process.env.NEXT_PUBLIC_POLYGON_API_KEY
+    );
+    setpolygonProvider(pprovider);
+    console.clear();
+    console.log(pprovider);
+  }, []);
 
   useEffect(() => {
-    setpolygonProvider(
-      new ethers.providers.JsonRpcProvider(
-        process.env.NEXT_PUBLIC_POLYGON_API_KEY
-      )
-    );
-  }, []);
+    const fetchHoldingsData = async () => {
+      if (router.query.address && polygonProvider) {
+        const holdingContract = new ethers.Contract(
+          HoldingsContract.address,
+          HoldingsContract.abi,
+          polygonProvider
+        );
+        try {
+          console.clear();
+          const address = router.query.address.toString().trim();
+          const rholding = await holdingContract.balanceOf(address);
+          console.log(rholding);
+          const holding = rholding.toString();
+          console.log(rholding);
+          console.log("Holdings: ", holdings);
+          setHoldings((holding / 10 ** 18).toFixed(2));
+        } catch (e) {
+          console.log(e);
+        } finally {
+        }
+      }
+    };
+
+    const fetchClaimingsData = async () => {
+      if (router.query.address && polygonProvider) {
+        const claimingContract = new ethers.Contract(
+          ClaimContract.address,
+          ClaimContract.abi,
+          polygonProvider
+        );
+
+        try {
+          const claiming = (
+            await claimingContract.claimableAmounts(router.query.address)
+          ).toString();
+          console.log(claiming);
+          setClaims((claiming / 10 ** 18).toFixed(2).toString());
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    };
+
+    const fetchData = async () => {
+      // await new Promise((resolve) => setTimeout(resolve, 1000));
+      await fetchHoldingsData();
+      await fetchClaimingsData();
+    };
+
+    if (renderFlag && polygonProvider) {
+      fetchData();
+    }
+  }, [polygonProvider, renderFlag, router.query.address]);
+
+  useEffect(() => {
+    const fetchClaimingsData = async () => {
+      if (router.query.address) {
+        const claimingContract = new ethers.Contract(
+          ClaimContract.address,
+          ClaimContract.abi,
+          polygonProvider
+        );
+
+        try {
+          const claiming = (
+            await claimingContract.claimableAmounts(router.query.address)
+          ).toString();
+          setClaims((claiming / 10 ** 18).toFixed(2).toString());
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    };
+
+    if (renderFlag) fetchClaimingsData();
+  }, [holdings, polygonProvider, renderFlag, router.query.address]);
 
   useEffect(() => {
     if (renderFlag)
@@ -144,11 +196,7 @@ const Post = () => {
   }, [router.query.address, renderFlag, router.query, toast]);
 
   useEffect(() => {
-    fetchHoldingsData();
-  }, [polygonProvider, router.query.address]);
-
-  useEffect(() => {
-    let web3;
+    // let web3;
     // if (chainId == 1) {
     //   web3 = walletProvider;
     //   if (!web3)
@@ -159,14 +207,14 @@ const Post = () => {
     //     }
     // }
 
-    if (!web3) {
-      setProvider(
-        // @ts-ignore
-        new ethers.providers.JsonRpcProvider(
-          process.env.NEXT_PUBLIC_INFURA_MAIN_API
-        )
-      );
-    }
+    // if (!web3) {
+    setProvider(
+      // @ts-ignore
+      new ethers.providers.JsonRpcProvider(
+        process.env.NEXT_PUBLIC_INFURA_MAIN_API
+      )
+    );
+    // }
   }, [chainId, walletProvider]);
 
   useEffect(() => {
@@ -227,29 +275,6 @@ const Post = () => {
 
     if (renderFlag) fetchUserData();
   }, [provider, renderFlag, router.query.address]);
-
-  useEffect(() => {
-    const fetchClaimingsData = async () => {
-      if (router.query.address) {
-        const claimingContract = new ethers.Contract(
-          ClaimContract.address,
-          ClaimContract.abi,
-          polygonProvider
-        );
-
-        try {
-          const claiming = (
-            await claimingContract.claimableAmounts(router.query.address)
-          ).toString();
-          setClaims((claiming / 10 ** 18).toFixed(2).toString());
-        } catch (e) {
-          console.log(e);
-        }
-      }
-    };
-
-    if (renderFlag) fetchClaimingsData();
-  }, [holdings, polygonProvider, renderFlag, router.query.address]);
 
   useEffect(() => {
     let walletAddress = router.query.address;
