@@ -284,6 +284,7 @@ const CustomizeNFT: NextPage<
                       {
                         pathname: `/profile/modify/checkout`,
                         query: {
+                          image: nft?.image || (image as string),
                           data: JSON.stringify(checked),
                           length: checked.length,
                           token: token,

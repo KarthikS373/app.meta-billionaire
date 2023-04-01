@@ -43,7 +43,7 @@ const CheckoutPage = () => {
   const [cost, setCost] = useState<number>(0.0);
   const [balance, setBalance] = useState("0.00");
 
-  const { token, data: content, length } = router.query;
+  const { token, data: content, length, image } = router.query;
 
   useEffect(() => {
     const fetchHoldingsData = async () => {
@@ -216,33 +216,36 @@ const CheckoutPage = () => {
                     flexDirection={"row"}
                     gap={4}
                   >
-                    {data.map((item, index) => (
-                      <GridItem key={item.key} w={"full"} textAlign={"left"}>
-                        <Text px={[1, 2, 4, 4]}>
-                          {item.key} - {item.cost} MBUC
-                        </Text>
-                        <Box
-                          my={1}
-                          mx={"auto"}
-                          className={
-                            "group relative rounded border shadow md:!h-64 sm:!w-32 md:!w-64 !w-full"
-                          }
-                        >
-                          <Image
-                            loading="eager"
-                            src={`/assets/layers/${item.key}/${item.layer}`}
-                            alt={item.layer}
-                            width={1920}
-                            height={1080}
-                            className="!w-full !h-full"
-                            style={{
-                              objectFit: "cover",
-                              objectPosition: "center",
-                            }}
-                          />
-                        </Box>
-                      </GridItem>
-                    ))}
+                    <>
+                      {data.map((item, index) => (
+                        <GridItem key={item.key} w={"full"} textAlign={"left"}>
+                          <Text px={[1, 2, 4, 4]}>
+                            {item.key} - <br />
+                            {item.cost} MBUC
+                          </Text>
+                          <Box
+                            my={1}
+                            mx={"auto"}
+                            className={
+                              "group relative rounded border shadow md:!h-64 sm:!w-32 md:!w-64 !w-full"
+                            }
+                          >
+                            <Image
+                              loading="eager"
+                              src={`/assets/layers/${item.key}/${item.layer}`}
+                              alt={item.layer}
+                              width={1920}
+                              height={1080}
+                              className="!w-full !h-full"
+                              style={{
+                                objectFit: "cover",
+                                objectPosition: "center",
+                              }}
+                            />
+                          </Box>
+                        </GridItem>
+                      ))}
+                    </>
                   </Grid>
                   <Flex
                     direction="column"
@@ -251,28 +254,40 @@ const CheckoutPage = () => {
                     w="100%"
                     h="100%"
                   >
-                    <Box
+                    <Flex
                       w="100%"
                       h="100%"
                       p={6}
                       border="1px"
                       borderColor="gray.200"
                       borderRadius="md"
+                      flexDirection={["column", "column", "row", "row"]}
+                      justifyContent={"space-between"}
+                      gap={4}
                     >
-                      <Heading size="md">Details</Heading>
-                      <Text className="tracking-wider font-semibold mt-1">
-                        Address:
-                      </Text>
-                      <Text className="font-sans">{address}</Text>
-                      <Text className="tracking-wider font-semibold mt-2">
-                        Balance:
-                      </Text>
-                      <Text className="font-sans">{balance || 0.0}</Text>
-                      <Text className="tracking-wider font-semibold mt-2">
-                        Cost:
-                      </Text>
-                      <Text className="font-sans">{cost}</Text>
-                    </Box>
+                      <Box>
+                        <Heading size="md">Details</Heading>
+                        <Text className="tracking-wider font-semibold mt-1">
+                          Address:
+                        </Text>
+                        <Text className="font-sans">{address}</Text>
+                        <Text className="tracking-wider font-semibold mt-2">
+                          Balance:
+                        </Text>
+                        <Text className="font-sans">{balance || 0.0}</Text>
+                        <Text className="tracking-wider font-semibold mt-2">
+                          Cost:
+                        </Text>
+                        <Text className="font-sans">{cost}</Text>
+                      </Box>
+                      <Image
+                        rounded={[5, 20]}
+                        maxWidth={[400, 200, 300, 300]}
+                        w={"full"}
+                        src={image as string}
+                        alt={"NFT"}
+                      />
+                    </Flex>
                   </Flex>
                   <Textarea
                     value={description}

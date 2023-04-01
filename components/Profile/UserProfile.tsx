@@ -45,7 +45,7 @@ import backdrop from "../../assets/backdrop.jpeg";
 import { fetchFirestoreData } from "../../lib/firebase";
 import axios from "../../lib/api";
 import useEthersProvider from "../../hooks/useEthersProvider";
-import contractABI from "../../contracts/mbuc/MbucABI.json";
+import HoldingsContract from "../../utils/ABIs/Holdings";
 
 const UserProfile = ({
   username = "cyberpunk373",
@@ -164,6 +164,7 @@ const UserProfile = ({
       axios
         .get(
           `https://app.metabillionaire.com/api/getTraitRequests?address=${userId}`
+          // `http://localhost:3000/api/getTraitRequests?address=${userId}`
         )
         .then((res) => {
           console.log(res.data);
@@ -200,24 +201,38 @@ const UserProfile = ({
     }
   };
 
-  const transact = async (order: string, amount: string, items: string[]) => {
+  const transact = async (
+    order: string,
+    amount: string,
+    items: string[],
+    gasLimit = 100000
+  ) => {
     if (address) {
       if (chainId === 137) {
         try {
+          console.clear();
           const signer = provider.getSigner();
+          console.log(signer);
           const wei = ethers.utils.parseEther(amount.toString());
-          console.log("WEI: ", wei);
+          console.log("Transfer amount: ", wei);
 
           const tx = {
-            //TODO: Address to transfer
             to: "0x08749FFE5CDAe2fa83B0419f3C15AAC9335fd476",
             value: wei.toString(),
           };
 
-          const receipt = await signer.sendTransaction(tx);
-          await receipt.wait(2);
+          const contract = new ethers.Contract(
+            HoldingsContract.address,
+            HoldingsContract.abi,
+            signer
+          );
 
-          console.log(receipt);
+          const transaction = await contract.transfer(tx.to, wei, {
+            gasLimit: gasLimit,
+          });
+          await transaction.wait();
+
+          console.log(transaction);
 
           await axios.post(
             "https://app.metabillionaire.com/api/setTraitPaymentStats",
@@ -243,7 +258,15 @@ const UserProfile = ({
               duration: 1500,
               isClosable: true,
             });
+          } else if (e.message.includes("User denied")) {
+            toast({
+              description: "User denied transaction request",
+              status: "error",
+              duration: 1500,
+              isClosable: true,
+            });
           } else {
+            console.log(e);
             toast({
               description: "Something went wrong",
               status: "error",
@@ -260,7 +283,9 @@ const UserProfile = ({
               items: [],
             })
             .then((res) => {})
-            .catch((err) => {});
+            .catch((err) => {
+              console.log(err);
+            });
         }
       } else {
         toast({
@@ -489,7 +514,7 @@ const UserProfile = ({
                                 );
                               }}
                             >
-                              Pay {trait.total} MB
+                              Pay {trait.total} MBUC
                             </Button>
                           </Flex>
                         </AccordionPanel>
