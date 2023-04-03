@@ -219,7 +219,7 @@ const layers = [
   { id: 5, title: "Eyes", slug: "eyes" },
   { id: 6, title: "Face Accessories", slug: "face-accessories" },
   { id: 7, title: "Hair", slug: "hair" },
-  { id: 8, title: "Rare", slug: "rare" },
+  // { id: 8, title: "Rare", slug: "rare" },
   { id: 9, title: "Skin", slug: "skin" },
 ];
 

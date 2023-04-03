@@ -280,13 +280,23 @@ const CheckoutPage = () => {
                         </Text>
                         <Text className="font-sans">{cost}</Text>
                       </Box>
-                      <Image
-                        rounded={[5, 20]}
-                        maxWidth={[400, 200, 300, 300]}
-                        w={"full"}
-                        src={image as string}
-                        alt={"NFT"}
-                      />
+                      <Flex
+                        flexDirection={"column"}
+                        gap={2}
+                        alignItems={"center"}
+                        mt={[4, 4, 0, 0]}
+                      >
+                        <Text fontSize={15} textAlign={"center"}>
+                          You are upgrading your MB # {token}
+                        </Text>
+                        <Image
+                          rounded={[5, 20]}
+                          maxWidth={[400, 200, 300, 300]}
+                          w={"full"}
+                          src={image as string}
+                          alt={"NFT"}
+                        />
+                      </Flex>
                     </Flex>
                   </Flex>
                   <Textarea

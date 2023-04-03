@@ -137,7 +137,7 @@ const Navbar = () => {
             cursor="pointer"
           />
         </Link>
-        {address && router.pathname.includes("profile") && (
+        {/* {address && router.pathname.includes("profile") && (
           <Box
             fontSize={17}
             cursor="pointer"
@@ -151,7 +151,7 @@ const Navbar = () => {
               <Icon as={BiSearch} w="30px" display="inline" pb="3px" />
             </Link>
           </Box>
-        )}
+        )} */}
         <Box
           fontSize={17}
           cursor="pointer"
@@ -212,7 +212,7 @@ const Navbar = () => {
             </MenuList>
           </Menu>
           <Spacer />
-          {address && router.pathname.includes("profile") && (
+          {/* {address && router.pathname.includes("profile") && (
             <Box
               fontSize={17}
               cursor="pointer"
@@ -225,7 +225,7 @@ const Navbar = () => {
                 <Icon as={BiSearch} w="30px" display="inline" pb="3px" />
               </Link>
             </Box>
-          )}
+          )} */}
           <Box fontSize={17} cursor="pointer">
             <Link passHref href="https://opensea.io/collection/metabillionaire">
               <Image
