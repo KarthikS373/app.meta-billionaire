@@ -6,6 +6,12 @@ import {
   Text,
   chakra,
   TableContainer,
+  Box,
+  Accordion,
+  AccordionItem,
+  AccordionButton,
+  AccordionIcon,
+  AccordionPanel,
 } from "@chakra-ui/react";
 import { ethers } from "ethers";
 import useEthersProvider from "../../hooks/useEthersProvider";
@@ -16,6 +22,7 @@ import AdminStoreList from "../AdminStoreList/AdminStoreList";
 import { Table, Thead, Tbody, Tr, Th, Td } from "../../components/CustomTable";
 import UserSubmissionTable from "../AdminStoreItem/UserSubmissionTable";
 import AdminTraitRequest from "../Trait/AdminTraitRequest";
+import Link from "next/link";
 
 const AdminContent = ({ products, raffleWinner }: any) => {
   const [isLessThan600, setIsLessThan600] = useState(false);
@@ -152,7 +159,7 @@ const AdminContent = ({ products, raffleWinner }: any) => {
       flexDir="column"
       justify="flex-start"
       my="sm"
-      px="xs"
+      px={["2px", "xs"]}
       w="100%"
       flex={1}
     >
@@ -164,7 +171,6 @@ const AdminContent = ({ products, raffleWinner }: any) => {
         </Flex>
         <Spacer />
       </Flex>
-
       <Flex
         flex={1}
         mt="md"
@@ -203,11 +209,22 @@ const AdminContent = ({ products, raffleWinner }: any) => {
                 shadow="md"
                 textTransform="uppercase"
                 fontFamily="METAB"
+                mt={1}
                 onClick={() => setCreateNewMode(true)}
               >
                 Create new product
               </Button>
             </Flex>
+            <Link href={"#trait-request"} passHref>
+              <Button
+                mt={5}
+                display={["block", "block", "none", "none"]}
+                fontFamily={"sans-serif"}
+                rounded={"full"}
+              >
+                Go to Trait Requests
+              </Button>
+            </Link>
 
             {activeProducts ? (
               activeProducts.length > 0 ? (
@@ -256,14 +273,14 @@ const AdminContent = ({ products, raffleWinner }: any) => {
           maxHeight="450px"
           w="100%"
           shadow="md"
-          my="md"
+          my={["sm", "md"]}
         >
           <Table
             variant="simple"
             colorScheme="customBlue"
             size="md"
             style={{
-              border: "1px solid #ccc",
+              border: isLessThan600 ? "" : "1px solid #ccc",
               borderCollapse: "collapse",
               margin: "0",
               padding: "0",
@@ -292,43 +309,104 @@ const AdminContent = ({ products, raffleWinner }: any) => {
                 </Tr>
               </Thead>
             )}
-            <Tbody fontFamily="Montserrat" bgColor="#f7f7f7">
-              {sortProduct.map((x: any, i: number) => {
-                return (
-                  <Tr
-                    cursor="pointer"
-                    transition="all ease 0.3s"
-                    key={i}
-                    _hover={{
-                      bgColor: "customBlue.500",
-                      color: "white",
-                      borderRadius: "15px",
-                    }}
-                    borderRadius={10}
-                  >
-                    <Td textAlign={"left"}>{i}</Td>
-                    <Td>{x.owner.name}</Td>
-                    <Td>{x.authorId}</Td>
-                    <Td>{x.quantity}</Td>
+            {!isLessThan600 && (
+              <Tbody fontFamily="Montserrat" bgColor="#f7f7f7">
+                {sortProduct.map((x: any, i: number) => {
+                  return (
+                    <Tr
+                      cursor="pointer"
+                      transition="all ease 0.3s"
+                      key={i}
+                      _hover={{
+                        bgColor: "customBlue.500",
+                        color: "white",
+                        borderRadius: "15px",
+                      }}
+                      borderRadius={10}
+                    >
+                      <Td textAlign={"left"}>{i}</Td>
+                      <Td>{x.owner.name}</Td>
+                      <Td>{x.authorId}</Td>
+                      <Td>{x.quantity}</Td>
 
-                    <Td>
-                      {loadingName ? (
-                        <Spinner m="0 auto" size="md" color="customBlue.500" />
-                      ) : productNameArray === null ? (
-                        <Text fontSize={12}>Please connect wallet</Text>
-                      ) : (
-                        productNameArray[x.productId]
-                      )}
-                    </Td>
-                  </Tr>
-                );
-              })}
-            </Tbody>
+                      <Td>
+                        {loadingName ? (
+                          <Spinner
+                            m="0 auto"
+                            size="md"
+                            color="customBlue.500"
+                          />
+                        ) : productNameArray === null ? (
+                          <Text fontSize={12}>Please connect wallet</Text>
+                        ) : (
+                          productNameArray[x.productId]
+                        )}
+                      </Td>
+                    </Tr>
+                  );
+                })}
+              </Tbody>
+            )}
+            {isLessThan600 && (
+              <>
+                <Accordion
+                  className="border rounded-xl py-2 px-1 shadow"
+                  w={"full"}
+                  allowToggle
+                  mt={4}
+                  onChange={(e) => {}}
+                >
+                  {sortProduct.map((x: any, i: number) => {
+                    return (
+                      <AccordionItem key={i} className="border-0 outline-none">
+                        <h2>
+                          <AccordionButton className="h-16 center w-full justify-between border-0 outline-none">
+                            <Flex gap={3} flex="1" textAlign="left">
+                              <Text>{x.owner.name}</Text>
+                            </Flex>
+                            <AccordionIcon />
+                          </AccordionButton>
+                        </h2>
+                        <AccordionPanel pb={4} overflow={"hidden"}>
+                          <Flex gap={3}>
+                            Name:
+                            <Text fontFamily={"sans-serif"}>
+                              {x.owner.name}
+                            </Text>
+                          </Flex>
+                          <Text fontFamily={"sans-serif"}>{x.authorId}</Text>
+                          <Flex gap={3}>
+                            Quantity:
+                            <Text fontFamily={"sans-serif"}>{x.quantity}</Text>
+                          </Flex>
+
+                          <Box mt={4}>
+                            {loadingName ? (
+                              <Spinner
+                                m="0 auto"
+                                size="md"
+                                color="customBlue.500"
+                              />
+                            ) : productNameArray === null ? (
+                              <Text fontSize={12}>Please connect wallet</Text>
+                            ) : (
+                              productNameArray[x.productId]
+                            )}
+                          </Box>
+                        </AccordionPanel>
+                      </AccordionItem>
+                    );
+                  })}
+                </Accordion>
+              </>
+            )}
           </Table>
         </TableContainer>
       </Flex>
       <UserSubmissionTable />
-      <AdminTraitRequest />
+      <Box w={"full"} id="trait-request">
+        <AdminTraitRequest />
+      </Box>
     </Flex>
   );
 };

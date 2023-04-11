@@ -99,6 +99,8 @@ const UserSubmissionTable = () => {
       });
   }, []);
 
+  if (submissions.length === 0) return <></>;
+
   return (
     <Flex w="100%" align="center" mt="md" justify="center" flexDir="column">
       <Text
@@ -226,7 +228,7 @@ const UserSubmissionTable = () => {
                             onOpen();
                           }}
                         >
-                            <Td>{sub.address}</Td>
+                          <Td>{sub.address}</Td>
                           <Td>{sub.product}</Td>
                           <Td>{sub.price}</Td>
                         </Tr>

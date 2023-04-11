@@ -45,10 +45,27 @@ const AdminTraitRequest = () => {
   const [note, setNote] = useState<string | null>(null);
 
   useEffect(() => {
-    axios.get("https://app.metabillionaire.com/api/getTraitRequests").then((res) => {
-      console.log(res.data);
-      setTraits(res.data.data);
-    });
+    axios
+      .get("https://app.metabillionaire.com/api/getTraitRequests")
+      .then((res) => {
+        // axios.get("http://localhost:3000/api/getTraitRequests").then((res) => {
+        console.log(res.data);
+        const d = [];
+
+        const pdata = res.data.data.filter(
+          (item: { isApproved: boolean | null }) => item.isApproved === null
+        );
+        const adata = res.data.data.filter(
+          (item: { isApproved: boolean | null }) => item.isApproved === true
+        );
+        const rdata = res.data.data.filter(
+          (item: { isApproved: boolean | null }) => item.isApproved === false
+        );
+
+        d.push(...pdata, ...adata, ...rdata);
+
+        setTraits(d);
+      });
   }, [current]);
 
   useEffect(() => {
@@ -57,6 +74,7 @@ const AdminTraitRequest = () => {
       traits[current].request.map((request) => {
         axios
           .get(`https://app.metabillionaire.com/api/getTraits?id=${request}`)
+          // .get(`http://localhost:3000/api/getTraits?id=${request}`)
           .then((res) => {
             console.log(res.data);
             temp.push(res.data.data);
@@ -69,6 +87,7 @@ const AdminTraitRequest = () => {
   const handleTraitApproval = (order: string, isApproved: boolean) => {
     axios
       .post("https://app.metabillionaire.com/api/getTraitRequests", {
+        // .post("http://localhost:3000/api/getTraitRequests", {
         order: order,
         note: note,
         isApproved: isApproved,
@@ -102,6 +121,7 @@ const AdminTraitRequest = () => {
           }}
         >
           {traits.map((trait, index) => {
+            console.log("Status", trait.paymentStatus);
             return (
               <AccordionItem
                 key={trait.order}
@@ -109,14 +129,26 @@ const AdminTraitRequest = () => {
               >
                 <h2>
                   <AccordionButton className="h-16 center w-full justify-between border-0 outline-none">
-                    <Box flex="1" textAlign="left">
-                      {trait.order} -{" "}
-                      {trait.isApproved === null
-                        ? "pending"
-                        : trait.isApproved
-                        ? "Approved"
-                        : "Rejected"}
-                    </Box>
+                    <Flex gap={3} flex="1" textAlign="left">
+                      #{trait.token}:{" "}
+                      {trait.isApproved === null ? (
+                        "pending"
+                      ) : trait.isApproved ? (
+                        <Flex w={"min"} gap={3} alignItems={"center"}>
+                          Approved
+                          <Box
+                            h={4}
+                            w={4}
+                            bg={
+                              trait.paymentStatus === "paid" ? "green" : "red"
+                            }
+                            rounded={"full"}
+                          />
+                        </Flex>
+                      ) : (
+                        <Flex>Rejected</Flex>
+                      )}
+                    </Flex>
                     <AccordionIcon />
                   </AccordionButton>
                 </h2>

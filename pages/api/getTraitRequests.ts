@@ -18,6 +18,7 @@ const handler = async (req: any, res: any) => {
             request: true,
             total: true,
             token: true,
+            paymentStatus: true,
           },
         });
       } else {
@@ -34,6 +35,7 @@ const handler = async (req: any, res: any) => {
             request: true,
             total: true,
             token: true,
+            paymentStatus: true,
           },
         });
       }
