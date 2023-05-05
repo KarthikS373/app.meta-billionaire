@@ -47,10 +47,10 @@ const AdminTraitRequest = () => {
 
   useEffect(() => {
     axios
-      // .get("https://app.metabillionaire.com/api/getTraitRequests")
-      // .then((res) => {
-      .get("http://localhost:3000/api/getTraitRequests")
+      .get("https://app.metabillionaire.com/api/getTraitRequests")
       .then((res) => {
+        // .get("http://localhost:3000/api/getTraitRequests")
+        // .then((res) => {
         console.log(res.data);
         const d = [];
 
@@ -76,8 +76,8 @@ const AdminTraitRequest = () => {
       setCollection(null);
       traits[current].request.map((request) => {
         axios
-          // .get(`https://app.metabillionaire.com/api/getTraits?id=${request}`)
-          .get(`http://localhost:3000/api/getTraits?id=${request}`)
+          .get(`https://app.metabillionaire.com/api/getTraits?id=${request}`)
+          // .get(`http://localhost:3000/api/getTraits?id=${request}`)
           .then((res) => {
             console.log(res.data);
             temp.push(res.data.data);
@@ -94,8 +94,8 @@ const AdminTraitRequest = () => {
 
   const handleTraitApproval = (order: string, isApproved: boolean) => {
     axios
-      // .post("https://app.metabillionaire.com/api/getTraitRequests", {
-      .post("http://localhost:3000/api/getTraitRequests", {
+      .post("https://app.metabillionaire.com/api/getTraitRequests", {
+        // .post("http://localhost:3000/api/getTraitRequests", {
         order: order,
         note: note,
         isApproved: isApproved,
