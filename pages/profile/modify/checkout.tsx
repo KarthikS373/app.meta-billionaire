@@ -106,6 +106,7 @@ const CheckoutPage = () => {
     const request = data.map((item) => item.id);
     axios
       .post(`https://app.metabillionaire.com/api/requestTrait`, {
+        // .post(`http://localhost:3000/api/requestTrait`, {
         token,
         address,
         description,

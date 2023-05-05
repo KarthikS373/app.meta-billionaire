@@ -47,9 +47,10 @@ const AdminTraitRequest = () => {
 
   useEffect(() => {
     axios
-      .get("https://app.metabillionaire.com/api/getTraitRequests")
+      // .get("https://app.metabillionaire.com/api/getTraitRequests")
+      // .then((res) => {
+      .get("http://localhost:3000/api/getTraitRequests")
       .then((res) => {
-        // .get("http://localhost:3000/api/getTraitRequests").then((res) => {
         console.log(res.data);
         const d = [];
 
@@ -75,8 +76,8 @@ const AdminTraitRequest = () => {
       setCollection(null);
       traits[current].request.map((request) => {
         axios
-          .get(`https://app.metabillionaire.com/api/getTraits?id=${request}`)
-          // .get(`http://localhost:3000/api/getTraits?id=${request}`)
+          // .get(`https://app.metabillionaire.com/api/getTraits?id=${request}`)
+          .get(`http://localhost:3000/api/getTraits?id=${request}`)
           .then((res) => {
             console.log(res.data);
             temp.push(res.data.data);
@@ -93,8 +94,8 @@ const AdminTraitRequest = () => {
 
   const handleTraitApproval = (order: string, isApproved: boolean) => {
     axios
-      .post("https://app.metabillionaire.com/api/getTraitRequests", {
-        // .post("http://localhost:3000/api/getTraitRequests", {
+      // .post("https://app.metabillionaire.com/api/getTraitRequests", {
+      .post("http://localhost:3000/api/getTraitRequests", {
         order: order,
         note: note,
         isApproved: isApproved,
@@ -182,6 +183,16 @@ const AdminTraitRequest = () => {
                         </Text>
                       </>
                     )}
+                    {trait.createdAt && (
+                      <>
+                        <Text fontSize={16} fontFamily={"sans-serif"}>
+                          <>
+                            <strong>Date: </strong>
+                            {new Date(trait?.createdAt || "").toLocaleString()}
+                          </>
+                        </Text>
+                      </>
+                    )}
                   </Flex>
                   <Grid
                     templateColumns={[
@@ -204,7 +215,7 @@ const AdminTraitRequest = () => {
                     ) : (
                       collection.map((item, index) => (
                         <GridItem
-                          key={item.asset}
+                          key={item?.asset}
                           w={"full"}
                           textAlign={"left"}
                         >
@@ -218,13 +229,13 @@ const AdminTraitRequest = () => {
                           >
                             <Image
                               loading="eager"
-                              src={`/assets/layers/${item.category
-                                .split("-")
+                              src={`/assets/layers/${item?.category
+                                ?.split("-")
                                 .join(" ")
                                 .replace(/(^\w{1})|(\s+\w{1})/g, (letter) =>
                                   letter.toUpperCase()
-                                )}/${item.imagePath}`}
-                              alt={item.asset}
+                                )}/${item?.imagePath}`}
+                              alt={item?.asset}
                               width={1920}
                               height={1080}
                               className="!w-full !h-full mb-2 rounded-md"
@@ -233,7 +244,7 @@ const AdminTraitRequest = () => {
                                 objectPosition: "center",
                               }}
                             />
-                            {item.asset}
+                            {item?.asset}
                           </Box>
                         </GridItem>
                       ))

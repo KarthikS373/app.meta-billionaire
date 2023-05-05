@@ -8,34 +8,11 @@ const handler = async (req: any, res: any) => {
     if (req.method === "GET") {
       let data: any[] = [];
       if (!address) {
-        data = await prisma.traitShop.findMany({
-          select: {
-            address: true,
-            adminNote: true,
-            description: true,
-            isApproved: true,
-            order: true,
-            request: true,
-            total: true,
-            token: true,
-            paymentStatus: true,
-          },
-        });
+        data = await prisma.traitShop.findMany({});
       } else {
         data = await prisma.traitShop.findMany({
           where: {
             address: address,
-          },
-          select: {
-            address: true,
-            adminNote: true,
-            description: true,
-            isApproved: true,
-            order: true,
-            request: true,
-            total: true,
-            token: true,
-            paymentStatus: true,
           },
         });
       }
@@ -75,6 +52,7 @@ const handler = async (req: any, res: any) => {
       }
     }
   } catch (e) {
+    console.log(e);
     res.status(500).json({ message: "An error occurred" });
   }
 };

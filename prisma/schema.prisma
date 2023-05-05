@@ -46,16 +46,18 @@ model User {
   isApproval  Boolean       @default(false)
   claimReward ClaimReward[]
   inventory   Product[]
+  createdAt   DateTime      @default(now())
 }
 
 model Product {
-  id           Int     @id @default(autoincrement())
+  id           Int      @id @default(autoincrement())
   productId    String
   alreadyClaim Boolean
   authorId     String
-  quantity     Int     @default(1)
-  oldContract  Boolean @default(false)
-  owner        User    @relation(fields: [authorId], references: [wallet])
+  quantity     Int      @default(1)
+  oldContract  Boolean  @default(false)
+  owner        User     @relation(fields: [authorId], references: [wallet])
+  createdAt    DateTime @default(now())
 }
 
 model RaffleWinner {
@@ -140,4 +142,5 @@ model TraitShop {
   isApproved    Boolean?
   token         Int      @default(0)
   paymentStatus String   @default("pending") // pending | paid | failed
+  createdAt     DateTime @default(now())
 }
