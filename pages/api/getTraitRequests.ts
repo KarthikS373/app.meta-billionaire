@@ -43,6 +43,22 @@ const handler = async (req: any, res: any) => {
             isApproved: isApproved,
           },
         });
+
+        if (isApproved === false) {
+          for (let orders of data.request) {
+            await prisma.trait.update({
+              where: {
+                id: orders,
+              },
+              data: {
+                shopQuantity: {
+                  increment: 1,
+                },
+              },
+            });
+          }
+        }
+
         res.status(200).json({
           message: "Data approved successful",
           data: data,

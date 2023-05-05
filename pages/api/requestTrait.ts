@@ -28,6 +28,19 @@ const handler = async (req: any, res: any) => {
           },
         });
 
+        for (let orders of created.request) {
+          await prisma.trait.update({
+            where: {
+              id: orders,
+            },
+            data: {
+              shopQuantity: {
+                decrement: 1,
+              },
+            },
+          });
+        }
+
         console.log(created);
 
         res.status(200).json({
