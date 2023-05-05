@@ -1,27 +1,12 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   Button,
   Flex,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  Table,
-  TableContainer,
-  Tbody,
-  Td,
   Text,
-  Th,
-  Thead,
-  Tr,
   useDisclosure,
   ButtonGroup,
   Image,
-  Spacer,
   useMediaQuery,
   Accordion,
   AccordionItem,
@@ -35,6 +20,7 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { Trait, TraitShop } from "@prisma/client";
+import json2csv from "json2csv";
 
 const AdminTraitRequest = () => {
   const [isLessThan768] = useMediaQuery("(max-width: 768px)");
@@ -44,6 +30,46 @@ const AdminTraitRequest = () => {
   const [collection, setCollection] = useState<Trait[] | null>([]);
   const [current, setCurrent] = useState<number>(-1);
   const [note, setNote] = useState<string | null>(null);
+
+  const handleExport = async () => {
+    const response = await axios.get(
+      "https://app.metabillionaire.com/api/exportTraits"
+      // "http://localhost:3000/api/exportTraits"
+    );
+    const ordersWithTraits = await response.data;
+
+    const fields = [
+      "order",
+      "address",
+      "description",
+      "total",
+      {
+        label: "traits",
+        value: (row: any) => {
+          const traits = row.trait.map((t: any) => ({
+            category: t.category,
+            asset: t.asset,
+            cost: t.cost,
+          }));
+          return JSON.stringify(traits);
+        },
+      },
+    ];
+
+    const opts = { fields };
+    const csv = json2csv.parse(ordersWithTraits, opts);
+
+    console.clear();
+    console.log(ordersWithTraits);
+    console.log(csv);
+
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", "traits.csv");
+    link.click();
+  };
 
   useEffect(() => {
     axios
@@ -300,6 +326,9 @@ const AdminTraitRequest = () => {
           })}
         </Accordion>
       </Box>
+      <Button variant="contained" mt={5} onClick={handleExport}>
+        Export Data
+      </Button>
     </Flex>
   );
 };
