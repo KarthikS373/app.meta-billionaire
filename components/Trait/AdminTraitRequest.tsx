@@ -31,6 +31,7 @@ import {
   Grid,
   GridItem,
   Textarea,
+  Spinner,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { Trait, TraitShop } from "@prisma/client";
@@ -40,7 +41,7 @@ const AdminTraitRequest = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const [traits, setTraits] = useState<TraitShop[]>([]);
-  const [collection, setCollection] = useState<Trait[]>([]);
+  const [collection, setCollection] = useState<Trait[] | null>([]);
   const [current, setCurrent] = useState<number>(-1);
   const [note, setNote] = useState<string | null>(null);
 
@@ -48,7 +49,7 @@ const AdminTraitRequest = () => {
     axios
       .get("https://app.metabillionaire.com/api/getTraitRequests")
       .then((res) => {
-        // axios.get("http://localhost:3000/api/getTraitRequests").then((res) => {
+        // .get("http://localhost:3000/api/getTraitRequests").then((res) => {
         console.log(res.data);
         const d = [];
 
@@ -71,6 +72,7 @@ const AdminTraitRequest = () => {
   useEffect(() => {
     const temp: Trait[] = [];
     if (current !== -1) {
+      setCollection(null);
       traits[current].request.map((request) => {
         axios
           .get(`https://app.metabillionaire.com/api/getTraits?id=${request}`)
@@ -79,8 +81,13 @@ const AdminTraitRequest = () => {
             console.log(res.data);
             temp.push(res.data.data);
             setCollection(temp);
+          })
+          .catch(() => {
+            setCollection(null);
           });
       });
+    } else {
+      setCollection(null);
     }
   }, [traits, current]);
 
@@ -189,37 +196,48 @@ const AdminTraitRequest = () => {
                     flexDirection={"row"}
                     gap={4}
                   >
-                    {collection.map((item, index) => (
-                      <GridItem key={item.asset} w={"full"} textAlign={"left"}>
-                        <Text px={[1, 2, 4, 4]}></Text>
-                        <Box
-                          my={4}
-                          mx={"auto"}
-                          className={
-                            "group relative rounded border shadow md:!h-64 sm:!w-32 md:!w-64 !w-full"
-                          }
+                    {collection === null ? (
+                      <Flex my={4} mx={6} gap={4}>
+                        <Spinner color="black" />
+                        <Text>Loading Assets</Text>
+                      </Flex>
+                    ) : (
+                      collection.map((item, index) => (
+                        <GridItem
+                          key={item.asset}
+                          w={"full"}
+                          textAlign={"left"}
                         >
-                          <Image
-                            loading="eager"
-                            src={`/assets/layers/${item.category
-                              .split("-")
-                              .join(" ")
-                              .replace(/(^\w{1})|(\s+\w{1})/g, (letter) =>
-                                letter.toUpperCase()
-                              )}/${item.imagePath}`}
-                            alt={item.asset}
-                            width={1920}
-                            height={1080}
-                            className="!w-full !h-full mb-2 rounded-md"
-                            style={{
-                              objectFit: "cover",
-                              objectPosition: "center",
-                            }}
-                          />
-                          {item.asset}
-                        </Box>
-                      </GridItem>
-                    ))}
+                          <Text px={[1, 2, 4, 4]}></Text>
+                          <Box
+                            my={4}
+                            mx={"auto"}
+                            className={
+                              "group relative rounded border shadow md:!h-64 sm:!w-32 md:!w-64 !w-full"
+                            }
+                          >
+                            <Image
+                              loading="eager"
+                              src={`/assets/layers/${item.category
+                                .split("-")
+                                .join(" ")
+                                .replace(/(^\w{1})|(\s+\w{1})/g, (letter) =>
+                                  letter.toUpperCase()
+                                )}/${item.imagePath}`}
+                              alt={item.asset}
+                              width={1920}
+                              height={1080}
+                              className="!w-full !h-full mb-2 rounded-md"
+                              style={{
+                                objectFit: "cover",
+                                objectPosition: "center",
+                              }}
+                            />
+                            {item.asset}
+                          </Box>
+                        </GridItem>
+                      ))
+                    )}
                   </Grid>
                   {trait.isApproved === null ? (
                     <Textarea
